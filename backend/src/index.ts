@@ -1,0 +1,54 @@
+import express from 'express';
+import cors from 'cors';
+import morgan from 'morgan';
+import dotenv from 'dotenv';
+import { toNodeHandler } from 'better-auth/node';
+import { auth } from './lib/auth.js';
+import orderRoutes from './routes/orderRoutes.js';
+import productRoutes from './routes/productRoutes.js';
+import offerSlideRoutes from './routes/offerSlideRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
+import subcategoryRoutes from './routes/subcategoryRoutes.js';
+import brandRoutes from './routes/brandRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import analyticsRoutes from './routes/analyticsRoutes.js';
+import attributeRoutes from './routes/attributeRoutes.js';
+import variantRoutes from './routes/variantRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+app.use(cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    credentials: true
+}));
+app.use(morgan('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Better-Auth handler
+app.all('/api/auth/*', toNodeHandler(auth));
+
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// Routes
+app.use('/api/orders', orderRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/offer-slides', offerSlideRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/subcategories', subcategoryRoutes);
+app.use('/api/brands', brandRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/attributes', attributeRoutes);
+app.use('/api/variants', variantRoutes);
+app.use('/api/admin', adminRoutes);
+
+app.listen(PORT, () => {
+    console.log(`🚀 Backend server running on http://localhost:${PORT}`);
+});

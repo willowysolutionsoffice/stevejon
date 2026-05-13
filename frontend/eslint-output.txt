@@ -1,0 +1,7 @@
+﻿
+C:\Users\DELL\OneDrive\Documents\project\decomoja\prisma\seed.ts
+  127:30  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  127:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+Γ£û 2 problems (2 errors, 0 warnings)
+

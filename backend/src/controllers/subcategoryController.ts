@@ -13,6 +13,19 @@ export const getSubcategories = async (req: Request, res: Response) => {
     }
 };
 
+export const getSubcategoriesByCategory = async (req: Request, res: Response) => {
+    try {
+        const { categoryId } = req.params;
+        const subcategories = await prisma.subCategory.findMany({
+            where: { categoryId: categoryId as string },
+            orderBy: { name: 'asc' }
+        });
+        res.json(subcategories);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch subcategories" });
+    }
+};
+
 export const createSubcategory = async (req: Request, res: Response) => {
     try {
         const { name, categoryId } = req.body;

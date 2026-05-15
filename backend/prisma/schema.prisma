@@ -44,6 +44,7 @@ model Product {
   name          String
   description   String?
   image         String 
+  subimage      String[]
   brandId       String?  @db.ObjectId
   categoryId    String?  @db.ObjectId
   subCategoryId String?  @db.ObjectId
@@ -331,4 +332,4 @@ model Review {
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("review")
-}
+}

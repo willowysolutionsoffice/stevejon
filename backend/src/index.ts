@@ -15,6 +15,7 @@ import analyticsRoutes from './routes/analyticsRoutes.js';
 import attributeRoutes from './routes/attributeRoutes.js';
 import variantRoutes from './routes/variantRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import bannerRoutes from './routes/bannerRoutes.js';
 
 dotenv.config();
 
@@ -48,6 +49,7 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/attributes', attributeRoutes);
 app.use('/api/variants', variantRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/banners', bannerRoutes);
 
 app.listen(PORT, () => {
     console.log(`🚀 Backend server running on http://localhost:${PORT}`);

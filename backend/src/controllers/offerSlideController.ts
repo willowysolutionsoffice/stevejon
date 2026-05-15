@@ -38,6 +38,42 @@ export const createOfferSlide = async (req: Request, res: Response) => {
     }
 };
 
+export const updateOfferSlide = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { route, order, isActive } = req.body;
+        const file = req.file;
+
+        const existingSlide = await prisma.offerSlide.findUnique({ where: { id } });
+        if (!existingSlide) return res.status(404).json({ error: "Slide not found" });
+
+        let photoUrl = existingSlide.image;
+        if (file) {
+            // Delete old image
+            if (existingSlide.image) {
+                const publicId = existingSlide.image.split("/").pop()?.split(".")[0];
+                if (publicId) await (cloudinary as any).uploader.destroy(`Deco moja/${publicId}`);
+            }
+            photoUrl = await uploadToCloudinary(file.buffer, file.originalname);
+        }
+
+        const updatedSlide = await prisma.offerSlide.update({
+            where: { id },
+            data: {
+                route: route !== undefined ? route : existingSlide.route,
+                order: order !== undefined ? parseInt(order) : existingSlide.order,
+                isActive: isActive !== undefined ? (isActive === 'true' || isActive === true) : existingSlide.isActive,
+                image: photoUrl
+            }
+        });
+
+        res.json(updatedSlide);
+    } catch (error) {
+        console.error("Update offer slide error:", error);
+        res.status(500).json({ error: "Failed to update offer slide" });
+    }
+};
+
 export const deleteOfferSlide = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;

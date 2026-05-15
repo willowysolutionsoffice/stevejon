@@ -128,3 +128,71 @@ export const getSalesByDateRange = async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Failed to fetch sales by date range' });
     }
 };
+
+export const getDashboardSummary = async (req: Request, res: Response) => {
+    try {
+        const [
+            totalProducts,
+            totalVariants,
+            brandsCount,
+            categoriesCount,
+            subcategoriesCount,
+            lowStockProducts
+        ] = await Promise.all([
+            prisma.product.count(),
+            prisma.productVariant.count(),
+            prisma.brand.count(),
+            prisma.category.count(),
+            prisma.subCategory.count(),
+            prisma.productVariant.findMany({
+                where: { qty: { lte: 10 } },
+                include: {
+                    product: { include: { brand: true } },
+                    options: { include: { attribute: true, attributeValue: true } }
+                },
+                take: 10
+            })
+        ]);
+
+        const formattedLowStock = lowStockProducts.map(v => ({
+            id: v.id,
+            name: v.product.name,
+            sku: v.sku,
+            currentStock: v.qty,
+            brand: v.product.brand?.name,
+            variantOptions: formatVariantOptions(v.options)
+        }));
+
+        res.json({
+            totalProducts,
+            totalVariants,
+            brandsCount,
+            categoriesCount,
+            subcategoriesCount,
+            lowStockProducts: formattedLowStock
+        });
+    } catch (error) {
+        console.error("Dashboard summary error:", error);
+        res.status(500).json({ error: 'Failed to fetch dashboard summary' });
+    }
+};
+
+export const getRecentOrders = async (req: Request, res: Response) => {
+    try {
+        const orders = await prisma.order.findMany({
+            take: 5,
+            orderBy: { createdAt: 'desc' },
+            include: { user: { select: { name: true } } }
+        });
+
+        res.json(orders.map(o => ({
+            id: o.id,
+            userName: o.user?.name || 'Guest',
+            totalAmount: o.totalAmount,
+            status: o.status,
+            createdAt: o.createdAt
+        })));
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch recent orders' });
+    }
+};

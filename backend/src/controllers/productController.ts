@@ -4,6 +4,203 @@ import { uploadToCloudinary } from '../lib/upload.js';
 import cloudinary from '../lib/cloudinary.js';
 import { createProductSchema, updateProductSchema } from '../schemas/product-schema.js';
 
+export const createProductWithVariants = async (req: Request, res: Response) => {
+    try {
+        const data = req.body;
+        const files = req.files as Express.Multer.File[];
+
+        // Extract files
+        const mainImageFile = files.find(f => f.fieldname === 'mainImage');
+        const thumbnailFiles = files.filter(f => f.fieldname.startsWith('thumbnails'));
+        const variantImageFiles = files.filter(f => f.fieldname.startsWith('variantImages'));
+
+        if (!mainImageFile) return res.status(400).json({ error: "Main image is required" });
+
+        const photoUrl = await uploadToCloudinary(mainImageFile.buffer, mainImageFile.originalname);
+        const subimageUrls = await Promise.all(thumbnailFiles.map(f => uploadToCloudinary(f.buffer, f.originalname)));
+
+        // Parse variants data
+        const variantsData = JSON.parse(data.variants || '[]');
+
+        const product = await prisma.product.create({
+            data: {
+                name: data.name,
+                description: data.description,
+                image: photoUrl,
+                subimage: subimageUrls,
+                brandId: data.brandId || null,
+                categoryId: data.categoryId,
+                subCategoryId: data.subCategoryId,
+                isCustomerFavorite: data.isCustomerFavorite === 'true',
+                isNewArrival: data.isNewArrival === 'true',
+                variants: {
+                    create: await Promise.all(variantsData.map(async (v: any, index: number) => {
+                        const currentVariantImages = variantImageFiles.filter(f => f.fieldname.startsWith(`variantImages[${index}]`));
+                        const imageUrls = await Promise.all(currentVariantImages.map(f => uploadToCloudinary(f.buffer, f.originalname)));
+                        
+                        return {
+                            price: parseFloat(v.price),
+                            qty: parseInt(v.qty),
+                            offerPrice: v.offerPrice ? parseFloat(v.offerPrice) : null,
+                            sku: `${data.name.toUpperCase()}-${index}-${Date.now()}`, // Simple SKU generator
+                            images: imageUrls,
+                            options: {
+                                create: v.attributes.map((attr: any) => ({
+                                    attributeId: attr.attributeId,
+                                    valueId: attr.valueId,
+                                })),
+                            },
+                        };
+                    })),
+                },
+            },
+            include: { variants: true },
+        });
+
+        res.status(201).json({ success: true, data: product });
+    } catch (error: any) {
+        console.error("Create product with variants error:", error);
+        res.status(500).json({ error: error.message || "Failed to create product" });
+    }
+};
+
+export const updateProductWithVariants = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const data = req.body;
+        const files = req.files as Express.Multer.File[];
+
+        const existingProduct = await prisma.product.findUnique({
+            where: { id },
+            include: { variants: true }
+        });
+
+        if (!existingProduct) return res.status(404).json({ error: "Product not found" });
+
+        // Handle Main Image
+        let photoUrl = existingProduct.image;
+        const mainImageFile = files.find(f => f.fieldname === 'mainImage');
+        if (mainImageFile) {
+            // Delete old
+            const publicId = existingProduct.image.split("/").pop()?.split(".")[0];
+            if (publicId) await (cloudinary as any).uploader.destroy(`Deco moja/${publicId}`);
+            photoUrl = await uploadToCloudinary(mainImageFile.buffer, mainImageFile.originalname);
+        } else if (data.existingMainImage) {
+            photoUrl = data.existingMainImage;
+        }
+
+        // Handle Subimages (thumbnails)
+        const thumbnailFiles = files.filter(f => f.fieldname.startsWith('thumbnails'));
+        const newSubimageUrls = await Promise.all(thumbnailFiles.map(f => uploadToCloudinary(f.buffer, f.originalname)));
+        
+        const existingSubimages = data.existingThumbnails ? JSON.parse(data.existingThumbnails) : [];
+        const finalSubimages = [...existingSubimages, ...newSubimageUrls];
+
+        // Parse variants data
+        const variantsData = JSON.parse(data.variants || '[]');
+        const deletedVariantIds = JSON.parse(data.deletedVariantIds || '[]');
+
+        // Start Transaction
+        const updatedProduct = await prisma.$transaction(async (tx) => {
+            // Delete marked variants
+            if (deletedVariantIds.length > 0) {
+                // Delete their images from Cloudinary first?
+                const variantsToDelete = await tx.productVariant.findMany({
+                    where: { id: { in: deletedVariantIds } }
+                });
+                for (const v of variantsToDelete) {
+                    for (const img of v.images) {
+                        const publicId = img.split("/").pop()?.split(".")[0];
+                        if (publicId) await (cloudinary as any).uploader.destroy(`Deco moja/${publicId}`);
+                    }
+                }
+                await tx.productVariant.deleteMany({
+                    where: { id: { in: deletedVariantIds } }
+                });
+            }
+
+            // Update Product Base Info
+            await tx.product.update({
+                where: { id },
+                data: {
+                    name: data.name,
+                    description: data.description,
+                    image: photoUrl,
+                    subimage: finalSubimages,
+                    brandId: data.brandId || null,
+                    categoryId: data.categoryId,
+                    subCategoryId: data.subCategoryId,
+                    isCustomerFavorite: data.isCustomerFavorite === 'true',
+                    isNewArrival: data.isNewArrival === 'true',
+                }
+            });
+
+            // Handle Variants
+            for (let i = 0; i < variantsData.length; i++) {
+                const v = variantsData[i];
+                const variantId = v.id;
+                
+                // Get new images for this variant
+                const currentVariantNewFiles = files.filter(f => f.fieldname.startsWith(`variantImages[${i}]`));
+                const newVariantImageUrls = await Promise.all(currentVariantNewFiles.map(f => uploadToCloudinary(f.buffer, f.originalname)));
+                
+                // Existing images that were kept
+                const existingImagesKey = `existingVariantImages[${i}]`;
+                const existingImages = data[existingImagesKey] ? JSON.parse(data[existingImagesKey]) : [];
+                
+                const finalImages = [...existingImages, ...newVariantImageUrls];
+
+                if (v.isNew) {
+                    await tx.productVariant.create({
+                        data: {
+                            productId: id,
+                            price: parseFloat(v.price),
+                            qty: parseInt(v.qty),
+                            offerPrice: v.offerPrice ? parseFloat(v.offerPrice) : null,
+                            sku: `${data.name.toUpperCase()}-${i}-${Date.now()}`,
+                            images: finalImages,
+                            options: {
+                                create: v.attributes.map((attr: any) => ({
+                                    attributeId: attr.attributeId,
+                                    valueId: attr.valueId,
+                                })),
+                            },
+                        }
+                    });
+                } else if (v.isModified || currentVariantNewFiles.length > 0 || (v.images && v.images.length !== finalImages.length)) {
+                    // Update existing
+                    await tx.productVariant.update({
+                        where: { id: variantId },
+                        data: {
+                            price: parseFloat(v.price),
+                            qty: parseInt(v.qty),
+                            offerPrice: v.offerPrice ? parseFloat(v.offerPrice) : null,
+                            images: finalImages,
+                            options: {
+                                deleteMany: {}, // Simplest way to update options
+                                create: v.attributes.map((attr: any) => ({
+                                    attributeId: attr.attributeId,
+                                    valueId: attr.valueId,
+                                })),
+                            },
+                        }
+                    });
+                }
+            }
+
+            return tx.product.findUnique({
+                where: { id },
+                include: { variants: true }
+            });
+        });
+
+        res.json({ success: true, data: updatedProduct });
+    } catch (error: any) {
+        console.error("Update product with variants error:", error);
+        res.status(500).json({ error: error.message || "Failed to update product" });
+    }
+};
+
 export const createProduct = async (req: Request, res: Response) => {
     try {
         const data = req.body;
@@ -31,6 +228,7 @@ export const createProduct = async (req: Request, res: Response) => {
                 categoryId: (parsedInput as any).categoryId || null,
                 subCategoryId: (parsedInput as any).subcategoryId || null,
                 image: photoUrl,
+                subimage: [],
                 isCustomerFavorite: (parsedInput as any).isCustomerFavorite,
                 isNewArrival: (parsedInput as any).isNewArrival,
             },
@@ -107,11 +305,15 @@ export const deleteProduct = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
 
-        const product = await prisma.product.findUnique({ where: { id: id as string } });
+        const product = await prisma.product.findUnique({ 
+            where: { id: id as string },
+            include: { variants: true }
+        });
         if (!product) {
             return res.status(404).json({ error: "Product not found" });
         }
 
+        // Delete Main Image
         if (product.image) {
             const oldPublicId = product.image.split("/").pop()?.split(".")[0];
             if (oldPublicId) {
@@ -120,6 +322,20 @@ export const deleteProduct = async (req: Request, res: Response) => {
                 } catch (e) {
                     console.warn("Failed to delete product image:", e);
                 }
+            }
+        }
+
+        // Delete Subimages
+        for (const img of product.subimage) {
+            const publicId = img.split("/").pop()?.split(".")[0];
+            if (publicId) await (cloudinary as any).uploader.destroy(`Deco moja/${publicId}`);
+        }
+
+        // Delete Variant Images
+        for (const v of product.variants) {
+            for (const img of v.images) {
+                const publicId = img.split("/").pop()?.split(".")[0];
+                if (publicId) await (cloudinary as any).uploader.destroy(`Deco moja/${publicId}`);
             }
         }
 
@@ -132,7 +348,76 @@ export const deleteProduct = async (req: Request, res: Response) => {
     }
 };
 
+export const getProducts = async (req: Request, res: Response) => {
+    try {
+        const { categoryId, subCategoryId, brandId, search, sort, page = '1', limit = '10' } = req.query;
+
+        const skip = (parseInt(page as string) - 1) * parseInt(limit as string);
+        const take = parseInt(limit as string);
+
+        const where: any = {};
+        if (categoryId) where.categoryId = categoryId;
+        if (subCategoryId) where.subCategoryId = subCategoryId;
+        if (brandId) where.brandId = brandId;
+        if (search) {
+            where.OR = [
+                { name: { contains: search as string, mode: 'insensitive' } },
+                { description: { contains: search as string, mode: 'insensitive' } },
+            ];
+        }
+
+        let orderBy: any = { createdAt: 'desc' };
+        if (sort) {
+            const [field, order] = (sort as string).split('_');
+            if (field === 'name') orderBy = { name: order };
+            if (field === 'price') orderBy = { variants: { _count: 'desc' } }; // Simplified, real price sort is harder with variants
+            if (field === 'created') orderBy = { createdAt: order };
+        }
+
+        const [products, totalCount] = await Promise.all([
+            prisma.product.findMany({
+                where,
+                include: {
+                    brand: true,
+                    category: true,
+                    subCategory: true,
+                    variants: {
+                        include: {
+                            options: {
+                                include: {
+                                    attribute: true,
+                                    attributeValue: true,
+                                }
+                            }
+                        }
+                    }
+                },
+                orderBy,
+                skip,
+                take,
+            }),
+            prisma.product.count({ where })
+        ]);
+
+        res.json({
+            data: products,
+            pagination: {
+                currentPage: parseInt(page as string),
+                totalPages: Math.ceil(totalCount / take),
+                totalCount,
+                limit: take,
+                hasNextPage: skip + take < totalCount,
+                hasPreviousPage: skip > 0,
+            }
+        });
+    } catch (error) {
+        console.error('Failed to fetch products:', error);
+        res.status(500).json({ error: "Failed to fetch products" });
+    }
+};
+
 export const getProductById = async (req: Request, res: Response) => {
+
     try {
         const { id } = req.params;
         const product = await prisma.product.findUnique({

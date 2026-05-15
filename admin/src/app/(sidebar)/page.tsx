@@ -15,6 +15,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { rupee } from "@/constants/values";
 import { API_URL } from "@/lib/api-client";
+import { cookies } from "next/headers";
 
 // Loading component for individual stat cards
 function StatCardSkeleton() {
@@ -40,14 +41,26 @@ async function DashboardStats() {
     const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
 
+    const cookieStore = await cookies();
+    const cookieHeader = cookieStore.toString();
+
     const [
       metricsRes,
       lastMonthMetricsRes,
       summaryRes
     ] = await Promise.all([
-      fetch(`${API_URL}/analytics/metrics?startDate=${currentMonth.toISOString()}&endDate=${now.toISOString()}`, { cache: 'no-store' }),
-      fetch(`${API_URL}/analytics/metrics?startDate=${lastMonth.toISOString()}&endDate=${lastMonthEnd.toISOString()}`, { cache: 'no-store' }),
-      fetch(`${API_URL}/analytics/summary`, { cache: 'no-store' })
+      fetch(`${API_URL}/analytics/metrics?startDate=${currentMonth.toISOString()}&endDate=${now.toISOString()}`, { 
+        cache: 'no-store',
+        headers: { cookie: cookieHeader }
+      }),
+      fetch(`${API_URL}/analytics/metrics?startDate=${lastMonth.toISOString()}&endDate=${lastMonthEnd.toISOString()}`, { 
+        cache: 'no-store',
+        headers: { cookie: cookieHeader }
+      }),
+      fetch(`${API_URL}/analytics/summary`, { 
+        cache: 'no-store',
+        headers: { cookie: cookieHeader }
+      })
     ]);
 
     const currentMetrics = await metricsRes.json();
@@ -59,63 +72,63 @@ async function DashboardStats() {
       return ((current - previous) / previous) * 100;
     };
 
-    const revenueChange = calculatePercentageChange(currentMetrics.totalRevenue, lastMonthMetrics.totalRevenue);
-    const ordersChange = calculatePercentageChange(currentMetrics.totalOrders, lastMonthMetrics.totalOrders);
+    const revenueChange = calculatePercentageChange(currentMetrics?.totalRevenue ?? 0, lastMonthMetrics?.totalRevenue ?? 0);
+    const ordersChange = calculatePercentageChange(currentMetrics?.totalOrders ?? 0, lastMonthMetrics?.totalOrders ?? 0);
     
     const stats = [
       {
         title: "Total Products",
-        value: summary.totalProducts.toLocaleString(),
-        description: `${summary.totalVariants} total variants`,
+        value: (summary?.totalProducts ?? 0).toLocaleString(),
+        description: `${summary?.totalVariants ?? 0} total variants`,
         icon: Package,
         trend: "neutral" as const
       },
       {
         title: "Low Stock Variants",
-        value: summary.lowStockProducts.length.toLocaleString(),
+        value: (summary?.lowStockProducts?.length ?? 0).toLocaleString(),
         description: "Variants need restocking",
         icon: AlertTriangle,
-        trend: summary.lowStockProducts.length > 5 ? "down" : "neutral" as const,
-        alert: summary.lowStockProducts.length > 5
+        trend: (summary?.lowStockProducts?.length ?? 0) > 5 ? "down" : "neutral" as const,
+        alert: (summary?.lowStockProducts?.length ?? 0) > 5
       },
       {
         title: "Total Brands",
-        value: summary.brandsCount.toString(),
+        value: (summary?.brandsCount ?? 0).toString(),
         description: "Active brands",
         icon: Tag,
         trend: "neutral" as const
       },
       {
         title: "Categories",
-        value: summary.categoriesCount.toString(),
-        description: `${summary.subcategoriesCount} subcategories`,
+        value: (summary?.categoriesCount ?? 0).toString(),
+        description: `${summary?.subcategoriesCount ?? 0} subcategories`,
         icon: Layers,
         trend: "neutral" as const
       },
       {
         title: "Total Orders",
-        value: currentMetrics.totalOrders.toLocaleString(),
+        value: (currentMetrics?.totalOrders ?? 0).toLocaleString(),
         description: `${ordersChange >= 0 ? '+' : ''}${ordersChange.toFixed(1)}% from last month`,
         icon: ShoppingCart,
         trend: ordersChange >= 0 ? "up" : "down" as const
       },
       {
         title: "Revenue",
-        value: `${rupee} ${currentMetrics.totalRevenue.toLocaleString()}`,
+        value: `${rupee} ${(currentMetrics?.totalRevenue ?? 0).toLocaleString()}`,
         description: `${revenueChange >= 0 ? '+' : ''}${revenueChange.toFixed(1)}% from last month`,
         icon: DollarSign,
         trend: revenueChange >= 0 ? "up" : "down" as const
       },
       {
         title: "Average Order",
-        value: `${rupee} ${currentMetrics.averageOrderValue.toFixed(2)}`,
+        value: `${rupee} ${(currentMetrics?.averageOrderValue ?? 0).toFixed(2)}`,
         description: "Average order value",
         icon: TrendingUp,
         trend: "neutral" as const
       },
       {
         title: "Product Variants",
-        value: summary.totalVariants.toLocaleString(),
+        value: (summary?.totalVariants ?? 0).toLocaleString(),
         description: "Total SKUs in inventory",
         icon: Box,
         trend: "neutral" as const
@@ -174,7 +187,11 @@ async function DashboardStats() {
 // Component for recent orders
 async function RecentOrders() {
   try {
-    const res = await fetch(`${API_URL}/analytics/recent-orders`, { cache: 'no-store' });
+    const cookieStore = await cookies();
+    const res = await fetch(`${API_URL}/analytics/recent-orders`, { 
+      cache: 'no-store',
+      headers: { cookie: cookieStore.toString() }
+    });
     const latestOrders = await res.json();
 
     return (
@@ -187,7 +204,7 @@ async function RecentOrders() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {latestOrders.length === 0 ? (
+            {!Array.isArray(latestOrders) || latestOrders.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-4">
                 No orders found
               </p>
@@ -213,7 +230,7 @@ async function RecentOrders() {
               ))
             )}
           </div>
-          {latestOrders.length > 0 && (
+          {Array.isArray(latestOrders) && latestOrders.length > 0 && (
             <div className="mt-4 pt-4 border-t">
               <Link 
                 href="/orders" 
@@ -244,12 +261,16 @@ async function RecentOrders() {
 // Component for low stock alerts
 async function LowStockAlert() {
   try {
-    const res = await fetch(`${API_URL}/analytics/summary`, { cache: 'no-store' });
+    const cookieStore = await cookies();
+    const res = await fetch(`${API_URL}/analytics/summary`, { 
+      cache: 'no-store',
+      headers: { cookie: cookieStore.toString() }
+    });
     const summary = await res.json();
-    const lowStockProducts = summary.lowStockProducts;
+    const lowStockProducts = summary?.lowStockProducts || [];
     
     return (
-      <Card className={lowStockProducts.length > 0 ? "border-orange-200" : ""}>
+      <Card className={(lowStockProducts?.length ?? 0) > 0 ? "border-orange-200" : ""}>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             {lowStockProducts.length > 0 && (
@@ -263,7 +284,7 @@ async function LowStockAlert() {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {lowStockProducts.length === 0 ? (
+            {!Array.isArray(lowStockProducts) || lowStockProducts.length === 0 ? (
               <p className="text-sm text-green-600 text-center py-4">
                 ✅ All variants are well stocked
               </p>

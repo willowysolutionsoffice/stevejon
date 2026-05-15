@@ -27,6 +27,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { UserFormData } from "@/types/user";
 import { IconLogout } from "@tabler/icons-react";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 type CreateUserFormData = UserFormData;
 
@@ -54,18 +56,18 @@ export function SignUpForm({
     setErrorMessage(null);
 
     try {
-      const res = await fetch(`/api/auth/create-user`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+      const { data: session, error } = await authClient.signUp.email({
+        email: data.email,
+        password: data.password,
+        name: data.name,
+        phone: data.phone,
       });
 
-      const result = await res.json();
-
-      if (!res.ok) {
-        setErrorMessage(result.error || "Sign up failed");
+      if (error) {
+        setErrorMessage(error.message || "Sign up failed");
+        toast.error(error.message || "Sign up failed");
       } else {
-        localStorage.setItem('user', JSON.stringify(result.user));
+        toast.success("Account created successfully");
         router.replace("/login");
       }
     } catch (error) {

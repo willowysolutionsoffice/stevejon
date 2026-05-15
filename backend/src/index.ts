@@ -16,6 +16,7 @@ import attributeRoutes from './routes/attributeRoutes.js';
 import variantRoutes from './routes/variantRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import bannerRoutes from './routes/bannerRoutes.js';
+import inventoryRoutes from './routes/inventoryRoutes.js';
 
 dotenv.config();
 
@@ -31,7 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Better-Auth handler
-app.all('/api/auth/*', toNodeHandler(auth));
+app.use('/api/auth', toNodeHandler(auth));
 
 app.get('/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
@@ -50,6 +51,7 @@ app.use('/api/attributes', attributeRoutes);
 app.use('/api/variants', variantRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/banners', bannerRoutes);
+app.use('/api/inventory', inventoryRoutes);
 
 app.listen(PORT, () => {
     console.log(`🚀 Backend server running on http://localhost:${PORT}`);

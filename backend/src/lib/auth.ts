@@ -7,6 +7,8 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'mongodb',
   }),
+  baseURL: process.env.BETTER_AUTH_URL,
+  trustedOrigins: [process.env.FRONTEND_URL || 'http://localhost:3000'],
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,
@@ -20,6 +22,11 @@ export const auth = betterAuth({
         input: true,
       },
       branch: {
+        type: 'string',
+        required: false,
+        input: true,
+      },
+      phone: {
         type: 'string',
         required: false,
         input: true,

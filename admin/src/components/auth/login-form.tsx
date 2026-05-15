@@ -30,6 +30,7 @@ import Link from "next/link"; // ✅ added
 import { syncLocalCartToBackend } from "@/lib/local-cart";
 import { toast } from "sonner";
 import { apiFetch } from "@/lib/api-client";
+import { authClient } from "@/lib/auth-client";
 import { useWishlist } from "@/context/cartContext";
 
 export function LoginForm({
@@ -55,18 +56,17 @@ export function LoginForm({
     setErrorMessage(null);
 
     try {
-      const res = await apiFetch("/auth/login", {
-        method: "POST",
-        body: JSON.stringify(data),
+      const { data: session, error } = await authClient.signIn.email({
+        email: data.email,
+        password: data.password,
       });
 
-      const result = await res.json();
-
-      if (!res.ok) {
-        setErrorMessage(result.error || "Login failed");
+      if (error) {
+        setErrorMessage(error.message || "Login failed");
+        toast.error(error.message || "Login failed");
       } else {
         toast.success("Login successful");
-        localStorage.setItem('user', JSON.stringify(result.user));
+        // Better-auth handles session cookies automatically
         await updateWishlistCount();
         await syncLocalCartToBackend();
         router.replace("/");

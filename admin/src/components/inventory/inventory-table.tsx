@@ -73,7 +73,7 @@ interface InvenotryTableProps {
   onSelectionChange?: (selectedProducts: ProductWithRelations[]) => void;
 }
 
-export default function InvenotryTable({
+export default function InventoryTable({
   columns,
   categories = [],
   brands = [],
@@ -174,7 +174,9 @@ export default function InvenotryTable({
         params.append("sortOrder", sorting[0].desc ? "desc" : "asc");
       }
 
-      const response = await fetch(`${API_URL}/inventory?${params}`);
+      const response = await fetch(`${API_URL}/inventory?${params}`, {
+        credentials: 'include'
+      });
       if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
 

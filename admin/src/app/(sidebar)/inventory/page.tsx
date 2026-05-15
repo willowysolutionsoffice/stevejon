@@ -1,9 +1,9 @@
 import { inventoryColumns } from "@/components/inventory/inventory-column";
-import InvenotryTable from "@/components/inventory/inventory-table";
+import InventoryTable from "@/components/inventory/inventory-table";
 import React from "react";
 import { Brand , Category } from "@prisma/client";
 
-export default async function InvenotryPage() {
+export default async function InventoryPage() {
 
   const brands : Brand[] = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/brands`, { cache: "no-store" }).then((res) => res.json());
   const categories : Category[] = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`, { cache: "no-store" }).then((res) => res.json());
@@ -14,12 +14,12 @@ export default async function InvenotryPage() {
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight">Invenotry</h1>
-              <p className="text-muted-foreground">Manage Invenotry</p>
+              <h1 className="text-2xl font-bold tracking-tight">Inventory</h1>
+              <p className="text-muted-foreground">Manage Inventory</p>
             </div>
           </div>
 
-          <InvenotryTable brands={brands} categories={categories} columns={inventoryColumns} />
+          <InventoryTable brands={brands} categories={categories} columns={inventoryColumns} />
         </div>
       </div>
     </div>

@@ -28,6 +28,7 @@ import { LoginData } from "@/types/auth";
 import { IconLogout } from "@tabler/icons-react";
 import { toast } from "sonner";
 import { apiFetch } from "@/lib/api-client";
+import { authClient } from "@/lib/auth-client";
 
 export function AdminLoginForm({
   className,
@@ -50,18 +51,17 @@ export function AdminLoginForm({
     setErrorMessage(null);
 
     try {
-      const res = await apiFetch("/auth/login", {
-        method: "POST",
-        body: JSON.stringify(data),
+      const { data: session, error } = await authClient.signIn.email({
+        email: data.email,
+        password: data.password,
       });
 
-      const result = await res.json();
-
-      if (!res.ok) {
-        setErrorMessage(result.error || "Login failed");
+      if (error) {
+        setErrorMessage(error.message || "Login failed");
+        toast.error(error.message || "Login failed");
       } else {
         toast.success("Login successful");
-        router.replace(result.redirectTo || "/");
+        router.replace("/");
       }
     } catch (error) {
       console.error("Login error:", error);

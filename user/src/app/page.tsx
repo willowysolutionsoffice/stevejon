@@ -4,6 +4,7 @@ import Categories from "@/components/Categories";
 import NewArrivals from "@/components/NewArrivals";
 import Banner from "@/components/Banner";
 import ProductCollectionGrid from "@/components/ProductCollectionGrid";
+import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -15,6 +16,7 @@ export default function Home() {
       <NewArrivals />
       <Banner />
       <ProductCollectionGrid />
+      <Testimonials />
       <Footer />
     </div>
   );

@@ -88,22 +88,35 @@ export const productColumns: ColumnDef<ProductDetail>[] = [
     accessorKey: "price",
     header: "Price",
     cell: ({ row }) => {
-      const amount = row.getValue("price") as number;
-      return <div className="font-medium">{formatCurrency(amount)}</div>;
+      const variants = row.original.variants || [];
+      if (variants.length === 0) return <div className="font-medium text-muted-foreground">-</div>;
+      
+      const prices = variants.map(v => v.price).filter(p => typeof p === 'number');
+      if (prices.length === 0) return <div className="font-medium text-muted-foreground">-</div>;
+      
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      
+      const displayPrice = minPrice === maxPrice 
+        ? formatCurrency(minPrice)
+        : `${formatCurrency(minPrice)} - ${formatCurrency(maxPrice)}`;
+      
+      return <div className="font-medium text-foreground">{displayPrice}</div>;
     },
   },
   {
     accessorKey: "qty",
     header: "Stock",
     cell: ({ row }) => {
-      const qty = row.getValue("qty") as number;
+      const variants = row.original.variants || [];
+      const qty = variants.reduce((sum, v) => sum + (v.qty || 0), 0);
       return (
         <span
           className={`${
-            qty > 0 ? "text-green-600" : "text-red-600"
+            qty > 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
           } font-semibold`}
         >
-          {qty}
+          {variants.length > 0 ? `${qty} in stock (${variants.length} variant${variants.length > 1 ? 's' : ''})` : "Out of stock"}
         </span>
       );
     },

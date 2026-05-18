@@ -8,7 +8,7 @@ import { EditProductProvider, useEditProduct } from "@/context/EcitProductContex
 import type { ProductDetail } from "@/types/product";
 import EditProductFormSection from "./EditProductForm";
 import EditProductImageAndCategories from "./EditProductImageAndCategories";
-import EditAddVariant from "./EditAddVariant";
+import ShopifyVariantsManager from "./ShopifyVariantsManager";
 import { API_URL } from "@/lib/api-client";
 
 interface EditProductLayoutProps {
@@ -201,6 +201,7 @@ function EditProductFormContent({ productId }: { productId: string }) {
       const response = await fetch(`${API_URL}/products/withvariant/${productId}`, {
         method: "PATCH",
         body: formData,
+        credentials: "include",
       });
 
       if (!response.ok) {
@@ -256,7 +257,7 @@ function EditProductFormContent({ productId }: { productId: string }) {
         </div>
       </div>
 
-      <EditAddVariant />
+      <ShopifyVariantsManager mode="edit" />
     </div>
   );
 }

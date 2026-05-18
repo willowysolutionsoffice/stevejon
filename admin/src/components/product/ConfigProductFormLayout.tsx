@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "../ui/button";
 import ProductFormSection from "../AddProductForm";
-import AddVariant from "./AddVariant";
+import ShopifyVariantsManager from "./ShopifyVariantsManager";
 import ProductImageAndCategories from "./configurable-product";
 import { useRouter } from "next/navigation";
 import {
@@ -157,6 +157,7 @@ function ProductFormContent({ isSimpleProduct }: ProductFormContentProps) {
       const response = await fetch(`${API_URL}/products/withvariant`, {
         method: "POST",
         body: formData,
+        credentials: "include",
       });
 
       if (!response.ok) {
@@ -217,7 +218,7 @@ function ProductFormContent({ isSimpleProduct }: ProductFormContentProps) {
           <ProductImageAndCategories />
         </div>
       </div>
-      <AddVariant />
+      <ShopifyVariantsManager mode="create" />
     </div>
   );
 }

@@ -2,8 +2,11 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Categories from "@/components/Categories";
 import NewArrivals from "@/components/NewArrivals";
+import PromoSection from "@/components/PromoSection";
+import TodaysDeal from "@/components/TodaysDeal";
 import Banner from "@/components/Banner";
 import ProductCollectionGrid from "@/components/ProductCollectionGrid";
+import Winners from "@/components/Winners";
 import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 
@@ -14,8 +17,11 @@ export default function Home() {
       <Hero />
       <Categories />
       <NewArrivals />
+      <PromoSection />
+      <TodaysDeal />
       <Banner />
       <ProductCollectionGrid />
+      <Winners />
       <Testimonials />
       <Footer />
     </div>

@@ -11,7 +11,6 @@ import {
   useConfigurableProduct,
 } from "@/context/ConfigurableProductContext";
 import { toast } from "sonner";
-import AddAttribute from "./AddAttribute";
 import { compressImage } from "@/lib/image-utils";
 import { API_URL } from "@/lib/api-client";
 
@@ -75,22 +74,20 @@ function ProductFormContent({ isSimpleProduct }: ProductFormContentProps) {
       // Prepare final variants list
       let finalVariants = [...variants];
       
-      // If it's a simple product and no variants were added, create a default one
-      if (isSimpleProduct && finalVariants.length === 0) {
+      // If no variants were added, automatically create a single default variant
+      if (finalVariants.length === 0) {
         finalVariants = [{
           id: 'default-simple-variant',
+          qty: baseProduct.baseQuantity,
+          price: baseProduct.basePrice,
+          offerPrice: baseProduct.baseDiscountPrice || undefined,
           images: [],
           attributes: [],
         }];
       }
 
-      if (finalVariants.length === 0) {
-        toast.error("At least one variant is required");
-        return;
-      }
-
-      // Validate each variant has attributes (only for non-simple products)
-      if (!isSimpleProduct) {
+      // Validate each variant has attributes (only for user-added variants)
+      if (variants.length > 0) {
         for (let i = 0; i < finalVariants.length; i++) {
           if (finalVariants[i].attributes.length === 0) {
             toast.error(`Variant ${i + 1} must have at least one attribute`);
@@ -132,11 +129,11 @@ function ProductFormContent({ isSimpleProduct }: ProductFormContentProps) {
         formData.append(`thumbnails[${index}]`, file);
       });
 
-      // Prepare variants data (without File objects)
+      // Prepare variants data (without File objects), fallback to base details
       const variantsData = finalVariants.map((v) => ({
-        price: v.price,
-        qty: v.qty,
-        offerPrice: v.offerPrice,
+        price: v.price !== undefined && v.price !== null ? v.price : baseProduct.basePrice,
+        qty: v.qty !== undefined && v.qty !== null ? v.qty : baseProduct.baseQuantity,
+        offerPrice: v.offerPrice !== undefined && v.offerPrice !== null ? v.offerPrice : baseProduct.baseDiscountPrice,
         attributes: v.attributes.map((a) => ({
           attributeId: a.attributeId,
           valueId: a.valueId,
@@ -220,15 +217,15 @@ function ProductFormContent({ isSimpleProduct }: ProductFormContentProps) {
           <ProductImageAndCategories />
         </div>
       </div>
-      {isSimpleProduct ? <AddAttribute /> : <AddVariant />}
+      <AddVariant />
     </div>
   );
 }
 
-function ProductFormLayout({ isSimpleProduct }: { isSimpleProduct: boolean }) {
+function ProductFormLayout({ isSimpleProduct }: { isSimpleProduct?: boolean }) {
   return (
     <ConfigurableProductProvider>
-      <ProductFormContent isSimpleProduct={isSimpleProduct} />
+      <ProductFormContent isSimpleProduct={!!isSimpleProduct} />
     </ConfigurableProductProvider>
   );
 }

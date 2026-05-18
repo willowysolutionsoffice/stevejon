@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
-import { ArrowRight, Trophy, Zap, X } from 'lucide-react';
+import { ArrowRight, Trophy, Zap, X, ArrowLeft, Star, ShieldCheck, Truck, RefreshCw, Check, ShoppingBag, Heart } from 'lucide-react';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -94,6 +94,13 @@ export default function ProductPage() {
 
   // Client-side category selection state
   const [selectedCategories, setSelectedCategories] = useState<string[]>(['Apparel', 'Leather Goods']);
+  
+  // Product Detail Inner Page State
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string>('M');
+  const [selectedColor, setSelectedColor] = useState<string>('Classic');
+  const [quantity, setQuantity] = useState<number>(1);
+  const [activeTab, setActiveTab] = useState<string>('description');
 
   // Handle category checkbox changes
   const handleCategoryChange = (category: string) => {
@@ -114,6 +121,283 @@ export default function ProductPage() {
     if (selectedCategories.length === 0) return productsCatalog;
     return productsCatalog.filter(p => selectedCategories.includes(p.category));
   }, [selectedCategories]);
+
+  // If a product is selected, render the stunning Product Detail Inner Page
+  if (selectedProduct) {
+    return (
+      <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans animate-fadeIn">
+        <Navbar />
+
+        <div className="max-w-7xl mx-auto px-4 md:px-8 pt-40 pb-24">
+          {/* Back Button */}
+          <button 
+            onClick={() => setSelectedProduct(null)}
+            className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.2em] uppercase text-gray-500 hover:text-black transition-colors mb-12 group cursor-pointer"
+          >
+            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+            Back to Catalog
+          </button>
+
+          {/* Product Detail Container */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            
+            {/* Left: Image Gallery (6 cols) */}
+            <div className="lg:col-span-6 flex flex-col gap-6 lg:sticky lg:top-32">
+              <div className="relative aspect-[4/5] rounded-[2.5rem] bg-[#F3F2EE] border border-gray-100 overflow-hidden shadow-sm group">
+                <Image
+                  src={selectedProduct.image}
+                  alt={selectedProduct.title}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-105 p-8 md:p-12"
+                  priority
+                />
+                <div className="absolute top-6 left-6 bg-[#DF9F28] text-white text-[0.65rem] font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full shadow-md">
+                  Stevejon Exclusive
+                </div>
+                <button className="absolute top-6 right-6 bg-white/80 backdrop-blur-md hover:bg-white text-gray-800 p-3 rounded-full shadow-sm transition-all hover:scale-110 cursor-pointer">
+                  <Heart className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Thumbnail preview row */}
+              <div className="grid grid-cols-3 gap-4">
+                {[selectedProduct.image, selectedProduct.image, selectedProduct.image].map((img, idx) => (
+                  <div key={idx} className={`relative aspect-square rounded-2xl bg-[#F3F2EE] border-2 overflow-hidden cursor-pointer transition-all hover:opacity-100 ${idx === 0 ? 'border-[#DF9F28] opacity-100 shadow-sm' : 'border-transparent opacity-60'}`}>
+                    <Image src={img} alt="" fill className="object-cover mix-blend-multiply p-4" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Product Info & Actions (6 cols) */}
+            <div className="lg:col-span-6 flex flex-col">
+              
+              {/* Category & Rating */}
+              <div className="flex items-center justify-between gap-4 mb-3">
+                <span className="text-xs font-bold tracking-[0.25em] uppercase text-[#DF9F28]">
+                  {selectedProduct.category}
+                </span>
+                <div className="flex items-center gap-1.5 bg-gray-100/80 px-3 py-1 rounded-full">
+                  <div className="flex text-yellow-500">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-current" />
+                    ))}
+                  </div>
+                  <span className="text-xs font-bold text-gray-800 ml-1">4.9</span>
+                  <span className="text-[0.65rem] text-gray-500">(128 Reviews)</span>
+                </div>
+              </div>
+
+              {/* Title */}
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif tracking-wide text-black mb-6 leading-tight">
+                {selectedProduct.title}
+              </h1>
+
+              {/* Price & Discount */}
+              <div className="flex items-baseline gap-4 mb-8 pb-8 border-b border-gray-100">
+                <span className="text-3xl md:text-4xl font-bold text-black font-sans">
+                  ₹ {selectedProduct.price.toLocaleString()}
+                </span>
+                <span className="text-lg md:text-xl line-through text-gray-400 font-normal">
+                  ₹ {selectedProduct.originalPrice.toLocaleString()}
+                </span>
+                <span className="text-xs font-bold tracking-widest uppercase bg-green-100 text-green-700 px-3 py-1 rounded-full">
+                  Save ₹ {(selectedProduct.originalPrice - selectedProduct.price).toLocaleString()}
+                </span>
+              </div>
+
+              {/* Description snippet */}
+              <p className="text-gray-600 text-sm md:text-base leading-relaxed mb-8 font-sans">
+                Experience unparalleled luxury and craftsmanship with the {selectedProduct.title}. Designed for the modern connoisseur, this masterpiece combines timeless elegance with uncompromising utility, tailored from the finest bespoke materials.
+              </p>
+
+              {/* Color Selection */}
+              <div className="mb-8">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-xs font-bold tracking-[0.2em] uppercase text-gray-700">Color: <span className="text-black font-semibold">{selectedColor}</span></span>
+                </div>
+                <div className="flex gap-3">
+                  {[
+                    { name: 'Classic', bg: 'bg-[#3A3835]' },
+                    { name: 'Pristine White', bg: 'bg-[#F4F4F0]' },
+                    { name: 'Heritage Tan', bg: 'bg-[#C89D7C]' },
+                    { name: 'Midnight Navy', bg: 'bg-[#1C2838]' },
+                  ].map(col => (
+                    <button
+                      key={col.name}
+                      onClick={() => setSelectedColor(col.name)}
+                      className={`w-9 h-9 rounded-full ${col.bg} border-2 transition-all cursor-pointer flex items-center justify-center ${selectedColor === col.name ? 'border-[#DF9F28] scale-110 shadow-md ring-2 ring-[#DF9F28]/20' : 'border-gray-200 hover:scale-105'}`}
+                      title={col.name}
+                    >
+                      {selectedColor === col.name && <Check className={`w-4 h-4 ${col.name === 'Pristine White' ? 'text-black' : 'text-white'}`} />}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Size Selection */}
+              {selectedProduct.category === 'Apparel' && (
+                <div className="mb-8">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs font-bold tracking-[0.2em] uppercase text-gray-700">Size: <span className="text-black font-semibold">{selectedSize}</span></span>
+                    <button className="text-xs font-semibold underline tracking-wider text-gray-500 hover:text-black cursor-pointer">Size Guide</button>
+                  </div>
+                  <div className="flex gap-3">
+                    {['S', 'M', 'L', 'XL'].map(size => (
+                      <button 
+                        key={size}
+                        onClick={() => setSelectedSize(size)}
+                        className={`w-12 h-12 rounded-xl border text-xs font-bold tracking-wider transition-all cursor-pointer flex items-center justify-center ${selectedSize === size ? 'border-[#DF9F28] bg-[#DF9F28] text-white shadow-lg shadow-[#DF9F28]/20' : 'border-gray-200 bg-white text-gray-800 hover:border-gray-400'}`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Quantity & Actions */}
+              <div className="flex flex-col sm:flex-row gap-4 mb-10">
+                {/* Quantity Selector */}
+                <div className="flex items-center border border-gray-200 rounded-full bg-white px-4 py-2 w-fit">
+                  <button 
+                    onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                    className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-black font-bold text-lg transition-colors cursor-pointer"
+                  >
+                    -
+                  </button>
+                  <span className="w-12 text-center text-sm font-bold text-black font-sans">{quantity}</span>
+                  <button 
+                    onClick={() => setQuantity(q => q + 1)}
+                    className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-black font-bold text-lg transition-colors cursor-pointer"
+                  >
+                    +
+                  </button>
+                </div>
+
+                {/* Add to Cart Button */}
+                <button className="flex-1 bg-[#DF9F28] hover:bg-[#c58b20] text-white px-8 py-4 rounded-full flex items-center justify-center gap-3 transition-all text-xs font-bold tracking-[0.2em] uppercase shadow-xl shadow-[#DF9F28]/20 hover:shadow-2xl hover:shadow-[#DF9F28]/30 cursor-pointer group">
+                  <ShoppingBag className="w-4 h-4 transition-transform group-hover:scale-110" />
+                  Add To Cart
+                </button>
+              </div>
+
+              {/* Buy Now Button */}
+              <button className="w-full bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-full flex items-center justify-center gap-2 transition-all text-xs font-bold tracking-[0.2em] uppercase mb-12 shadow-lg cursor-pointer">
+                Buy It Now
+              </button>
+
+              {/* Premium Guarantees Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 py-8 border-t border-b border-gray-100 mb-12 bg-gray-50/50 rounded-3xl p-6">
+                <div className="flex flex-col items-center text-center gap-2">
+                  <Truck className="w-6 h-6 text-[#DF9F28]" />
+                  <h4 className="text-xs font-bold tracking-wider uppercase text-black">Express Delivery</h4>
+                  <p className="text-[0.7rem] text-gray-500 leading-relaxed">Complimentary insured shipping worldwide.</p>
+                </div>
+                <div className="flex flex-col items-center text-center gap-2">
+                  <ShieldCheck className="w-6 h-6 text-[#DF9F28]" />
+                  <h4 className="text-xs font-bold tracking-wider uppercase text-black">2-Year Warranty</h4>
+                  <p className="text-[0.7rem] text-gray-500 leading-relaxed">Official Stevejon atelier guarantee.</p>
+                </div>
+                <div className="flex flex-col items-center text-center gap-2">
+                  <RefreshCw className="w-6 h-6 text-[#DF9F28]" />
+                  <h4 className="text-xs font-bold tracking-wider uppercase text-black">Easy Exchanges</h4>
+                  <p className="text-[0.7rem] text-gray-500 leading-relaxed">30-day seamless return policy.</p>
+                </div>
+              </div>
+
+              {/* Accordion / Tabs Section */}
+              <div className="flex flex-col border border-gray-200 rounded-[2rem] overflow-hidden bg-white shadow-sm">
+                <div className="flex border-b border-gray-100 bg-gray-50/50">
+                  {[
+                    { id: 'description', label: 'Description' },
+                    { id: 'materials', label: 'Materials & Care' },
+                    { id: 'shipping', label: 'Shipping' }
+                  ].map(tab => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex-1 py-4 text-xs font-bold tracking-[0.15em] uppercase transition-colors cursor-pointer border-b-2 ${activeTab === tab.id ? 'border-[#DF9F28] text-black bg-white' : 'border-transparent text-gray-400 hover:text-gray-600'}`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+                <div className="p-8 text-xs md:text-sm text-gray-600 leading-relaxed font-sans">
+                  {activeTab === 'description' && (
+                    <p>
+                      Every Stevejon piece represents the pinnacle of modern luxury. The {selectedProduct.title} is meticulously crafted by master artisans to ensure a flawless silhouette, unparalleled comfort, and exceptional durability. Features custom hardware, reinforced stitching, and an exclusive serial number for authenticity verification.
+                    </p>
+                  )}
+                  {activeTab === 'materials' && (
+                    <p>
+                      • 100% Premium imported materials.<br />
+                      • Dry clean only by a professional leather/apparel specialist.<br />
+                      • Store in the provided Stevejon breathable dust bag.<br />
+                      • Avoid prolonged exposure to direct sunlight and moisture.
+                    </p>
+                  )}
+                  {activeTab === 'shipping' && (
+                    <p>
+                      • White-glove express delivery within 2-4 business days.<br />
+                      • Real-time tracking provided via email & SMS.<br />
+                      • All packages are fully insured against loss or damage.<br />
+                      • Signature required upon delivery for absolute security.
+                    </p>
+                  )}
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* Related Products Section */}
+          <div className="mt-32 pt-16 border-t border-gray-100">
+            <div className="text-center mb-16">
+              <h2 className="text-2xl md:text-3xl font-serif tracking-widest uppercase text-black mb-4">You May Also Like</h2>
+              <div className="w-16 h-[1px] bg-[#DF9F28] mx-auto"></div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {productsCatalog.filter(p => p.id !== selectedProduct.id).slice(0, 3).map(prod => (
+                <div 
+                  key={prod.id} 
+                  onClick={() => {
+                    setSelectedProduct(prod);
+                    window.scrollTo({ top: 300, behavior: 'smooth' });
+                  }}
+                  className="group cursor-pointer bg-white rounded-2xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition-all"
+                >
+                  <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-[#F3F2EE] mb-4">
+                    <Image
+                      src={prod.image}
+                      alt={prod.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-105 p-4"
+                    />
+                  </div>
+                  <div className="text-center">
+                    <span className="text-[0.6rem] tracking-[0.2em] uppercase font-bold text-[#DF9F28]">{prod.category}</span>
+                    <h3 className="text-sm font-semibold tracking-wide text-gray-900 mt-1 group-hover:text-[#DF9F28] transition-colors">{prod.title}</h3>
+                    <div className="flex items-center justify-center gap-2 mt-2">
+                      <span className="text-sm font-bold text-black">₹ {prod.price}</span>
+                      <span className="text-[0.7rem] line-through text-gray-400">₹ {prod.originalPrice}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans">
@@ -243,7 +527,14 @@ export default function ProductPage() {
             {/* Products Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-12">
               {filteredProducts.map(prod => (
-                <div key={prod.id} className="group cursor-pointer">
+                <div 
+                  key={prod.id} 
+                  onClick={() => {
+                    setSelectedProduct(prod);
+                    window.scrollTo({ top: 300, behavior: 'smooth' });
+                  }}
+                  className="group cursor-pointer"
+                >
                   
                   {/* Image Card */}
                   <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 bg-[#F3F2EE] border border-gray-100/50">
@@ -265,7 +556,7 @@ export default function ProductPage() {
                     <span className="text-[0.6rem] tracking-[0.2em] uppercase font-bold text-gray-400">
                       {prod.category}
                     </span>
-                    <h3 className="text-sm font-semibold tracking-wide text-gray-900 mt-1 hover:text-black transition-colors font-sans">
+                    <h3 className="text-sm font-semibold tracking-wide text-gray-900 mt-1 group-hover:text-black transition-colors font-sans">
                       {prod.title}
                     </h3>
                     <div className="flex items-center gap-2 mt-2">
@@ -304,3 +595,4 @@ export default function ProductPage() {
     </div>
   );
 }
+

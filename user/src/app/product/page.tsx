@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { ArrowRight, Trophy, Zap, X, ArrowLeft, Star, ShieldCheck, Truck, RefreshCw, Check, ShoppingBag, Heart } from 'lucide-react';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useRouter } from 'next/navigation';
+import { useCart } from '@/context/CartContext';
 
 interface Product {
   id: number;
@@ -16,6 +18,8 @@ interface Product {
 }
 
 export default function ProductPage() {
+  const router = useRouter();
+  const { addToCart } = useCart();
   // Real project products catalog duplicated to form a pristine 9-item grid
   const productsCatalog: Product[] = [
     {
@@ -121,6 +125,21 @@ export default function ProductPage() {
     if (selectedCategories.length === 0) return productsCatalog;
     return productsCatalog.filter(p => selectedCategories.includes(p.category));
   }, [selectedCategories]);
+
+  const handleAddToCart = () => {
+    if (!selectedProduct) return;
+    addToCart({
+      productId: selectedProduct.id,
+      title: selectedProduct.title,
+      category: selectedProduct.category,
+      price: selectedProduct.price,
+      image: selectedProduct.image,
+      size: selectedSize,
+      color: selectedColor,
+      quantity,
+    });
+    router.push('/cart');
+  };
 
   // If a product is selected, render the stunning Product Detail Inner Page
   if (selectedProduct) {
@@ -277,14 +296,14 @@ export default function ProductPage() {
                 </div>
 
                 {/* Add to Cart Button */}
-                <button className="flex-1 bg-[#DF9F28] hover:bg-[#c58b20] text-white px-8 py-4 rounded-full flex items-center justify-center gap-3 transition-all text-xs font-bold tracking-[0.2em] uppercase shadow-xl shadow-[#DF9F28]/20 hover:shadow-2xl hover:shadow-[#DF9F28]/30 cursor-pointer group">
+                <button onClick={handleAddToCart} className="flex-1 bg-[#DF9F28] hover:bg-[#c58b20] text-white px-8 py-4 rounded-full flex items-center justify-center gap-3 transition-all text-xs font-bold tracking-[0.2em] uppercase shadow-xl shadow-[#DF9F28]/20 hover:shadow-2xl hover:shadow-[#DF9F28]/30 cursor-pointer group">
                   <ShoppingBag className="w-4 h-4 transition-transform group-hover:scale-110" />
                   Add To Cart
                 </button>
               </div>
 
               {/* Buy Now Button */}
-              <button className="w-full bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-full flex items-center justify-center gap-2 transition-all text-xs font-bold tracking-[0.2em] uppercase mb-12 shadow-lg cursor-pointer">
+              <button onClick={handleAddToCart} className="w-full bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-full flex items-center justify-center gap-2 transition-all text-xs font-bold tracking-[0.2em] uppercase mb-12 shadow-lg cursor-pointer">
                 Buy It Now
               </button>
 

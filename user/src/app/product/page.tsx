@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import { ArrowRight, Trophy, Zap, X, ArrowLeft, Star, ShieldCheck, Truck, RefreshCw, Check, ShoppingBag, Heart } from 'lucide-react';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 
 interface Product {
@@ -17,14 +17,15 @@ interface Product {
   image: string;
 }
 
-export default function ProductPage() {
+function ProductPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { addToCart } = useCart();
   // Real project products catalog duplicated to form a pristine 9-item grid
   const productsCatalog: Product[] = [
     {
       id: 1,
-      title: "Utility Overshirt",
+      title: "Overshirt",
       category: "Apparel",
       price: 5400,
       originalPrice: 6600,
@@ -56,7 +57,7 @@ export default function ProductPage() {
     },
     {
       id: 5,
-      title: "Savile Row Trouser",
+      title: "Trouser",
       category: "Apparel",
       price: 5400,
       originalPrice: 6600,
@@ -72,11 +73,11 @@ export default function ProductPage() {
     },
     {
       id: 7,
-      title: "Premium Atelier Scarf",
+      title: "Pocket Square",
       category: "Accessories",
       price: 5400,
       originalPrice: 6600,
-      image: "/cat_accessories_1778670517925.png"
+      image: "/prod_overshirt_1778670536589.png" // User used overshirt image for pocket square on homepage
     },
     {
       id: 8,
@@ -88,16 +89,31 @@ export default function ProductPage() {
     },
     {
       id: 9,
-      title: "Stevejon Signature Set",
+      title: "Belt",
       category: "Accessories",
       price: 5400,
       originalPrice: 6600,
-      image: "/cat_accessories_1778670517925.png"
+      image: "/prod_trouser_1778670553370.png" // User used trouser image for belt on homepage
     }
   ];
 
   // Client-side category selection state
   const [selectedCategories, setSelectedCategories] = useState<string[]>(['Apparel', 'Leather Goods']);
+
+  useEffect(() => {
+    const categoryQuery = searchParams.get('category');
+    if (categoryQuery) {
+      setSelectedCategories([categoryQuery]);
+    }
+
+    const idQuery = searchParams.get('id');
+    if (idQuery) {
+      const prod = productsCatalog.find(p => p.id === Number(idQuery));
+      if (prod) {
+        setSelectedProduct(prod);
+      }
+    }
+  }, [searchParams]);
   
   // Product Detail Inner Page State
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -612,6 +628,14 @@ export default function ProductPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function ProductPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#FDFCF8]"></div>}>
+      <ProductPageContent />
+    </Suspense>
   );
 }
 

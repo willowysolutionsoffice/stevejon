@@ -1,7 +1,18 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function NewArrivals() {
+  const getProductId = (title: string) => {
+    switch (title) {
+      case "Overshirt": return 1;
+      case "Trouser": return 5;
+      case "Pocket Square": return 7; // Just mapping to a valid ID (Scarf/Accessories)
+      case "Belt": return 9; // Signature Set
+      default: return 1;
+    }
+  }
+
   return (
     <section className="py-20 px-4 md:px-8 max-w-7xl mx-auto">
       <h2 className="text-3xl font-serif text-center md:text-left mb-12">New Arrivals</h2>
@@ -12,7 +23,7 @@ export default function NewArrivals() {
           { title: "Pocket Square", price: "$150", img: "/prod_overshirt_1778670536589.png" },
           { title: "Belt", price: "$280", img: "/prod_trouser_1778670553370.png" },
         ].map((prod, i) => (
-          <div key={i} className="group cursor-pointer">
+          <Link href={`/product?id=${getProductId(prod.title)}`} key={i} className="group cursor-pointer block">
             <div className="relative aspect-[3/4] bg-[#F3F2EE] mb-4 overflow-hidden">
               <div className="absolute top-3 left-3 bg-white px-2 py-1 text-[0.6rem] font-bold tracking-widest z-10 shadow-sm">NEW</div>
               <Image 
@@ -26,7 +37,7 @@ export default function NewArrivals() {
               <h4 className="text-sm text-gray-900">{prod.title}</h4>
               <p className="text-sm font-semibold">{prod.price}</p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

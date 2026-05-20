@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
 export default function TodaysDeal() {
@@ -82,7 +83,7 @@ export default function TodaysDeal() {
         </div>
 
         {/* Card 1: Overshirt */}
-        <div className="w-full lg:w-[28%] relative rounded-2xl overflow-hidden aspect-[3/4] group cursor-pointer shadow-sm hover:shadow-md transition-shadow bg-[#F3F2EE]">
+        <Link href="/product?id=1" className="w-full lg:w-[28%] relative rounded-2xl overflow-hidden aspect-[3/4] group cursor-pointer shadow-sm hover:shadow-md transition-shadow bg-[#F3F2EE] block">
           <Image
             src="/prod_overshirt_1778670536589.png"
             alt="Today's Deal - Overshirt"
@@ -99,10 +100,10 @@ export default function TodaysDeal() {
               Discover
             </span>
           </div>
-        </div>
+        </Link>
 
         {/* Card 2: Trouser */}
-        <div className="w-full lg:w-[28%] relative rounded-2xl overflow-hidden aspect-[3/4] group cursor-pointer shadow-sm hover:shadow-md transition-shadow bg-[#F3F2EE]">
+        <Link href="/product?id=5" className="w-full lg:w-[28%] relative rounded-2xl overflow-hidden aspect-[3/4] group cursor-pointer shadow-sm hover:shadow-md transition-shadow bg-[#F3F2EE] block">
           <Image
             src="/prod_trouser_1778670553370.png"
             alt="Today's Deal - Trouser"
@@ -119,7 +120,7 @@ export default function TodaysDeal() {
               Discover
             </span>
           </div>
-        </div>
+        </Link>
       </div>
     </section>
   );

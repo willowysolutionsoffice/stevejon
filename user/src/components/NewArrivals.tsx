@@ -44,10 +44,10 @@ export default function NewArrivals() {
       <h2 className="text-3xl font-serif text-center md:text-left mb-12">New Arrivals</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
         {[
-          { title: "Overshirt", price: "$850", img: "/prod_overshirt_1778670536589.png" },
-          { title: "Trouser", price: "$620", img: "/prod_trouser_1778670553370.png" },
-          { title: "Pocket Square", price: "$150", img: "/prod_overshirt_1778670536589.png" },
-          { title: "Belt", price: "$280", img: "/prod_trouser_1778670553370.png" },
+          { title: "Overshirt", price: "Rs 850", img: "/prod_overshirt_1778670536589.png" },
+          { title: "Trouser", price: "Rs 620", img: "/prod_trouser_1778670553370.png" },
+          { title: "Pocket Square", price: "Rs 150", img: "/prod_overshirt_1778670536589.png" },
+          { title: "Belt", price: "Rs 280", img: "/prod_trouser_1778670553370.png" },
         ].map((prod, i) => (
           <div key={i} className="group flex flex-col">
             <Link href={`/product?id=${getProductId(prod.title)}`} className="block relative aspect-[3/4] bg-[#F3F2EE] mb-4 overflow-hidden rounded-xl">

@@ -20,12 +20,12 @@ export default function ProductCollectionGrid() {
       <h2 className="text-3xl font-serif text-center mb-12">Our Products</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-16">
         {[
-          { title: "Overcoat", price: "$2,450", img: "/cat_apparel_1778670103427.png" },
-          { title: "Blazer", price: "$1,200", img: "/prod_overshirt_1778670536589.png" },
-          { title: "Knit", price: "$950", img: "/prod_trouser_1778670553370.png" },
-          { title: "Duffle", price: "$650", img: "/cat_leather_1778670351299.png" },
-          { title: "Scarf", price: "$1,100", img: "/cat_accessories_1778670517925.png" },
-          { title: "Watch", price: "$850", img: "/prod_overshirt_1778670536589.png" },
+          { title: "Overcoat", price: "Rs 2,450", img: "/cat_apparel_1778670103427.png" },
+          { title: "Blazer", price: "Rs 1,200", img: "/prod_overshirt_1778670536589.png" },
+          { title: "Knit", price: "Rs 950", img: "/prod_trouser_1778670553370.png" },
+          { title: "Duffle", price: "Rs 650", img: "/cat_leather_1778670351299.png" },
+          { title: "Scarf", price: "Rs 1,100", img: "/cat_accessories_1778670517925.png" },
+          { title: "Watch", price: "Rs 850", img: "/prod_overshirt_1778670536589.png" },
         ].map((prod, i) => (
           <Link href={`/product?id=${getProductId(prod.title)}`} key={i} className="group cursor-pointer block">
             <div className="relative aspect-square bg-[#F3F2EE] mb-4 overflow-hidden">

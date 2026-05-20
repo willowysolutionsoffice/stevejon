@@ -24,7 +24,7 @@ export default function Testimonials() {
               location: "Paris"
             }
           ].map((testimonial, index) => (
-            <div key={index} className="flex flex-col items-center text-center px-4 group">
+            <div key={index} className="flex flex-col items-center text-center p-8 bg-white rounded-xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-[#EAE8E1] group transition-transform duration-300 hover:-translate-y-1">
               <div className="mb-6 text-[#1A1A1A] opacity-20 group-hover:opacity-40 transition-opacity duration-300">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <path d="M14.017 18L14.017 10.609C14.017 4.905 17.748 1.039 23 0L23.995 2.151C21.563 3.068 20 5.789 20 8H24V18H14.017ZM0 18V10.609C0 4.905 3.748 1.038 9 0L9.996 2.151C7.563 3.068 6 5.789 6 8H9.983L9.983 18L0 18Z" />

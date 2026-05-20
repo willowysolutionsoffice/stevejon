@@ -17,7 +17,7 @@ export default function ProductCollectionGrid() {
 
   return (
     <section className="py-20 px-4 md:px-8 max-w-7xl mx-auto">
-      <h2 className="text-3xl font-serif text-center md:text-left mb-12">Product Collection Grid</h2>
+      <h2 className="text-3xl font-serif text-center mb-12">Our Products</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-16">
         {[
           { title: "Overcoat", price: "$2,450", img: "/cat_apparel_1778670103427.png" },

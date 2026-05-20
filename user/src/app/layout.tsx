@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 };
 
 import { CartProvider } from "@/context/CartContext";
+import { OrderProvider } from "@/context/OrderContext";
 
 export default function RootLayout({
   children,
@@ -31,7 +32,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans bg-[#FDFCF8] text-[#1A1A1A] selection:bg-[#1A1A1A] selection:text-white">
         <CartProvider>
-          {children}
+          <OrderProvider>
+            {children}
+          </OrderProvider>
         </CartProvider>
       </body>
     </html>

@@ -42,8 +42,13 @@ export default function Navbar() {
         {/* Desktop Right Links (Hidden on mobile/tablet) */}
         <div className="hidden lg:flex gap-8 items-center">
           <a href="#" className="hover:text-white transition-colors">SEARCH</a>
-          <a href="#" className="hover:text-white transition-colors">ACCOUNT</a>
-          <Link href="/cart" className="hover:text-white transition-colors">CART ({totalItems})</Link>
+          <Link href="/orders" className="hover:text-white transition-colors">ORDERS</Link>
+          <Link href="/cart" className="hover:text-white transition-colors relative flex items-center" aria-label="Cart">
+            <ShoppingBag className="w-5 h-5 stroke-[1.5]" />
+            <span className="absolute -top-1 -right-2 bg-[#DF9F28] text-white text-[0.55rem] font-bold w-4 h-4 rounded-full flex items-center justify-center font-sans shadow-sm">
+              {totalItems}
+            </span>
+          </Link>
         </div>
 
         {/* Mobile Right Tools */}
@@ -118,13 +123,13 @@ export default function Navbar() {
           >
             SEARCH
           </a>
-          <a
-            href="#"
+          <Link
+            href="/orders"
             onClick={toggleMenu}
             className="text-xs tracking-[0.15em] font-medium text-white/50 hover:text-white transition-colors"
           >
-            ACCOUNT
-          </a>
+            ORDERS
+          </Link>
           <Link
             href="/cart"
             onClick={toggleMenu}

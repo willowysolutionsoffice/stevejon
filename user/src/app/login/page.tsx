@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [isChangePassword, setIsChangePassword] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,6 +16,47 @@ export default function LoginPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isChangePassword) {
+      const storedUserData = localStorage.getItem('stevejon_user');
+      if (storedUserData) {
+        const storedUser = JSON.parse(storedUserData);
+        if (storedUser.email === email && storedUser.password === oldPassword) {
+          storedUser.password = password;
+          localStorage.setItem('stevejon_user', JSON.stringify(storedUser));
+          alert("Password changed successfully! Please login with your new password.");
+          setIsChangePassword(false);
+          setIsLogin(true);
+          setPassword("");
+          setOldPassword("");
+        } else {
+          alert("Invalid email or old password.");
+        }
+      } else {
+        alert("No account found. Please sign up.");
+      }
+      return;
+    }
+
+    if (isForgotPassword) {
+      const storedUserData = localStorage.getItem('stevejon_user');
+      if (storedUserData) {
+        const storedUser = JSON.parse(storedUserData);
+        if (storedUser.email === email) {
+          storedUser.password = password;
+          localStorage.setItem('stevejon_user', JSON.stringify(storedUser));
+          alert("Password reset successfully! Please login with your new password.");
+          setIsForgotPassword(false);
+          setIsLogin(true);
+          setPassword("");
+        } else {
+          alert("No account found with this email address.");
+        }
+      } else {
+        alert("No account found. Please sign up.");
+      }
+      return;
+    }
+
     if (!isLogin) {
       // Create Account
       localStorage.setItem('stevejon_user', JSON.stringify({ name, email, password }));
@@ -60,17 +104,21 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
           <div className="mb-12">
             <h2 className="text-3xl font-serif mb-4 text-[#1A1A1A]">
-              {isLogin ? "Welcome Back" : "Create Account"}
+              {isChangePassword ? "Change Password" : isForgotPassword ? "Reset Password" : isLogin ? "Welcome Back" : "Create Account"}
             </h2>
             <p className="text-[#666] text-sm">
-              {isLogin
+              {isChangePassword
+                ? "Enter your email, old password and a new password to update your credentials."
+                : isForgotPassword
+                ? "Enter your email address and a new password to reset your account access."
+                : isLogin
                 ? "Sign in to access your bespoke orders, saved items, and personalized recommendations."
                 : "Join Stevejon to experience the pinnacle of personalized tailoring and exclusive collections."}
             </p>
           </div>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {!isLogin && (
+            {!isLogin && !isForgotPassword && !isChangePassword && (
               <div>
                 <label className="block text-xs font-bold tracking-widest text-[#1A1A1A] mb-2 uppercase">
                   Full Name
@@ -100,18 +148,44 @@ export default function LoginPage() {
               />
             </div>
 
+            {isChangePassword && (
+              <div>
+                <label className="block text-xs font-bold tracking-widest text-[#1A1A1A] mb-2 uppercase">
+                  Old Password
+                </label>
+                <input
+                  type="password"
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}
+                  className="w-full border-b border-[#ccc] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+            )}
+
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-xs font-bold tracking-widest text-[#1A1A1A] uppercase">
-                  Password
+                  {isForgotPassword || isChangePassword ? "New Password" : "Password"}
                 </label>
-                {isLogin && (
-                  <a
-                    href="#"
-                    className="text-xs text-[#DF9F28] hover:text-black transition-colors"
-                  >
-                    Forgot password?
-                  </a>
+                {isLogin && !isForgotPassword && !isChangePassword && (
+                  <div className="flex gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setIsChangePassword(true)}
+                      className="text-xs text-[#DF9F28] hover:text-black transition-colors"
+                    >
+                      Change password?
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsForgotPassword(true)}
+                      className="text-xs text-[#DF9F28] hover:text-black transition-colors"
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
                 )}
               </div>
               <input
@@ -128,19 +202,35 @@ export default function LoginPage() {
               type="submit"
               className="w-full bg-[#1A1A1A] hover:bg-black text-white py-4 rounded-none text-xs font-bold tracking-[0.2em] uppercase transition-colors mt-8"
             >
-              {isLogin ? "Sign In" : "Create Account"}
+              {isChangePassword ? "Change Password" : isForgotPassword ? "Reset Password" : isLogin ? "Sign In" : "Create Account"}
             </button>
           </form>
 
           <div className="mt-12 text-center">
             <p className="text-[#666] text-sm">
-              {isLogin ? "Don't have an account?" : "Already have an account?"}
-              <button
-                onClick={() => setIsLogin(!isLogin)}
-                className="ml-2 font-bold text-[#1A1A1A] hover:text-[#DF9F28] transition-colors border-b border-[#1A1A1A] pb-0.5"
-              >
-                {isLogin ? "Sign Up" : "Sign In"}
-              </button>
+              {isChangePassword || isForgotPassword ? (
+                <>
+                  Remember your password?
+                  <button
+                    type="button"
+                    onClick={() => { setIsForgotPassword(false); setIsChangePassword(false); setIsLogin(true); }}
+                    className="ml-2 font-bold text-[#1A1A1A] hover:text-[#DF9F28] transition-colors border-b border-[#1A1A1A] pb-0.5"
+                  >
+                    Sign In
+                  </button>
+                </>
+              ) : (
+                <>
+                  {isLogin ? "Don't have an account?" : "Already have an account?"}
+                  <button
+                    type="button"
+                    onClick={() => setIsLogin(!isLogin)}
+                    className="ml-2 font-bold text-[#1A1A1A] hover:text-[#DF9F28] transition-colors border-b border-[#1A1A1A] pb-0.5"
+                  >
+                    {isLogin ? "Sign Up" : "Sign In"}
+                  </button>
+                </>
+              )}
             </p>
           </div>
         </div>

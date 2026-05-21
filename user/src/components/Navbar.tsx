@@ -2,8 +2,9 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, ShoppingBag, Search, User, Banknote, MessageSquare, FileText, ShieldCheck, LogIn } from 'lucide-react';
+import { Menu, X, ShoppingBag, Search, User, Banknote, MessageSquare, FileText, ShieldCheck, LogIn, Heart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { useWishlist } from '@/context/WishlistContext';
 import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
@@ -12,6 +13,7 @@ export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { totalItems } = useCart();
+  const { totalItems: totalWishlistItems } = useWishlist();
   const router = useRouter();
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -122,6 +124,12 @@ export default function Navbar() {
             )}
           </div>
 
+          <Link href="/wishlist" className="hover:text-white transition-colors relative flex items-center" aria-label="Wishlist">
+            <Heart className="w-5 h-5 stroke-[1.5]" />
+            <span className="absolute -top-1 -right-2 bg-[#DF9F28] text-white text-[0.55rem] font-bold w-4 h-4 rounded-full flex items-center justify-center font-sans shadow-sm">
+              {totalWishlistItems}
+            </span>
+          </Link>
           <Link href="/cart" className="hover:text-white transition-colors relative flex items-center" aria-label="Cart">
             <ShoppingBag className="w-5 h-5 stroke-[1.5]" />
             <span className="absolute -top-1 -right-2 bg-[#DF9F28] text-white text-[0.55rem] font-bold w-4 h-4 rounded-full flex items-center justify-center font-sans shadow-sm">
@@ -143,6 +151,12 @@ export default function Navbar() {
           <button onClick={() => setIsSearchOpen(true)} className="text-white hover:text-gray-300 transition-colors p-1" aria-label="Search">
             <Search className="w-4 h-4 stroke-[1.5]" />
           </button>
+          <Link href="/wishlist" className="text-white hover:text-gray-300 transition-colors p-1 relative" aria-label="Wishlist">
+            <Heart className="w-4 h-4 stroke-[1.5]" />
+            <span className="absolute -top-1 -right-1.5 bg-[#DF9F28] text-white text-[0.55rem] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center font-sans">
+              {totalWishlistItems}
+            </span>
+          </Link>
           <Link href="/cart" className="text-white hover:text-gray-300 transition-colors p-1 relative" aria-label="Cart">
             <ShoppingBag className="w-4 h-4 stroke-[1.5]" />
             <span className="absolute -top-1 -right-1.5 bg-[#DF9F28] text-white text-[0.55rem] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center font-sans">
@@ -216,6 +230,13 @@ export default function Navbar() {
             className="text-xs tracking-[0.15em] font-medium text-white/50 hover:text-white transition-colors flex items-center gap-2"
           >
             LOGIN / SIGNUP
+          </Link>
+          <Link
+            href="/wishlist"
+            onClick={toggleMenu}
+            className="text-xs tracking-[0.15em] font-medium text-white/50 hover:text-white transition-colors"
+          >
+            WISHLIST ({totalWishlistItems})
           </Link>
           <Link
             href="/cart"

@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
+import { useWishlist } from '@/context/WishlistContext';
 
 interface Product {
   id: number;
@@ -21,6 +22,41 @@ function ProductPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { addToCart } = useCart();
+  const { addToWishlist } = useWishlist();
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (message: string) => {
+    setToastMessage(message);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleQuickAddToCart = (e: React.MouseEvent, prod: Product) => {
+    e.stopPropagation();
+    addToCart({
+      productId: prod.id,
+      title: prod.title,
+      category: prod.category,
+      price: prod.price,
+      image: prod.image,
+      size: 'M',
+      color: 'Classic',
+      quantity: 1,
+    });
+    showToast(`Added ${prod.title} to cart`);
+  };
+
+  const handleQuickAddToWishlist = (e: React.MouseEvent, prod: Product) => {
+    e.stopPropagation();
+    addToWishlist({
+      id: String(prod.id),
+      productId: prod.id,
+      title: prod.title,
+      category: prod.category,
+      price: prod.price,
+      image: prod.image,
+    });
+    showToast(`Added ${prod.title} to wishlist`);
+  };
   // Real project products catalog duplicated to form a pristine 9-item grid
   const productsCatalog: Product[] = [
     {
@@ -190,9 +226,6 @@ function ProductPageContent() {
                 <div className="absolute top-6 left-6 bg-[#DF9F28] text-white text-[0.65rem] font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full shadow-md">
                   Stevejon Exclusive
                 </div>
-                <button className="absolute top-6 right-6 bg-white/80 backdrop-blur-md hover:bg-white text-gray-800 p-3 rounded-full shadow-sm transition-all hover:scale-110 cursor-pointer">
-                  <Heart className="w-5 h-5" />
-                </button>
               </div>
 
               {/* Thumbnail preview row */}
@@ -584,6 +617,24 @@ function ProductPageContent() {
                     
                     {/* Subtle bottom gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    {/* Wishlist & Cart Icons */}
+                    <div className="absolute bottom-3 right-3 flex flex-row gap-2 z-20">
+                      <button 
+                        onClick={(e) => handleQuickAddToWishlist(e, prod)}
+                        className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#DF9F28] hover:text-white transition-colors text-gray-800"
+                        aria-label="Add to wishlist"
+                      >
+                        <Heart className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={(e) => handleQuickAddToCart(e, prod)}
+                        className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#DF9F28] hover:text-white transition-colors text-gray-800"
+                        aria-label="Add to cart"
+                      >
+                        <ShoppingBag className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Product Details */}
@@ -625,6 +676,18 @@ function ProductPageContent() {
 
         </div>
       </div>
+
+      {/* Floating Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-black text-white px-6 py-4 rounded-full shadow-2xl z-[100] flex items-center gap-3 animate-fadeIn">
+          <div className="bg-green-500 rounded-full p-1">
+            <Check className="w-3 h-3 text-white" />
+          </div>
+          <span className="text-xs font-semibold tracking-widest uppercase">
+            {toastMessage}
+          </span>
+        </div>
+      )}
 
       <Footer />
     </div>

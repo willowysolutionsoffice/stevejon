@@ -108,7 +108,7 @@ export default function CartPage() {
 
         {items.length === 0 ? (
           /* Empty State */
-          <div className="text-center py-28 bg-white rounded-[2.5rem] border border-gray-100 shadow-sm flex flex-col items-center justify-center my-8">
+          <div className="text-center py-28 bg-white rounded-[8px] border border-gray-100 shadow-sm flex flex-col items-center justify-center my-8">
             <div className="w-20 h-20 bg-[#F3F2EE] text-gray-400 rounded-full flex items-center justify-center mb-6">
               <ShoppingBag className="w-8 h-8 stroke-[1.5]" />
             </div>
@@ -132,10 +132,10 @@ export default function CartPage() {
               {items.map(item => (
                 <div
                   key={item.id}
-                  className="flex flex-col sm:flex-row items-center gap-6 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm relative group transition-all hover:shadow-md"
+                  className="flex flex-col sm:flex-row items-center gap-6 bg-white p-6 rounded-[8px] border border-gray-100 shadow-sm relative group transition-all hover:shadow-md"
                 >
                   {/* Image */}
-                  <div className="relative aspect-[3/4] w-28 sm:w-32 rounded-2xl overflow-hidden bg-[#F3F2EE] flex-shrink-0 border border-gray-100/50">
+                  <div className="relative aspect-[3/4] w-28 sm:w-32 rounded-[8px] overflow-hidden bg-[#F3F2EE] flex-shrink-0 border border-gray-100/50">
                     <Image
                       src={item.image}
                       alt={item.title}
@@ -209,7 +209,7 @@ export default function CartPage() {
 
             {/* Right: Order Summary (5 cols) */}
             <div className="lg:col-span-5 flex flex-col gap-8 lg:sticky lg:top-32">
-              <div className="bg-white rounded-[2.5rem] border border-gray-100 p-8 shadow-[0_15px_50px_rgba(0,0,0,0.03)]">
+              <div className="bg-white rounded-[8px] border border-gray-100 p-8 shadow-[0_15px_50px_rgba(0,0,0,0.03)]">
                 <h2 className="text-xl font-serif tracking-wider uppercase text-black mb-6 pb-4 border-b border-gray-100">
                   Order Summary
                 </h2>
@@ -248,7 +248,7 @@ export default function CartPage() {
               </div>
 
               {/* Guarantees */}
-              <div className="bg-[#F9F8F4] rounded-3xl border border-gray-100 p-6 grid grid-cols-3 gap-4 text-center">
+              <div className="bg-[#F9F8F4] rounded-[8px] border border-gray-100 p-6 grid grid-cols-3 gap-4 text-center">
                 <div className="flex flex-col items-center gap-1.5">
                   <Truck className="w-5 h-5 text-[#DF9F28]" />
                   <span className="text-[0.65rem] font-bold tracking-wider uppercase text-black">Express</span>
@@ -272,7 +272,7 @@ export default function CartPage() {
       {/* Checkout Modal */}
       {isCheckoutOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-[#FDFCF8] w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden animate-scaleUp max-h-[90vh] flex flex-col border border-gray-100">
+          <div className="bg-[#FDFCF8] w-full max-w-lg rounded-[8px] shadow-2xl overflow-hidden animate-scaleUp max-h-[90vh] flex flex-col border border-gray-100">
             {/* Modal Header */}
             <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between bg-white">
               <div>
@@ -298,7 +298,7 @@ export default function CartPage() {
                     required
                     value={shippingForm.name}
                     onChange={(e) => setShippingForm({ ...shippingForm, name: e.target.value })}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
+                    className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
                   />
                 </div>
                 <div>
@@ -308,7 +308,7 @@ export default function CartPage() {
                     required
                     value={shippingForm.phone}
                     onChange={(e) => setShippingForm({ ...shippingForm, phone: e.target.value })}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
+                    className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
                   />
                 </div>
               </div>
@@ -322,7 +322,7 @@ export default function CartPage() {
                     required
                     value={shippingForm.street}
                     onChange={(e) => setShippingForm({ ...shippingForm, street: e.target.value })}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
+                    className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
@@ -333,7 +333,7 @@ export default function CartPage() {
                       required
                       value={shippingForm.city}
                       onChange={(e) => setShippingForm({ ...shippingForm, city: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
+                      className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
                     />
                   </div>
                   <div>
@@ -343,7 +343,7 @@ export default function CartPage() {
                       required
                       value={shippingForm.pincode}
                       onChange={(e) => setShippingForm({ ...shippingForm, pincode: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
+                      className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
                     />
                   </div>
                 </div>
@@ -354,7 +354,7 @@ export default function CartPage() {
                     required
                     value={shippingForm.state}
                     onChange={(e) => setShippingForm({ ...shippingForm, state: e.target.value })}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
+                    className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
                   />
                 </div>
               </div>
@@ -374,7 +374,7 @@ export default function CartPage() {
                         key={pay.id}
                         type="button"
                         onClick={() => setPaymentMethod(pay.id)}
-                        className={`flex flex-col items-center gap-2 p-3 border rounded-2xl transition-all cursor-pointer text-center ${
+                        className={`flex flex-col items-center gap-2 p-3 border rounded-[8px] transition-all cursor-pointer text-center ${
                           paymentMethod === pay.id
                             ? 'border-[#DF9F28] bg-[#FDF8EE] ring-1 ring-[#DF9F28]/20 text-black'
                             : 'border-gray-200 hover:border-gray-400 text-gray-500 bg-white'

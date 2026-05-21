@@ -4,18 +4,22 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
-import { ShoppingBag, Check } from 'lucide-react';
+import { useWishlist } from '@/context/WishlistContext';
+import { ShoppingBag, Check, Heart } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function NewArrivals() {
   const { addToCart } = useCart();
+  const { addToWishlist } = useWishlist();
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const router = useRouter();
 
   const getProductId = (title: string) => {
     switch (title) {
       case "Overshirt": return 1;
       case "Trouser": return 5;
-      case "Pocket Square": return 7; // Just mapping to a valid ID (Scarf/Accessories)
-      case "Belt": return 9; // Signature Set
+      case "Pocket Square": return 7;
+      case "Belt": return 9;
       default: return 1;
     }
   }
@@ -26,7 +30,7 @@ export default function NewArrivals() {
       productId: getProductId(prod.title),
       title: prod.title,
       category: prod.title === "Pocket Square" || prod.title === "Belt" ? "Accessories" : "Apparel",
-      price: 5400, // Using standard price from catalog to match product page
+      price: 5400,
       image: prod.img,
       size: 'M',
       color: 'Classic',
@@ -37,6 +41,37 @@ export default function NewArrivals() {
     setTimeout(() => {
       setToastMessage(null);
     }, 3000);
+  };
+
+  const handleAddToWishlist = (e: React.MouseEvent, prod: { title: string; price: string; img: string }) => {
+    e.preventDefault();
+    addToWishlist({
+      id: String(getProductId(prod.title)),
+      productId: getProductId(prod.title),
+      title: prod.title,
+      category: prod.title === "Pocket Square" || prod.title === "Belt" ? "Accessories" : "Apparel",
+      price: 5400,
+      image: prod.img,
+    });
+    setToastMessage(`Added ${prod.title} to wishlist`);
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 3000);
+  };
+
+  const handleBuyNow = (e: React.MouseEvent, prod: { title: string; price: string; img: string }) => {
+    e.preventDefault();
+    addToCart({
+      productId: getProductId(prod.title),
+      title: prod.title,
+      category: prod.title === "Pocket Square" || prod.title === "Belt" ? "Accessories" : "Apparel",
+      price: 5400,
+      image: prod.img,
+      size: 'M',
+      color: 'Classic',
+      quantity: 1,
+    });
+    router.push('/cart');
   };
 
   return (
@@ -50,26 +85,43 @@ export default function NewArrivals() {
           { title: "Belt", price: "Rs 280", img: "/prod_trouser_1778670553370.png" },
         ].map((prod, i) => (
           <div key={i} className="group flex flex-col">
-            <Link href={`/product?id=${getProductId(prod.title)}`} className="block relative aspect-[3/4] bg-[#F3F2EE] mb-4 overflow-hidden rounded-xl">
-              <div className="absolute top-3 left-3 bg-white px-2 py-1 text-[0.6rem] font-bold tracking-widest z-10 shadow-sm">NEW</div>
-              <Image 
-                src={prod.img} 
-                alt={prod.title} 
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105 mix-blend-multiply"
-              />
-            </Link>
+            <div className="relative aspect-[3/4] bg-[#F3F2EE] mb-4 overflow-hidden rounded-xl group/image">
+              <Link href={`/product?id=${getProductId(prod.title)}`} className="block w-full h-full">
+                <div className="absolute top-3 left-3 bg-white px-2 py-1 text-[0.6rem] font-bold tracking-widest z-10 shadow-sm">NEW</div>
+                <Image 
+                  src={prod.img} 
+                  alt={prod.title} 
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover/image:scale-105 mix-blend-multiply"
+                />
+              </Link>
+              <div className="absolute bottom-3 right-3 flex flex-row gap-2 z-20">
+                <button 
+                  onClick={(e) => handleAddToWishlist(e, prod)}
+                  className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#DF9F28] hover:text-white transition-colors text-gray-800"
+                  aria-label="Add to wishlist"
+                >
+                  <Heart className="w-4 h-4" />
+                </button>
+                <button 
+                  onClick={(e) => handleAddToCart(e, prod)}
+                  className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#DF9F28] hover:text-white transition-colors text-gray-800"
+                  aria-label="Add to cart"
+                >
+                  <ShoppingBag className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
             <div className="flex flex-col gap-3 flex-1">
               <Link href={`/product?id=${getProductId(prod.title)}`} className="block">
                 <h4 className="text-sm text-gray-900 group-hover:text-[#DF9F28] transition-colors">{prod.title}</h4>
                 <p className="text-sm font-semibold text-gray-900 mt-1">{prod.price}</p>
               </Link>
               <button 
-                onClick={(e) => handleAddToCart(e, prod)}
+                onClick={(e) => handleBuyNow(e, prod)}
                 className="mt-auto flex items-center justify-center gap-2 w-full py-2.5 text-[0.65rem] font-bold tracking-[0.2em] uppercase border border-gray-200 text-gray-800 rounded-full hover:bg-[#DF9F28] hover:text-white hover:border-[#DF9F28] transition-all cursor-pointer shadow-sm hover:shadow-md"
               >
-                <ShoppingBag className="w-3.5 h-3.5" />
-                Add to Cart
+                Buy Now
               </button>
             </div>
           </div>

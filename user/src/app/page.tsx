@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import MovingNewsBar from "@/components/MovingNewsBar";
 import Categories from "@/components/Categories";
 import NewArrivals from "@/components/NewArrivals";
 import PromoSection from "@/components/PromoSection";
@@ -15,6 +16,7 @@ export default function Home() {
     <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans">
       <Navbar />
       <Hero />
+      <MovingNewsBar />
       <Categories />
       <NewArrivals />
       <PromoSection />

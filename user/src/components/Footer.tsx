@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
         <div className="flex flex-col gap-4">
           <h5 className="tracking-widest uppercase mb-2 opacity-80">CUSTOMER CARE</h5>
-          <a href="#" className="text-[#888] hover:text-white transition-colors">About Us</a>
+          <Link href="/about" className="text-[#888] hover:text-white transition-colors">About Us</Link>
           <a href="#" className="text-[#888] hover:text-white transition-colors">Customer Care</a>
           <a href="#" className="text-[#888] hover:text-white transition-colors">Shipping</a>
           <a href="#" className="text-[#888] hover:text-white transition-colors">Returns</a>
@@ -21,7 +21,7 @@ export default function Footer() {
         </div>
         <div className="flex flex-col gap-4">
           <h5 className="tracking-widest uppercase mb-2 opacity-80">COMPANY</h5>
-          <a href="#" className="text-[#888] hover:text-white transition-colors">About</a>
+          <Link href="/about" className="text-[#888] hover:text-white transition-colors">About</Link>
           <a href="#" className="text-[#888] hover:text-white transition-colors">Careers</a>
           <a href="#" className="text-[#888] hover:text-white transition-colors">Stores</a>
           <a href="#" className="text-[#888] hover:text-white transition-colors">Contact Us</a>

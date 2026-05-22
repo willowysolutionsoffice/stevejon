@@ -157,6 +157,7 @@ function ProductPageContent() {
   const [selectedColor, setSelectedColor] = useState<string>('Classic');
   const [quantity, setQuantity] = useState<number>(1);
   const [activeTab, setActiveTab] = useState<string>('description');
+  const [activeReviewIdx, setActiveReviewIdx] = useState<number>(0);
 
   // Handle category checkbox changes
   const handleCategoryChange = (category: string) => {
@@ -195,6 +196,242 @@ function ProductPageContent() {
 
   // If a product is selected, render the stunning Product Detail Inner Page
   if (selectedProduct) {
+    const defaultReviews = [
+      {
+        name: "Alex Mathio",
+        date: "13 Oct 2024",
+        rating: 5,
+        comment: "Stevejon's dedication to quality materials and ethical tailoring practices resonates strongly. The structural drape and shoulder fit are the absolute best I have ever experienced. A truly responsible and high-end fashion choice.",
+        avatar: "/winner_man.jpg"
+      },
+      {
+        name: "Sofia Laurent",
+        date: "22 Nov 2025",
+        rating: 5,
+        comment: "The quality of the fabric and the fit is simply second to none. Stevejon's attention to detail, from custom horn buttons to the hand-rolled lapels, makes this my absolute favorite wardrobe piece.",
+        avatar: "/winner_woman.jpg"
+      },
+      {
+        name: "Julian Vance",
+        date: "05 Jan 2026",
+        rating: 5,
+        comment: "Outstanding bespoke tailoring. The drape is immaculate, and the customer service was truly world-class. Absolute perfection in every stitch. Worth every single penny.",
+        avatar: "/winner_man.jpg"
+      }
+    ];
+
+    const reviewsDatabase: Record<number, typeof defaultReviews> = {
+      1: [
+        {
+          name: "Alex Mathio",
+          date: "13 Oct 2024",
+          rating: 5,
+          comment: "This Overshirt is the ultimate layering piece. The fabric is sturdy yet soft, and the fit across the shoulders is exceptionally precise. Easily a staple in my everyday wardrobe.",
+          avatar: "/winner_man.jpg"
+        },
+        {
+          name: "Sofia Laurent",
+          date: "22 Nov 2025",
+          rating: 5,
+          comment: "Beautiful drape and weight. You can instantly feel the quality of the premium Italian weave. The classic shade pairs perfectly with almost everything in my casual collection.",
+          avatar: "/winner_woman.jpg"
+        },
+        {
+          name: "Julian Vance",
+          date: "05 Jan 2026",
+          rating: 5,
+          comment: "Impeccable craftsmanship. The hand-finished seams and custom horn buttons elevate this far above standard retail overshirts. Extremely recommended.",
+          avatar: "/winner_man.jpg"
+        }
+      ],
+      2: [
+        {
+          name: "Marcus Vance",
+          date: "18 Feb 2025",
+          rating: 5,
+          comment: "An absolute travel masterpiece. The full-grain leather is robust and has already started developing a beautiful rich patina. The brass hardware is top-tier.",
+          avatar: "/winner_man.jpg"
+        },
+        {
+          name: "Helena Rostova",
+          date: "04 Apr 2025",
+          rating: 5,
+          comment: "Generously sized yet fits perfectly in overhead compartments. The stitching is completely flawless and the interior lining feels exceptionally luxurious.",
+          avatar: "/winner_woman.jpg"
+        },
+        {
+          name: "David Chen",
+          date: "11 Jul 2025",
+          rating: 5,
+          comment: "I get compliments every single time I travel with this bag. The shoulder strap is extremely comfortable even when fully loaded. Truly built to last a lifetime.",
+          avatar: "/winner_man.jpg"
+        }
+      ],
+      3: [
+        {
+          name: "Siddharth Sen",
+          date: "03 Jan 2025",
+          rating: 5,
+          comment: "An exquisite, sophisticated scent profile. The transition from spicy cardamom to deep cedarwood is beautiful. It lasts over 8 hours on skin without being overpowering.",
+          avatar: "/winner_man.jpg"
+        },
+        {
+          name: "Clara Dupont",
+          date: "19 Mar 2025",
+          rating: 5,
+          comment: "Unique, mysterious, and incredibly elegant. I’ve found my new signature scent. The heavy glass bottle and magnetic cap feel extremely premium on my vanity.",
+          avatar: "/winner_woman.jpg"
+        },
+        {
+          name: "Liam Sterling",
+          date: "28 Aug 2025",
+          rating: 5,
+          comment: "Receive endless compliments wearing this. It projects a refined, subtle aura of confidence. A masterpiece of high-end perfumery.",
+          avatar: "/winner_man.jpg"
+        }
+      ],
+      4: [
+        {
+          name: "Vittorio Rossi",
+          date: "09 Nov 2024",
+          rating: 5,
+          comment: "The silhouette of this double-breasted coat is absolutely regal. It drapes beautifully, keeping its form while moving. The Italian virgin wool is incredibly warm and soft.",
+          avatar: "/winner_man.jpg"
+        },
+        {
+          name: "Isabella Vane",
+          date: "15 Dec 2024",
+          rating: 5,
+          comment: "Exquisite tailoring. The broad lapels and structured shoulders project power and elegance. Stevejon has outdone themselves with this piece.",
+          avatar: "/winner_woman.jpg"
+        },
+        {
+          name: "Arthur Pendelton",
+          date: "22 Jan 2025",
+          rating: 5,
+          comment: "Fits like a glove. The hand-sewn lining is silky smooth, and the warmth-to-weight ratio is perfect. Essential for any gentleman's winter wardrobe.",
+          avatar: "/winner_man.jpg"
+        }
+      ],
+      5: [
+        {
+          name: "Oliver Twist",
+          date: "14 May 2025",
+          rating: 5,
+          comment: "The absolute perfect trouser. The rise, the drape, and the cuff line are flawlessly tailored. It coordinates effortlessly with bespoke blazers.",
+          avatar: "/winner_man.jpg"
+        },
+        {
+          name: "Emilia Clarke",
+          date: "29 Jun 2025",
+          rating: 5,
+          comment: "Outstanding wool-crepe comfort. It flows elegantly and retains its crease even after long hours of travel. Truly a masterpiece of functional luxury.",
+          avatar: "/winner_woman.jpg"
+        },
+        {
+          name: "Dev Patel",
+          date: "08 Sep 2025",
+          rating: 5,
+          comment: "Tailoring at its finest. The waist adjustment side tabs are sleek and functional. The stitch finish is exceptionally clean.",
+          avatar: "/winner_man.jpg"
+        }
+      ],
+      6: [
+        {
+          name: "Christian Bale",
+          date: "10 Dec 2024",
+          rating: 5,
+          comment: "A briefcase that commands respect in every boardroom. The structured leather holds its form flawlessly, and the organizer sections are perfectly engineered for modern tech.",
+          avatar: "/winner_man.jpg"
+        },
+        {
+          name: "Diana Prince",
+          date: "14 Feb 2025",
+          rating: 5,
+          comment: "Immaculate leather grain and flawless finish. The lock mechanism feels crisp and secure. A beautiful marriage of security, heritage, and style.",
+          avatar: "/winner_woman.jpg"
+        },
+        {
+          name: "Harvey Specter",
+          date: "03 May 2025",
+          rating: 5,
+          comment: "The absolute pinnacle of professional carry. It projects extreme refinement and attention to detail. Indispensable.",
+          avatar: "/winner_man.jpg"
+        }
+      ],
+      7: [
+        {
+          name: "Tom Ford",
+          date: "01 Jun 2025",
+          rating: 5,
+          comment: "The silk quality is sublime. The hand-rolled edges are completely even, giving it the perfect posture when folded in a suit pocket.",
+          avatar: "/winner_man.jpg"
+        },
+        {
+          name: "Gemma Chan",
+          date: "22 Jul 2025",
+          rating: 5,
+          comment: "Lustrous colors and beautiful patterns. It adds the perfect touch of sophisticated flair to both tuxedos and casual blazers.",
+          avatar: "/winner_woman.jpg"
+        },
+        {
+          name: "Henry Cavill",
+          date: "14 Oct 2025",
+          rating: 5,
+          comment: "A tiny detail that speaks volumes. The silk has the perfect dry-slip texture that prevents it from sliding down the pocket. Absolute class.",
+          avatar: "/winner_man.jpg"
+        }
+      ],
+      8: [
+        {
+          name: "Keanu Reeves",
+          date: "23 Apr 2025",
+          rating: 5,
+          comment: "Incredibly durable and surprisingly stylish. The utility pockets are streamlined so they don't bulk out the silhouette. Best casual trousers I own.",
+          avatar: "/winner_man.jpg"
+        },
+        {
+          name: "Zendaya",
+          date: "09 Aug 2025",
+          rating: 5,
+          comment: "Perfect relaxed luxury aesthetic. The gabardine cotton is extremely breathable and comfortable for all-day wear. Highly recommend.",
+          avatar: "/winner_woman.jpg"
+        },
+        {
+          name: "Chris Evans",
+          date: "11 Nov 2025",
+          rating: 5,
+          comment: "Robust, functional, and handsomely tailored. Stevejon proves that casual wear can be built with the exact same high standards as evening wear.",
+          avatar: "/winner_man.jpg"
+        }
+      ],
+      9: [
+        {
+          name: "Daniel Craig",
+          date: "12 Oct 2025",
+          rating: 5,
+          comment: "The calfskin leather is incredibly supple, and the polished silver buckle is beautifully minimal. Holds up perfectly without stretching.",
+          avatar: "/winner_man.jpg"
+        },
+        {
+          name: "Cate Blanchett",
+          date: "29 Nov 2025",
+          rating: 5,
+          comment: "Beautiful hand-painted edges and robust stitching. It's the ideal finishing piece that binds any formal or smart-casual outfit together.",
+          avatar: "/winner_woman.jpg"
+        },
+        {
+          name: "Benedict Cumberbatch",
+          date: "08 Jan 2026",
+          rating: 5,
+          comment: "A timeless belt of absolute distinction. Simple, durable, and crafted from top-grade leather. Fits perfectly in the waist loops.",
+          avatar: "/winner_man.jpg"
+        }
+      ]
+    };
+
+    const reviews = reviewsDatabase[selectedProduct.id] || defaultReviews;
+
     return (
       <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans animate-fadeIn">
         <Navbar />
@@ -419,6 +656,115 @@ function ProductPageContent() {
 
             </div>
 
+          </div>
+
+          {/* Rating & Reviews Section */}
+          <div className="mt-32 pt-16 border-t border-gray-100 font-sans">
+            <h2 className="text-3xl font-semibold tracking-tight text-gray-900 mb-16 text-left">Rating & Reviews</h2>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+              
+              {/* Left Column: Big Average & Breakdown Bar (5 cols) */}
+              <div className="lg:col-span-5 flex flex-col sm:flex-row lg:flex-col gap-10 lg:gap-8 items-start sm:items-center lg:items-start justify-between w-full">
+                <div className="flex flex-col items-start">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-8xl font-bold tracking-tight text-gray-950">4,5</span>
+                    <span className="text-2xl text-gray-400 font-medium">/5</span>
+                  </div>
+                  <p className="text-sm text-gray-400 font-normal tracking-wide mt-2">(50 New Reviews)</p>
+                </div>
+                
+                <div className="w-full max-w-xs">
+                  <div className="flex flex-col gap-3.5">
+                    {[
+                      { stars: 5, percentage: 'w-[75%]' },
+                      { stars: 4, percentage: 'w-[15%]' },
+                      { stars: 3, percentage: 'w-[5%]' },
+                      { stars: 2, percentage: 'w-0' },
+                      { stars: 1, percentage: 'w-0' }
+                    ].map((bar, idx) => (
+                      <div key={idx} className="flex items-center gap-4 w-full">
+                        <div className="flex items-center gap-1.5 w-10 text-left text-yellow-500">
+                          <Star className="w-4 h-4 fill-current stroke-none" />
+                          <span className="text-xs font-semibold text-gray-700 font-sans">{bar.stars}</span>
+                        </div>
+                        <div className="flex-1 h-[3px] bg-gray-100/80 rounded-full overflow-hidden">
+                          <div className={`h-full bg-gray-950 rounded-full ${bar.percentage}`}></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Interactive Review Card Slider (7 cols) */}
+              <div className="lg:col-span-7 w-full relative pr-6">
+                
+                {/* Main Card Container */}
+                <div className="bg-[#FCFCFC] rounded-[2rem] border border-gray-100/80 p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.015)] transition-all duration-300 min-h-[300px] flex flex-col justify-between relative">
+                  
+                  <div className="text-left">
+                    {/* Header: Name, Stars and Date */}
+                    <div className="flex items-start justify-between gap-4 mb-6">
+                      <div>
+                        <h4 className="text-lg font-bold text-gray-900 font-sans tracking-wide">
+                          {reviews[activeReviewIdx].name}
+                        </h4>
+                        <div className="flex text-yellow-500 mt-2 gap-0.5">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className={`w-4 h-4 ${i < reviews[activeReviewIdx].rating ? 'fill-current stroke-none' : 'text-gray-200 stroke-[1.5]'}`} />
+                          ))}
+                        </div>
+                      </div>
+                      <span className="text-xs text-gray-400 font-medium font-sans">
+                        {reviews[activeReviewIdx].date}
+                      </span>
+                    </div>
+
+                    {/* Comment */}
+                    <p className="text-gray-500 text-sm md:text-base font-normal leading-relaxed font-sans mb-10 max-w-xl">
+                      "{reviews[activeReviewIdx].comment}"
+                    </p>
+                  </div>
+
+                  {/* Footer Row: Avatar and custom sliding scrollbar pagination */}
+                  <div className="flex items-center justify-between border-t border-gray-100/50 pt-6 mt-4">
+                    {/* Avatar */}
+                    <div className="relative w-12 h-12 rounded-full overflow-hidden border border-gray-100 bg-gray-50 flex-shrink-0">
+                      <Image 
+                        src={reviews[activeReviewIdx].avatar} 
+                        alt={reviews[activeReviewIdx].name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+
+                    {/* Dribbble Style Horizontal Scrollbar Indicator */}
+                    <div className="w-28 h-[3px] bg-gray-200/60 rounded-full overflow-hidden relative">
+                      <div 
+                        className="h-full bg-gray-950 rounded-full transition-all duration-500 ease-out absolute"
+                        style={{ 
+                          width: `${100 / reviews.length}%`, 
+                          left: `${(100 / reviews.length) * activeReviewIdx}%` 
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* Overlapping Next Button positioned on the right border */}
+                <button
+                  onClick={() => setActiveReviewIdx((prev) => (prev === reviews.length - 1 ? 0 : prev + 1))}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10 w-11 h-11 rounded-full border border-gray-200/80 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.06)] flex items-center justify-center hover:bg-gray-950 hover:text-white hover:border-gray-950 transition-all duration-300 cursor-pointer focus:outline-none group"
+                  aria-label="Next Review"
+                >
+                  <ArrowRight className="w-4 h-4 text-gray-700 group-hover:text-white transition-transform group-hover:translate-x-0.5 stroke-[2]" />
+                </button>
+
+              </div>
+
+            </div>
           </div>
 
           {/* Related Products Section */}

@@ -12,7 +12,7 @@ const slides = [
     title: "STEVEJON | THE NEW STANDARD OF REFINEMENT",
     description: "Experience the pinnacle of personalized tailoring and exclusive bespoke collections.",
     buttonText: "EXPLORE NOW",
-    link: "/collections"
+    link: "/product"
   },
   {
     image: "/about_atelier.png",
@@ -26,9 +26,7 @@ const slides = [
     image: "/about_craftsmanship.png",
     tagline: "UNCOMPROMISING PRECISION",
     title: "UNRIVALED CRAFTSMANSHIP IN EVERY DETAIL",
-    description: "Every stitch tells a story of mathematical precision, luxury fabrics, and absolute comfort.",
-    buttonText: "DISCOVER ATELIER",
-    link: "/about"
+    description: "Every stitch tells a story of mathematical precision, luxury fabrics, and absolute comfort."
   }
 ];
 
@@ -135,18 +133,20 @@ export default function Hero() {
               </p>
 
               {/* CTA Button */}
-              <div 
-                className={`transition-all duration-1000 delay-400 transform ${
-                  isActive ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'
-                }`}
-              >
-                <Link
-                  href={slide.link}
-                  className="border border-white/60 px-10 py-4 text-xs font-semibold tracking-[0.25em] hover:bg-white hover:text-black hover:border-white transition-all duration-500 ease-in-out backdrop-blur-md inline-block"
+              {slide.buttonText && slide.link && (
+                <div 
+                  className={`transition-all duration-1000 delay-400 transform ${
+                    isActive ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'
+                  }`}
                 >
-                  {slide.buttonText}
-                </Link>
-              </div>
+                  <Link
+                    href={slide.link}
+                    className="border border-white/60 px-10 py-4 text-xs font-semibold tracking-[0.25em] hover:bg-white hover:text-black hover:border-white transition-all duration-500 ease-in-out backdrop-blur-md inline-block"
+                  >
+                    {slide.buttonText}
+                  </Link>
+                </div>
+              )}
             </div>
           );
         })}

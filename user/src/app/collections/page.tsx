@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -11,6 +12,16 @@ export default function CollectionsPage() {
     { title: "Overshirt", img: "/prod_overshirt_1778670536589.png" },
     { title: "Trouser", img: "/prod_trouser_1778670553370.png" }
   ];
+
+  const getCollectionLink = (title: string) => {
+    const uppercaseTitle = title.toUpperCase();
+    if (uppercaseTitle.includes('APPAREL')) return '/product?category=Apparel';
+    if (uppercaseTitle.includes('LEATHER')) return '/product?category=Leather Goods';
+    if (uppercaseTitle.includes('ACCESSORIES')) return '/product?category=Accessories';
+    if (uppercaseTitle.includes('OVERSHIRT')) return '/product?id=1';
+    if (uppercaseTitle.includes('TROUSER')) return '/product?id=5';
+    return '/product';
+  };
 
   return (
     <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans">
@@ -24,7 +35,7 @@ export default function CollectionsPage() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-16">
           {products.map((prod, i) => (
-            <div key={i} className="group cursor-pointer">
+            <Link href={getCollectionLink(prod.title)} key={i} className="group cursor-pointer block">
               <div className="relative aspect-[3/4] bg-[#F3F2EE] mb-4 overflow-hidden">
                 <Image 
                   src={prod.img} 
@@ -37,7 +48,7 @@ export default function CollectionsPage() {
                 <h3 className="text-sm font-semibold tracking-widest uppercase text-gray-900">{prod.title}</h3>
                 <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 border-b border-transparent group-hover:border-black/30 pb-1 transition-colors">Discover</span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

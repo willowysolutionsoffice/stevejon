@@ -36,7 +36,7 @@ export default function PromoSection() {
         </div>
 
         {/* Right Side: Luxury Product Floating Collage */}
-        <div className="w-full md:w-1/2 relative h-[300px] md:h-[380px] w-full mt-8 md:mt-0 flex items-center justify-end overflow-visible select-none">
+        <div className="w-full md:w-1/2 relative h-[300px] md:h-[380px] mt-8 md:mt-0 flex items-center justify-end overflow-visible select-none">
           {/* Base Model Panel (tall backdrop) */}
           <div className="absolute right-0 top-0 bottom-0 w-[45%] rounded-2xl overflow-hidden shadow-xl border border-white/10 z-0">
             <Image
@@ -49,7 +49,7 @@ export default function PromoSection() {
           </div>
 
           {/* Floating Item 1: Duffle Bag (Center floating, high shadow) */}
-          <div className="absolute left-[15%] top-[10%] w-[160px] h-[160px] rounded-2xl overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.15)] border border-white/5 bg-[#F3F2EE] z-20 transition-transform duration-500 hover:scale-105">
+          <div className="absolute left-[10%] sm:left-[15%] top-[10%] w-[120px] h-[120px] sm:w-[160px] sm:h-[160px] rounded-2xl overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.15)] border border-white/5 bg-[#F3F2EE] z-20 transition-transform duration-500 hover:scale-105">
             <Image
               src="/cat_leather_1778670351299.png"
               alt="Stevejon Duffle Bag"
@@ -59,7 +59,7 @@ export default function PromoSection() {
           </div>
 
           {/* Floating Item 2: Overshirt (Layered behind Duffle) */}
-          <div className="absolute left-[38%] bottom-[5%] w-[130px] h-[160px] rounded-2xl overflow-hidden shadow-[0_15px_30px_rgba(0,0,0,0.12)] border border-white/5 bg-[#F3F2EE] z-10 transition-transform duration-500 hover:scale-105">
+          <div className="absolute left-[34%] sm:left-[38%] bottom-[5%] w-[100px] h-[120px] sm:w-[130px] sm:h-[160px] rounded-2xl overflow-hidden shadow-[0_15px_30px_rgba(0,0,0,0.12)] border border-white/5 bg-[#F3F2EE] z-10 transition-transform duration-500 hover:scale-105">
             <Image
               src="/prod_overshirt_1778670536589.png"
               alt="Stevejon Overshirt"
@@ -69,7 +69,7 @@ export default function PromoSection() {
           </div>
 
           {/* Floating Item 3: Accessories (At the bottom, high shadow) */}
-          <div className="absolute left-[5%] bottom-[12%] w-[100px] h-[100px] rounded-2xl overflow-hidden shadow-[0_15px_25px_rgba(0,0,0,0.15)] border border-white/5 bg-[#F3F2EE] z-30 transition-transform duration-500 hover:scale-105">
+          <div className="absolute left-[0%] sm:left-[5%] bottom-[12%] w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] rounded-2xl overflow-hidden shadow-[0_15px_25px_rgba(0,0,0,0.15)] border border-white/5 bg-[#F3F2EE] z-30 transition-transform duration-500 hover:scale-105">
             <Image
               src="/cat_accessories_1778670517925.png"
               alt="Stevejon Fragrance & Accessories"

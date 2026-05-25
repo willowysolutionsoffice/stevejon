@@ -166,7 +166,7 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
   const cancelOrder = (orderId: string) => {
     setOrders(prevOrders =>
       prevOrders.map(order =>
-        order.id === orderId && (order.status === 'PENDING' || order.status === 'PROCESSING')
+        order.id === orderId && (order.status === 'PENDING' || order.status === 'PROCESSING' || order.status === 'SHIPPED')
           ? { ...order, status: 'CANCELLED' }
           : order
       )

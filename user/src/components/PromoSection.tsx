@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ArrowRight, Truck, Headphones, CreditCard } from 'lucide-react';
 
 export default function PromoSection() {
@@ -28,10 +29,10 @@ export default function PromoSection() {
             Lorem ipsum dolor sit amet consectetur. Euismod fermentum nisi.
           </p>
           <div>
-            <a href="#" className="inline-flex items-center gap-2 text-white text-xs tracking-[0.2em] uppercase font-semibold underline underline-offset-8 decoration-white/30 hover:decoration-white transition-all group">
+            <Link href="/about" className="inline-flex items-center gap-2 text-white text-xs tracking-[0.2em] uppercase font-semibold underline underline-offset-8 decoration-white/30 hover:decoration-white transition-all group">
               Read More
               <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-            </a>
+            </Link>
           </div>
         </div>
 

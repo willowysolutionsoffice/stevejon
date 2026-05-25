@@ -101,7 +101,7 @@ export const updateProductWithVariants = async (req: Request, res: Response) => 
         const deletedVariantIds = JSON.parse(data.deletedVariantIds || '[]');
 
         // Start Transaction
-        const updatedProduct = await prisma.$transaction(async (tx) => {
+        const updatedProduct = await prisma.$transaction(async (tx: any) => {
             // Delete marked variants
             if (deletedVariantIds.length > 0) {
                 // Delete their images from Cloudinary first?

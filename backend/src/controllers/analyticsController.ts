@@ -154,7 +154,7 @@ export const getDashboardSummary = async (req: Request, res: Response) => {
             })
         ]);
 
-        const formattedLowStock = lowStockProducts.map(v => ({
+        const formattedLowStock = lowStockProducts.map((v: any) => ({
             id: v.id,
             name: v.product.name,
             sku: v.sku,
@@ -185,7 +185,7 @@ export const getRecentOrders = async (req: Request, res: Response) => {
             include: { user: { select: { name: true } } }
         });
 
-        res.json(orders.map(o => ({
+        res.json(orders.map((o: any) => ({
             id: o.id,
             userName: o.user?.name || 'Guest',
             totalAmount: o.totalAmount,

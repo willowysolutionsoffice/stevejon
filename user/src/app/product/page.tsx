@@ -58,7 +58,7 @@ function ProductPageContent() {
     showToast(`Added ${prod.title} to wishlist`);
   };
   // Real project products catalog duplicated to form a pristine 9-item grid
-  const productsCatalog: Product[] = [
+  const initialProductsCatalog: Product[] = [
     {
       id: 1,
       title: "Overshirt",
@@ -133,8 +133,41 @@ function ProductPageContent() {
     }
   ];
 
+  const [productsCatalog, setProductsCatalog] = useState<Product[]>(initialProductsCatalog);
+
   // Client-side category selection state
   const [selectedCategories, setSelectedCategories] = useState<string[]>(['Apparel', 'Leather Goods']);
+
+  // Fetch products from the backend on mount
+  useEffect(() => {
+    const fetchBackendProducts = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+        const response = await fetch(`${apiUrl}/products`);
+        if (response.ok) {
+          const resData = await response.json();
+          if (resData && Array.isArray(resData.data) && resData.data.length > 0) {
+            const mapped = resData.data.map((p: any) => {
+              const price = p.variants?.[0]?.price || 5400;
+              return {
+                id: p.id,
+                title: p.name,
+                category: p.category?.name || "Apparel",
+                price: price,
+                originalPrice: p.variants?.[0]?.offerPrice || Math.round(price * 1.2),
+                image: p.image || "/prod_overshirt_1778670536589.png"
+              };
+            });
+            setProductsCatalog(mapped);
+          }
+        }
+      } catch (error) {
+        console.warn("Backend server offline or database unseeded. Operating in elegant local fallback mode.", error);
+      }
+    };
+    
+    fetchBackendProducts();
+  }, []);
 
   useEffect(() => {
     const categoryQuery = searchParams.get('category');
@@ -144,12 +177,12 @@ function ProductPageContent() {
 
     const idQuery = searchParams.get('id');
     if (idQuery) {
-      const prod = productsCatalog.find(p => p.id === Number(idQuery));
+      const prod = productsCatalog.find(p => String(p.id) === String(idQuery));
       if (prod) {
         setSelectedProduct(prod);
       }
     }
-  }, [searchParams]);
+  }, [searchParams, productsCatalog]);
   
   // Product Detail Inner Page State
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);

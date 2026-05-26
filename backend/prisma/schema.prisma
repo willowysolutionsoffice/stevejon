@@ -333,3 +333,31 @@ model Review {
 
   @@map("review")
 }
+
+// Tracks every order ID entered into the weekly lucky draw pool
+model LuckyDrawEntry {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderId   String   @unique
+  buyerName String
+  location  String
+  isUser    Boolean  @default(false)
+  week      Int
+  drawn     Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("lucky_draw_entry")
+}
+
+// Records each week's drawn winner
+model LuckyDrawWinner {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  week      Int      @unique
+  orderId   String
+  buyerName String
+  location  String
+  prize     String
+  isUser    Boolean  @default(false)
+  drawnAt   DateTime @default(now())
+
+  @@map("lucky_draw_winner")
+}

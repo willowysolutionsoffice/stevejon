@@ -4,6 +4,7 @@ import MovingNewsBar from "@/components/MovingNewsBar";
 import Categories from "@/components/Categories";
 import NewArrivals from "@/components/NewArrivals";
 import PromoSection from "@/components/PromoSection";
+import LuckyDrawPoster from "@/components/LuckyDrawPoster";
 import TodaysDeal from "@/components/TodaysDeal";
 import Banner from "@/components/Banner";
 import ProductCollectionGrid from "@/components/ProductCollectionGrid";
@@ -20,6 +21,7 @@ export default function Home() {
       <Categories />
       <NewArrivals />
       <PromoSection />
+      <LuckyDrawPoster />
       <TodaysDeal />
       <Banner />
       <ProductCollectionGrid />

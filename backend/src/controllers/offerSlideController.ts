@@ -40,7 +40,7 @@ export const createOfferSlide = async (req: Request, res: Response) => {
 
 export const updateOfferSlide = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
+        const id = req.params.id as string;
         const { route, order, isActive } = req.body;
         const file = req.file;
 
@@ -76,7 +76,7 @@ export const updateOfferSlide = async (req: Request, res: Response) => {
 
 export const deleteOfferSlide = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
+        const id = req.params.id as string;
         const slide = await prisma.offerSlide.findUnique({ where: { id: id as string } });
         if (!slide) return res.status(404).json({ error: "Slide not found" });
 

@@ -66,7 +66,7 @@ export const createProductWithVariants = async (req: Request, res: Response) => 
 
 export const updateProductWithVariants = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
+        const id = req.params.id as string;
         const data = req.body;
         const files = req.files as Express.Multer.File[];
 
@@ -243,7 +243,7 @@ export const createProduct = async (req: Request, res: Response) => {
 
 export const updateProduct = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
+        const id = req.params.id as string;
         const data = req.body;
         const file = req.file;
 
@@ -303,7 +303,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 
 export const deleteProduct = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
+        const id = req.params.id as string;
 
         const product = await prisma.product.findUnique({ 
             where: { id: id as string },
@@ -419,7 +419,7 @@ export const getProducts = async (req: Request, res: Response) => {
 export const getProductById = async (req: Request, res: Response) => {
 
     try {
-        const { id } = req.params;
+        const id = req.params.id as string;
         const product = await prisma.product.findUnique({
             where: { id: id as string },
             include: {

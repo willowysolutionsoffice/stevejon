@@ -45,7 +45,7 @@ export const createBanner = async (req: Request, res: Response) => {
 
 export const updateBanner = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
+        const id = req.params.id as string;
         const { title, order, isActive } = req.body;
         const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
@@ -89,7 +89,7 @@ export const updateBanner = async (req: Request, res: Response) => {
 
 export const deleteBanner = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
+        const id = req.params.id as string;
         const banner = await prisma.banner.findUnique({ where: { id } });
         if (!banner) return res.status(404).json({ error: "Banner not found" });
 

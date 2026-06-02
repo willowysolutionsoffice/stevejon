@@ -17,6 +17,10 @@ export const metadata: Metadata = {
   description: "The New Standard of Refinement",
 };
 
+import { CartProvider } from "@/context/CartContext";
+import { OrderProvider } from "@/context/OrderContext";
+import { WishlistProvider } from "@/context/WishlistContext";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,7 +32,13 @@ export default function RootLayout({
       className={`${geistSans.variable} ${playfair.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-[#FDFCF8] text-[#1A1A1A] selection:bg-[#1A1A1A] selection:text-white">
-        {children}
+        <CartProvider>
+          <WishlistProvider>
+            <OrderProvider>
+              {children}
+            </OrderProvider>
+          </WishlistProvider>
+        </CartProvider>
       </body>
     </html>
   );

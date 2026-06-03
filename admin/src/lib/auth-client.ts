@@ -4,7 +4,18 @@ import { inferAdditionalFields } from 'better-auth/client/plugins';
 import type { auth } from '@/lib/auth';
 import { adminClient } from 'better-auth/client/plugins';
 
+const getBaseURL = () => {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    try {
+      return new URL(process.env.NEXT_PUBLIC_API_URL).origin;
+    } catch {
+      return "http://localhost:5000";
+    }
+  }
+  return "http://localhost:5000";
+};
+
 export const authClient = createAuthClient({
-  baseURL: "http://localhost:5000",
+  baseURL: getBaseURL(),
   plugins: [inferAdditionalFields<typeof auth>(), adminClient()],
 });

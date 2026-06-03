@@ -350,7 +350,8 @@ export const deleteProduct = async (req: Request, res: Response) => {
 
 export const getProducts = async (req: Request, res: Response) => {
     try {
-        const { categoryId, subCategoryId, brandId, search, sort, page = '1', limit = '10' } = req.query;
+        console.log("🚀 GET /api/products called with query:", req.query);
+        const { categoryId, subCategoryId, brandId, search, sort, priceRanges, page = '1', limit = '10' } = req.query;
 
         const skip = (parseInt(page as string) - 1) * parseInt(limit as string);
         const take = parseInt(limit as string);
@@ -359,11 +360,40 @@ export const getProducts = async (req: Request, res: Response) => {
         if (categoryId) where.categoryId = categoryId;
         if (subCategoryId) where.subCategoryId = subCategoryId;
         if (brandId) where.brandId = brandId;
+
+        const andConditions: any[] = [];
+
         if (search) {
-            where.OR = [
-                { name: { contains: search as string, mode: 'insensitive' } },
-                { description: { contains: search as string, mode: 'insensitive' } },
-            ];
+            andConditions.push({
+                OR: [
+                    { name: { contains: search as string, mode: 'insensitive' } },
+                    { description: { contains: search as string, mode: 'insensitive' } },
+                ]
+            });
+        }
+
+        if (priceRanges) {
+            const ranges = (priceRanges as string).split(',');
+            const priceConditions = ranges.map(range => {
+                if (range === 'under_5000') {
+                    return { variants: { some: { price: { lt: 5000 } } } };
+                }
+                if (range === '5000_10000') {
+                    return { variants: { some: { price: { gte: 5000, lte: 10000 } } } };
+                }
+                if (range === 'over_10000') {
+                    return { variants: { some: { price: { gt: 10000 } } } };
+                }
+                return {};
+            }).filter(c => Object.keys(c).length > 0);
+
+            if (priceConditions.length > 0) {
+                andConditions.push({ OR: priceConditions });
+            }
+        }
+
+        if (andConditions.length > 0) {
+            where.AND = andConditions;
         }
 
         let orderBy: any = { createdAt: 'desc' };

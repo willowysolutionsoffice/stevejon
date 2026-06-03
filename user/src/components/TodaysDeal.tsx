@@ -5,11 +5,39 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
+interface Product {
+  id: string;
+  name: string;
+  image: string;
+}
+
 export default function TodaysDeal() {
   const [timeLeft, setTimeLeft] = useState({ hours: 12, minutes: 4, seconds: 32 });
+  const [dealProducts, setDealProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    // Calculate initial time left or set custom rolling countdown
+    const fetchDealProducts = async () => {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      try {
+        const response = await fetch(`${apiUrl}/products?limit=2`);
+        if (response.ok) {
+          const resData = await response.json();
+          if (resData && Array.isArray(resData.data)) {
+            const mapped = resData.data.map((p: any) => ({
+              id: p.id,
+              name: p.name,
+              image: p.image || "/prod_overshirt_1778670536589.png"
+            }));
+            setDealProducts(mapped);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching deal products:", error);
+      }
+    };
+
+    fetchDealProducts();
+
     const calculateTimeLeft = () => {
       const now = new Date();
       const endOfDay = new Date();
@@ -76,51 +104,38 @@ export default function TodaysDeal() {
             </div>
           </div>
 
-          <button className="bg-[#1A1A1A] hover:bg-black text-white font-medium text-xs tracking-[0.2em] uppercase px-10 py-4 rounded-full inline-flex items-center gap-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-black/5 group cursor-pointer">
+          <Link href="/product" className="bg-[#1A1A1A] hover:bg-black text-white font-medium text-xs tracking-[0.2em] uppercase px-10 py-4 rounded-full inline-flex items-center gap-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-black/5 group cursor-pointer">
             Shop Now
             <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </button>
+          </Link>
         </div>
 
-        {/* Card 1: Overshirt */}
-        <Link href="/product?id=1" className="w-full lg:w-[28%] relative rounded-2xl overflow-hidden aspect-[3/4] group cursor-pointer shadow-sm hover:shadow-md transition-shadow bg-[#F3F2EE] block">
-          <Image
-            src="/prod_overshirt_1778670536589.png"
-            alt="Today's Deal - Overshirt"
-            fill
-            sizes="(max-width: 1024px) 100vw, 28vw"
-            className="object-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-105"
-            priority
-          />
-          {/* Subtle overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-85 group-hover:opacity-100 transition-opacity duration-300"></div>
-          {/* Link at the bottom */}
-          <div className="absolute bottom-6 left-0 right-0 text-center z-10">
-            <span className="text-white text-[0.65rem] md:text-xs tracking-[0.2em] uppercase font-medium underline underline-offset-4 decoration-white/70 group-hover:decoration-white transition-all">
-              Discover
-            </span>
-          </div>
-        </Link>
+        {/* Dynamic Deal Cards */}
+        {dealProducts.map((prod) => (
+          <Link key={prod.id} href={`/product?id=${prod.id}`} className="w-full lg:w-[28%] relative rounded-2xl overflow-hidden aspect-[3/4] group cursor-pointer shadow-sm hover:shadow-md transition-shadow bg-[#F3F2EE] block">
+            <Image
+              src={prod.image}
+              alt={`Today's Deal - ${prod.name}`}
+              fill
+              sizes="(max-width: 1024px) 100vw, 28vw"
+              className="object-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-105 p-6"
+              priority
+            />
+            {/* Subtle overlay gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-85 group-hover:opacity-100 transition-opacity duration-300"></div>
+            {/* Link at the bottom */}
+            <div className="absolute bottom-6 left-0 right-0 text-center z-10">
+              <span className="text-white text-[0.65rem] md:text-xs tracking-[0.2em] uppercase font-medium underline underline-offset-4 decoration-white/70 group-hover:decoration-white transition-all">
+                {prod.name}
+              </span>
+            </div>
+          </Link>
+        ))}
 
-        {/* Card 2: Trouser */}
-        <Link href="/product?id=5" className="w-full lg:w-[28%] relative rounded-2xl overflow-hidden aspect-[3/4] group cursor-pointer shadow-sm hover:shadow-md transition-shadow bg-[#F3F2EE] block">
-          <Image
-            src="/prod_trouser_1778670553370.png"
-            alt="Today's Deal - Trouser"
-            fill
-            sizes="(max-width: 1024px) 100vw, 28vw"
-            className="object-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-105"
-            priority
-          />
-          {/* Subtle overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-85 group-hover:opacity-100 transition-opacity duration-300"></div>
-          {/* Link at the bottom */}
-          <div className="absolute bottom-6 left-0 right-0 text-center z-10">
-            <span className="text-white text-[0.65rem] md:text-xs tracking-[0.2em] uppercase font-medium underline underline-offset-4 decoration-white/70 group-hover:decoration-white transition-all">
-              Discover
-            </span>
-          </div>
-        </Link>
+        {/* Fallbacks if dealProducts count is less than 2 */}
+        {dealProducts.length === 0 && [1, 2].map((i) => (
+          <div key={i} className="w-full lg:w-[28%] rounded-2xl bg-gray-100 animate-pulse aspect-[3/4]"></div>
+        ))}
       </div>
     </section>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
@@ -8,65 +8,106 @@ import { useWishlist } from '@/context/WishlistContext';
 import { ShoppingBag, Check, Heart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  originalPrice: number;
+  image: string;
+  isNewArrival: boolean;
+}
+
 export default function NewArrivals() {
   const { addToCart } = useCart();
   const { addToWishlist } = useWishlist();
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const router = useRouter();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const getProductId = (title: string) => {
-    switch (title) {
-      case "Overshirt": return 1;
-      case "Trouser": return 5;
-      case "Pocket Square": return 7;
-      case "Belt": return 9;
-      default: return 1;
-    }
-  }
+  useEffect(() => {
+    const fetchNewArrivals = async () => {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      try {
+        const response = await fetch(`${apiUrl}/products?limit=100`);
+        if (response.ok) {
+          const resData = await response.json();
+          if (resData && Array.isArray(resData.data)) {
+            // Map the API data
+            const mapped = resData.data.map((p: any) => {
+              const price = p.variants?.[0]?.price || 5400;
+              return {
+                id: p.id,
+                name: p.name,
+                category: p.category?.name || "Apparel",
+                price: price,
+                originalPrice: p.variants?.[0]?.offerPrice || Math.round(price * 1.2),
+                image: p.image || "/prod_overshirt_1778670536589.png",
+                isNewArrival: p.isNewArrival
+              };
+            });
 
-  const handleAddToCart = (e: React.MouseEvent, prod: { title: string; price: string; img: string }) => {
+            // Filter for new arrivals, fallback to first 4 products if none marked
+            let filtered = mapped.filter((p: any) => p.isNewArrival);
+            if (filtered.length === 0) {
+              filtered = mapped.slice(0, 4);
+            }
+            setProducts(filtered.slice(0, 4));
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching new arrivals:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchNewArrivals();
+  }, []);
+
+  const handleAddToCart = (e: React.MouseEvent, prod: Product) => {
     e.preventDefault();
     addToCart({
-      productId: getProductId(prod.title),
-      title: prod.title,
-      category: prod.title === "Pocket Square" || prod.title === "Belt" ? "Accessories" : "Apparel",
-      price: 5400,
-      image: prod.img,
+      productId: prod.id,
+      title: prod.name,
+      category: prod.category,
+      price: prod.price,
+      image: prod.image,
       size: 'M',
       color: 'Classic',
       quantity: 1,
     });
     
-    setToastMessage(`Added ${prod.title} to cart`);
+    setToastMessage(`Added ${prod.name} to cart`);
     setTimeout(() => {
       setToastMessage(null);
     }, 3000);
   };
 
-  const handleAddToWishlist = (e: React.MouseEvent, prod: { title: string; price: string; img: string }) => {
+  const handleAddToWishlist = (e: React.MouseEvent, prod: Product) => {
     e.preventDefault();
     addToWishlist({
-      id: String(getProductId(prod.title)),
-      productId: getProductId(prod.title),
-      title: prod.title,
-      category: prod.title === "Pocket Square" || prod.title === "Belt" ? "Accessories" : "Apparel",
-      price: 5400,
-      image: prod.img,
+      id: String(prod.id),
+      productId: prod.id,
+      title: prod.name,
+      category: prod.category,
+      price: prod.price,
+      image: prod.image,
     });
-    setToastMessage(`Added ${prod.title} to wishlist`);
+    setToastMessage(`Added ${prod.name} to wishlist`);
     setTimeout(() => {
       setToastMessage(null);
     }, 3000);
   };
 
-  const handleBuyNow = (e: React.MouseEvent, prod: { title: string; price: string; img: string }) => {
+  const handleBuyNow = (e: React.MouseEvent, prod: Product) => {
     e.preventDefault();
     addToCart({
-      productId: getProductId(prod.title),
-      title: prod.title,
-      category: prod.title === "Pocket Square" || prod.title === "Belt" ? "Accessories" : "Apparel",
-      price: 5400,
-      image: prod.img,
+      productId: prod.id,
+      title: prod.name,
+      category: prod.category,
+      price: prod.price,
+      image: prod.image,
       size: 'M',
       color: 'Classic',
       quantity: 1,
@@ -74,23 +115,37 @@ export default function NewArrivals() {
     router.push('/cart');
   };
 
+  if (loading) {
+    return (
+      <section className="py-20 px-4 md:px-8 max-w-7xl mx-auto">
+        <h2 className="text-3xl font-serif text-center md:text-left mb-12">New Arrivals</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
+          {[1, 2, 3, 4].map((_, i) => (
+            <div key={i} className="flex flex-col gap-4 animate-pulse">
+              <div className="aspect-[3/4] w-full bg-gray-200 rounded-xl"></div>
+              <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (products.length === 0) return null;
+
   return (
     <section className="py-20 px-4 md:px-8 max-w-7xl mx-auto relative">
       <h2 className="text-3xl font-serif text-center md:text-left mb-12">New Arrivals</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
-        {[
-          { title: "Overshirt", price: "Rs 850", img: "/prod_overshirt_1778670536589.png" },
-          { title: "Trouser", price: "Rs 620", img: "/prod_trouser_1778670553370.png" },
-          { title: "Pocket Square", price: "Rs 150", img: "/prod_overshirt_1778670536589.png" },
-          { title: "Belt", price: "Rs 280", img: "/prod_trouser_1778670553370.png" },
-        ].map((prod, i) => (
-          <div key={i} className="group flex flex-col">
+        {products.map((prod) => (
+          <div key={prod.id} className="group flex flex-col">
             <div className="relative aspect-[3/4] bg-[#F3F2EE] mb-4 overflow-hidden rounded-xl group/image">
-              <Link href={`/product?id=${getProductId(prod.title)}`} className="block w-full h-full">
+              <Link href={`/product?id=${prod.id}`} className="block w-full h-full">
                 <div className="absolute top-3 left-3 bg-white px-2 py-1 text-[0.6rem] font-bold tracking-widest z-10 shadow-sm">NEW</div>
                 <Image 
-                  src={prod.img} 
-                  alt={prod.title} 
+                  src={prod.image} 
+                  alt={prod.name} 
                   fill
                   className="object-cover transition-transform duration-700 group-hover/image:scale-105 mix-blend-multiply"
                 />
@@ -113,9 +168,9 @@ export default function NewArrivals() {
               </div>
             </div>
             <div className="flex flex-col gap-3 flex-1">
-              <Link href={`/product?id=${getProductId(prod.title)}`} className="block">
-                <h4 className="text-sm text-gray-900 group-hover:text-[#DF9F28] transition-colors">{prod.title}</h4>
-                <p className="text-sm font-semibold text-gray-900 mt-1">{prod.price}</p>
+              <Link href={`/product?id=${prod.id}`} className="block">
+                <h4 className="text-sm text-gray-900 group-hover:text-[#DF9F28] transition-colors">{prod.name}</h4>
+                <p className="text-sm font-semibold text-gray-900 mt-1">₹ {prod.price.toLocaleString()}</p>
               </Link>
               <button 
                 onClick={(e) => handleBuyNow(e, prod)}

@@ -10,7 +10,7 @@ import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 
 interface Product {
-  id: number;
+  id: string | number;
   title: string;
   category: string;
   price: number;
@@ -57,133 +57,16 @@ function ProductPageContent() {
     });
     showToast(`Added ${prod.title} to wishlist`);
   };
-  // Real project products catalog duplicated to form a pristine 9-item grid
-  const initialProductsCatalog: Product[] = [
-    {
-      id: 1,
-      title: "Overshirt",
-      category: "Apparel",
-      price: 5400,
-      originalPrice: 6600,
-      image: "/prod_overshirt_1778670536589.png"
-    },
-    {
-      id: 2,
-      title: "Leather Duffle Bag",
-      category: "Leather Goods",
-      price: 5400,
-      originalPrice: 6600,
-      image: "/cat_leather_1778670351299.png"
-    },
-    {
-      id: 3,
-      title: "Signature Perfume",
-      category: "Accessories",
-      price: 5400,
-      originalPrice: 6600,
-      image: "/cat_accessories_1778670517925.png"
-    },
-    {
-      id: 4,
-      title: "Double-Breasted Coat",
-      category: "Apparel",
-      price: 5400,
-      originalPrice: 6600,
-      image: "/cat_apparel_1778670103427.png"
-    },
-    {
-      id: 5,
-      title: "Trouser",
-      category: "Apparel",
-      price: 5400,
-      originalPrice: 6600,
-      image: "/prod_trouser_1778670553370.png"
-    },
-    {
-      id: 6,
-      title: "Luxury Briefcase",
-      category: "Leather Goods",
-      price: 5400,
-      originalPrice: 6600,
-      image: "/cat_leather_1778670351299.png"
-    },
-    {
-      id: 7,
-      title: "Pocket Square",
-      category: "Accessories",
-      price: 5400,
-      originalPrice: 6600,
-      image: "/prod_overshirt_1778670536589.png" // User used overshirt image for pocket square on homepage
-    },
-    {
-      id: 8,
-      title: "Casual Utility Trouser",
-      category: "Apparel",
-      price: 5400,
-      originalPrice: 6600,
-      image: "/prod_trouser_1778670553370.png"
-    },
-    {
-      id: 9,
-      title: "Belt",
-      category: "Accessories",
-      price: 5400,
-      originalPrice: 6600,
-      image: "/prod_trouser_1778670553370.png" // User used trouser image for belt on homepage
-    }
-  ];
 
-  const [productsCatalog, setProductsCatalog] = useState<Product[]>(initialProductsCatalog);
+  const [productsCatalog, setProductsCatalog] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [categoriesList, setCategoriesList] = useState<any[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
 
-  // Client-side category selection state
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(['Apparel', 'Leather Goods']);
-
-  // Fetch products from the backend on mount
-  useEffect(() => {
-    const fetchBackendProducts = async () => {
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-        const response = await fetch(`${apiUrl}/products`);
-        if (response.ok) {
-          const resData = await response.json();
-          if (resData && Array.isArray(resData.data) && resData.data.length > 0) {
-            const mapped = resData.data.map((p: any) => {
-              const price = p.variants?.[0]?.price || 5400;
-              return {
-                id: p.id,
-                title: p.name,
-                category: p.category?.name || "Apparel",
-                price: price,
-                originalPrice: p.variants?.[0]?.offerPrice || Math.round(price * 1.2),
-                image: p.image || "/prod_overshirt_1778670536589.png"
-              };
-            });
-            setProductsCatalog(mapped);
-          }
-        }
-      } catch (error) {
-        console.warn("Backend server offline or database unseeded. Operating in elegant local fallback mode.", error);
-      }
-    };
-    
-    fetchBackendProducts();
-  }, []);
-
-  useEffect(() => {
-    const categoryQuery = searchParams.get('category');
-    if (categoryQuery) {
-      setSelectedCategories([categoryQuery]);
-    }
-
-    const idQuery = searchParams.get('id');
-    if (idQuery) {
-      const prod = productsCatalog.find(p => String(p.id) === String(idQuery));
-      if (prod) {
-        setSelectedProduct(prod);
-      }
-    }
-  }, [searchParams, productsCatalog]);
-  
   // Product Detail Inner Page State
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<string>('M');
@@ -192,25 +75,113 @@ function ProductPageContent() {
   const [activeTab, setActiveTab] = useState<string>('description');
   const [activeReviewIdx, setActiveReviewIdx] = useState<number>(0);
 
-  // Handle category checkbox changes
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategories(prev => 
-      prev.includes(category) 
-        ? prev.filter(c => c !== category) 
-        : [...prev, category]
-    );
+  // Fetch categories on mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      try {
+        const response = await fetch(`${apiUrl}/categories`);
+        if (response.ok) {
+          const data = await response.json();
+          if (Array.isArray(data)) {
+            setCategoriesList(data);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  // Fetch products function
+  const fetchProducts = async (currentPage: number, categoryId: string | null, priceRanges: string[], isLoadMore: boolean) => {
+    if (isLoadMore) {
+      setLoadingMore(true);
+    } else {
+      setLoading(true);
+    }
+
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    let queryUrl = `${apiUrl}/products?page=${currentPage}&limit=9`;
+    if (categoryId) {
+      queryUrl += `&categoryId=${categoryId}`;
+    }
+    if (priceRanges.length > 0) {
+      queryUrl += `&priceRanges=${priceRanges.join(',')}`;
+    }
+
+    try {
+      const response = await fetch(queryUrl);
+      if (response.ok) {
+        const resData = await response.json();
+        if (resData && Array.isArray(resData.data)) {
+          const mapped = resData.data.map((p: any) => {
+            const price = p.variants?.[0]?.price || 5400;
+            return {
+              id: p.id,
+              title: p.name,
+              category: p.category?.name || "Apparel",
+              price: price,
+              originalPrice: p.variants?.[0]?.offerPrice || Math.round(price * 1.2),
+              image: p.image || "/prod_overshirt_1778670536589.png"
+            };
+          });
+
+          if (isLoadMore) {
+            setProductsCatalog(prev => [...prev, ...mapped]);
+          } else {
+            setProductsCatalog(mapped);
+          }
+          setHasNextPage(resData.pagination?.hasNextPage || false);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
   };
 
-  // Clear all active filters
+  // Trigger fetch on filter change (always resets to page 1)
+  useEffect(() => {
+    setPage(1);
+    fetchProducts(1, selectedCategoryId, selectedPriceRanges, false);
+  }, [selectedCategoryId, selectedPriceRanges]);
+
+  // Handle URL parameters once categories and catalog load
+  useEffect(() => {
+    const categoryQuery = searchParams.get('category');
+    if (categoryQuery && categoriesList.length > 0) {
+      const match = categoriesList.find(c => c.name.toLowerCase() === categoryQuery.toLowerCase());
+      if (match) {
+        setSelectedCategoryId(match.id);
+      }
+    }
+
+    const idQuery = searchParams.get('id');
+    if (idQuery && productsCatalog.length > 0) {
+      const prod = productsCatalog.find(p => String(p.id) === String(idQuery));
+      if (prod) {
+        setSelectedProduct(prod);
+      }
+    }
+  }, [searchParams, categoriesList, productsCatalog]);
+
+  const handleLoadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchProducts(nextPage, selectedCategoryId, selectedPriceRanges, true);
+  };
+
   const handleClearAll = () => {
-    setSelectedCategories([]);
+    setSelectedCategoryId(null);
+    setSelectedPriceRanges([]);
   };
 
-  // Filter products catalog dynamically
-  const filteredProducts = useMemo(() => {
-    if (selectedCategories.length === 0) return productsCatalog;
-    return productsCatalog.filter(p => selectedCategories.includes(p.category));
-  }, [selectedCategories]);
+  // Filtered products list is simply the productsCatalog since the API handles filtering
+  const filteredProducts = productsCatalog;
 
   const handleAddToCart = () => {
     if (!selectedProduct) return;
@@ -868,15 +839,17 @@ function ProductPageContent() {
                   Category
                 </h3>
                 <div className="flex flex-col gap-3">
-                  {['Apparel', 'Leather Goods', 'Accessories'].map(cat => (
-                    <label key={cat} className="flex items-center gap-3 text-xs tracking-wider font-medium text-gray-700 cursor-pointer group">
+                  {categoriesList.map(cat => (
+                    <label key={cat.id} className="flex items-center gap-3 text-xs tracking-wider font-medium text-gray-700 cursor-pointer group">
                       <input
                         type="checkbox"
-                        checked={selectedCategories.includes(cat)}
-                        onChange={() => handleCategoryChange(cat)}
+                        checked={selectedCategoryId === cat.id}
+                        onChange={() => {
+                          setSelectedCategoryId(prev => prev === cat.id ? null : cat.id);
+                        }}
                         className="w-4 h-4 rounded border-gray-200 text-[#DF9F28] focus:ring-[#DF9F28] accent-[#DF9F28]"
                       />
-                      <span className="group-hover:text-black transition-colors">{cat}</span>
+                      <span className="group-hover:text-black transition-colors">{cat.name}</span>
                     </label>
                   ))}
                 </div>
@@ -888,15 +861,25 @@ function ProductPageContent() {
                   Price Range
                 </h3>
                 <div className="flex flex-col gap-3">
-                  {['Under ₹5000', '₹5000 - ₹10000', 'Over ₹10000'].map(price => (
-                    <label key={price} className="flex items-center gap-3 text-xs tracking-wider font-medium text-gray-700 cursor-pointer group">
+                  {[
+                    { key: 'under_5000', label: 'Under ₹5000' },
+                    { key: '5000_10000', label: '₹5000 - ₹10000' },
+                    { key: 'over_10000', label: 'Over ₹10000' }
+                  ].map(priceRange => (
+                    <label key={priceRange.key} className="flex items-center gap-3 text-xs tracking-wider font-medium text-gray-700 cursor-pointer group">
                       <input
                         type="checkbox"
-                        defaultChecked={price === '₹5000 - ₹10000'}
+                        checked={selectedPriceRanges.includes(priceRange.key)}
+                        onChange={() => {
+                          setSelectedPriceRanges(prev => 
+                            prev.includes(priceRange.key)
+                              ? prev.filter(p => p !== priceRange.key)
+                              : [...prev, priceRange.key]
+                          );
+                        }}
                         className="w-4 h-4 rounded border-gray-200 text-[#DF9F28] focus:ring-[#DF9F28] accent-[#DF9F28]"
-                        disabled
                       />
-                      <span className="group-hover:text-black transition-colors opacity-60">{price}</span>
+                      <span className="group-hover:text-black transition-colors">{priceRange.label}</span>
                     </label>
                   ))}
                 </div>
@@ -950,18 +933,28 @@ function ProductPageContent() {
                 Active Filters:
               </span>
 
-              {selectedCategories.map(cat => (
+              {selectedCategoryId && (
                 <button
-                  key={cat}
-                  onClick={() => handleCategoryChange(cat)}
+                  onClick={() => setSelectedCategoryId(null)}
                   className="inline-flex items-center gap-1.5 bg-[#F3F2EE] hover:bg-[#E5E4E0] text-black text-[0.65rem] tracking-wider uppercase font-semibold px-3 py-1.5 rounded-full transition-colors cursor-pointer"
                 >
-                  {cat === 'Leather Goods' ? 'Leather' : cat}
+                  {categoriesList.find(c => c.id === selectedCategoryId)?.name || 'Category'}
+                  <X className="w-3 h-3 text-gray-400 hover:text-black transition-colors" />
+                </button>
+              )}
+
+              {selectedPriceRanges.map(range => (
+                <button
+                  key={range}
+                  onClick={() => setSelectedPriceRanges(prev => prev.filter(r => r !== range))}
+                  className="inline-flex items-center gap-1.5 bg-[#F3F2EE] hover:bg-[#E5E4E0] text-black text-[0.65rem] tracking-wider uppercase font-semibold px-3 py-1.5 rounded-full transition-colors cursor-pointer"
+                >
+                  {range === 'under_5000' ? 'Under ₹5000' : range === '5000_10000' ? '₹5000 - ₹10000' : 'Over ₹10000'}
                   <X className="w-3 h-3 text-gray-400 hover:text-black transition-colors" />
                 </button>
               ))}
 
-              {selectedCategories.length > 0 && (
+              {(selectedCategoryId || selectedPriceRanges.length > 0) && (
                 <button
                   onClick={handleClearAll}
                   className="text-[0.65rem] tracking-[0.2em] uppercase font-bold text-[#DF9F28] hover:text-[#c58b20] transition-colors cursor-pointer ml-2 border-b border-[#DF9F28]/35 hover:border-[#c58b20]"
@@ -972,71 +965,97 @@ function ProductPageContent() {
             </div>
 
             {/* Products Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-12">
-              {filteredProducts.map(prod => (
-                <div 
-                  key={prod.id} 
-                  onClick={() => {
-                    setSelectedProduct(prod);
-                    window.scrollTo({ top: 300, behavior: 'smooth' });
-                  }}
-                  className="group cursor-pointer"
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-12 w-full col-span-3">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="flex flex-col gap-4 animate-pulse">
+                    <div className="aspect-[3/4] w-full bg-gray-200 rounded-2xl"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/3 mt-2"></div>
+                    <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-5 bg-gray-200 rounded w-1/4"></div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-12 w-full col-span-3">
+                {filteredProducts.map(prod => (
+                  <div 
+                    key={prod.id} 
+                    onClick={() => {
+                      setSelectedProduct(prod);
+                      window.scrollTo({ top: 300, behavior: 'smooth' });
+                    }}
+                    className="group cursor-pointer"
+                  >
+                    
+                    {/* Image Card */}
+                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 bg-[#F3F2EE] border border-gray-100/50">
+                      <Image
+                        src={prod.image}
+                        alt={prod.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-cover mix-blend-multiply transition-transform duration-750 group-hover:scale-105 p-4"
+                        priority={true}
+                      />
+                      
+                      {/* Subtle bottom gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      
+                      {/* Wishlist & Cart Icons */}
+                      <div className="absolute bottom-3 right-3 flex flex-row gap-2 z-20">
+                        <button 
+                          onClick={(e) => handleQuickAddToWishlist(e, prod)}
+                          className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#DF9F28] hover:text-white transition-colors text-gray-800"
+                          aria-label="Add to wishlist"
+                        >
+                          <Heart className="w-4 h-4" />
+                        </button>
+                        <button 
+                          onClick={(e) => handleQuickAddToCart(e, prod)}
+                          className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#DF9F28] hover:text-white transition-colors text-gray-800"
+                          aria-label="Add to cart"
+                        >
+                          <ShoppingBag className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Product Details */}
+                    <div className="mt-5 text-left">
+                      <span className="text-[0.6rem] tracking-[0.2em] uppercase font-bold text-gray-400">
+                        {prod.category}
+                      </span>
+                      <h3 className="text-sm font-semibold tracking-wide text-gray-900 mt-1 group-hover:text-black transition-colors font-sans">
+                        {prod.title}
+                      </h3>
+                      <div className="flex items-center gap-2 mt-2">
+                        <span className="text-sm font-bold text-black">
+                          ₹ {prod.price}
+                        </span>
+                        <span className="text-[0.7rem] line-through text-gray-400 font-normal">
+                          ₹ {prod.originalPrice}
+                        </span>
+                      </div>
+                    </div>
+
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Load More Button */}
+            {hasNextPage && (
+              <div className="flex justify-center mt-16">
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loadingMore}
+                  className="bg-black hover:bg-gray-800 disabled:bg-gray-400 text-white font-medium text-xs tracking-[0.2em] uppercase px-10 py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg cursor-pointer"
                 >
-                  
-                  {/* Image Card */}
-                  <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 bg-[#F3F2EE] border border-gray-100/50">
-                    <Image
-                      src={prod.image}
-                      alt={prod.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                      className="object-cover mix-blend-multiply transition-transform duration-750 group-hover:scale-105 p-4"
-                      priority={prod.id <= 3}
-                    />
-                    
-                    {/* Subtle bottom gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    
-                    {/* Wishlist & Cart Icons */}
-                    <div className="absolute bottom-3 right-3 flex flex-row gap-2 z-20">
-                      <button 
-                        onClick={(e) => handleQuickAddToWishlist(e, prod)}
-                        className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#DF9F28] hover:text-white transition-colors text-gray-800"
-                        aria-label="Add to wishlist"
-                      >
-                        <Heart className="w-4 h-4" />
-                      </button>
-                      <button 
-                        onClick={(e) => handleQuickAddToCart(e, prod)}
-                        className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#DF9F28] hover:text-white transition-colors text-gray-800"
-                        aria-label="Add to cart"
-                      >
-                        <ShoppingBag className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Product Details */}
-                  <div className="mt-5 text-left">
-                    <span className="text-[0.6rem] tracking-[0.2em] uppercase font-bold text-gray-400">
-                      {prod.category}
-                    </span>
-                    <h3 className="text-sm font-semibold tracking-wide text-gray-900 mt-1 group-hover:text-black transition-colors font-sans">
-                      {prod.title}
-                    </h3>
-                    <div className="flex items-center gap-2 mt-2">
-                      <span className="text-sm font-bold text-black">
-                        ₹ {prod.price}
-                      </span>
-                      <span className="text-[0.7rem] line-through text-gray-400 font-normal">
-                        ₹ {prod.originalPrice}
-                      </span>
-                    </div>
-                  </div>
-
-                </div>
-              ))}
-            </div>
+                  {loadingMore ? 'Loading...' : 'Load More'}
+                </button>
+              </div>
+            )}
 
             {/* Empty State */}
             {filteredProducts.length === 0 && (

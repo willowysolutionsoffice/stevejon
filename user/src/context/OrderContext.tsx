@@ -44,75 +44,7 @@ interface OrderContextType {
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
-const initialMockOrders: Order[] = [
-  {
-    id: 'SJ-84902',
-    date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // Yesterday
-    items: [
-      {
-        id: '2-One Size-Heritage Tan',
-        productId: 2,
-        title: 'Leather Duffle Bag',
-        category: 'Leather Goods',
-        price: 5400,
-        image: '/cat_leather_1778670351299.png',
-        size: 'One Size',
-        color: 'Heritage Tan',
-        quantity: 1,
-      }
-    ],
-    totalAmount: 5400,
-    status: 'SHIPPED',
-    paymentMethod: 'Credit Card',
-    shippingDetails: {
-      name: 'Jane Doe',
-      phone: '+91 98765 43210',
-      street: '12, Atelier Lane, Khar West',
-      city: 'Mumbai',
-      state: 'Maharashtra',
-      pincode: '400052',
-    }
-  },
-  {
-    id: 'SJ-82910',
-    date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(), // 15 days ago
-    items: [
-      {
-        id: '1-M-Classic',
-        productId: 1,
-        title: 'Overshirt',
-        category: 'Apparel',
-        price: 5400,
-        image: '/prod_overshirt_1778670536589.png',
-        size: 'M',
-        color: 'Classic',
-        quantity: 1,
-      },
-      {
-        id: '5-M-Classic',
-        productId: 5,
-        title: 'Trouser',
-        category: 'Apparel',
-        price: 5400,
-        image: '/prod_trouser_1778670553370.png',
-        size: 'M',
-        color: 'Classic',
-        quantity: 1,
-      }
-    ],
-    totalAmount: 10800,
-    status: 'DELIVERED',
-    paymentMethod: 'UPI',
-    shippingDetails: {
-      name: 'Jane Doe',
-      phone: '+91 98765 43210',
-      street: '12, Atelier Lane, Khar West',
-      city: 'Mumbai',
-      state: 'Maharashtra',
-      pincode: '400052',
-    }
-  }
-];
+const initialMockOrders: Order[] = [];
 
 export const OrderProvider = ({ children }: { children: ReactNode }) => {
   const [orders, setOrders] = useState<Order[]>([]);

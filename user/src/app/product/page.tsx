@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect, Suspense } from 'react';
 import Image from 'next/image';
-import { ArrowRight, Trophy, Zap, X, ArrowLeft, Star, ShieldCheck, Truck, RefreshCw, Check, ShoppingBag, Heart } from 'lucide-react';
+import { ArrowRight, Trophy, Zap, X, ArrowLeft, Star, ShieldCheck, Truck, RefreshCw, Check, ShoppingBag, Heart, Search } from 'lucide-react';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -70,6 +70,12 @@ function ProductPageContent() {
   const [hasNextPage, setHasNextPage] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
 
+  // Search States
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchType, setSearchType] = useState('name'); // 'name' | 'sku' | 'category'
+  const [activeSearchQuery, setActiveSearchQuery] = useState('');
+  const [activeSearchType, setActiveSearchType] = useState('name');
+
   // Product Detail Inner Page State
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<string>('M');
@@ -99,7 +105,14 @@ function ProductPageContent() {
   }, []);
 
   // Fetch products function
-  const fetchProducts = async (currentPage: number, categoryId: string | null, priceRanges: string[], isLoadMore: boolean) => {
+  const fetchProducts = async (
+    currentPage: number, 
+    categoryId: string | null, 
+    priceRanges: string[], 
+    search: string,
+    sType: string,
+    isLoadMore: boolean
+  ) => {
     if (isLoadMore) {
       setLoadingMore(true);
     } else {
@@ -113,6 +126,9 @@ function ProductPageContent() {
     }
     if (priceRanges.length > 0) {
       queryUrl += `&priceRanges=${priceRanges.join(',')}`;
+    }
+    if (search.trim()) {
+      queryUrl += `&search=${encodeURIComponent(search.trim())}&searchType=${sType}`;
     }
 
     try {
@@ -149,11 +165,11 @@ function ProductPageContent() {
     }
   };
 
-  // Trigger fetch on filter change (always resets to page 1)
+  // Trigger fetch on filter/search change (always resets to page 1)
   useEffect(() => {
     setPage(1);
-    fetchProducts(1, selectedCategoryId, selectedPriceRanges, false);
-  }, [selectedCategoryId, selectedPriceRanges]);
+    fetchProducts(1, selectedCategoryId, selectedPriceRanges, activeSearchQuery, activeSearchType, false);
+  }, [selectedCategoryId, selectedPriceRanges, activeSearchQuery, activeSearchType]);
 
   // Handle URL parameters once categories and catalog load
   useEffect(() => {
@@ -174,15 +190,31 @@ function ProductPageContent() {
     }
   }, [searchParams, categoriesList, productsCatalog]);
 
+  // Handle URL search parameters on mount or when searchParams change
+  useEffect(() => {
+    const searchQueryParam = searchParams.get('search');
+    if (searchQueryParam !== null) {
+      setSearchQuery(searchQueryParam);
+      setActiveSearchQuery(searchQueryParam);
+      const searchTypeParam = searchParams.get('searchType') || 'name';
+      setSearchType(searchTypeParam);
+      setActiveSearchType(searchTypeParam);
+    }
+  }, [searchParams]);
+
   const handleLoadMore = () => {
     const nextPage = page + 1;
     setPage(nextPage);
-    fetchProducts(nextPage, selectedCategoryId, selectedPriceRanges, true);
+    fetchProducts(nextPage, selectedCategoryId, selectedPriceRanges, activeSearchQuery, activeSearchType, true);
   };
 
   const handleClearAll = () => {
     setSelectedCategoryId(null);
     setSelectedPriceRanges([]);
+    setSearchQuery('');
+    setSearchType('name');
+    setActiveSearchQuery('');
+    setActiveSearchType('name');
   };
 
   // Filtered products list is simply the productsCatalog since the API handles filtering
@@ -1102,12 +1134,74 @@ function ProductPageContent() {
 
           {/* RIGHT COLUMN: Active Filters & Products Grid */}
           <main className="w-full lg:w-3/4 flex-1">
+
+            {/* Search Input Bar Group */}
+            <div className="bg-white rounded-[1.5rem] border border-gray-100 p-4 shadow-sm mb-8 flex flex-col sm:flex-row gap-4 items-center">
+              <div className="relative flex-1 w-full">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                  <Search className="w-4 h-4" />
+                </span>
+                <input
+                  type="text"
+                  placeholder={
+                    searchType === 'sku'
+                      ? 'Search by variant SKU (e.g. OVER-SHIRT-M)...'
+                      : searchType === 'category'
+                      ? 'Search by category (e.g. Apparel)...'
+                      : 'Search products by name...'
+                  }
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      setActiveSearchQuery(searchQuery);
+                      setActiveSearchType(searchType);
+                    }
+                  }}
+                  className="w-full pl-11 pr-4 py-3 rounded-full text-xs font-semibold tracking-wider border border-gray-200 focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-gray-50/50"
+                />
+              </div>
+              <div className="flex gap-3 w-full sm:w-auto items-center">
+                <select
+                  value={searchType}
+                  onChange={(e) => setSearchType(e.target.value)}
+                  className="bg-white border border-gray-200 rounded-full px-4 py-3 text-xs font-bold tracking-wider text-gray-700 focus:outline-none focus:border-[#DF9F28] cursor-pointer"
+                >
+                  <option value="name">Search by Name</option>
+                  <option value="sku">Search by SKU</option>
+                  <option value="category">Search by Category</option>
+                </select>
+                <button
+                  onClick={() => {
+                    setActiveSearchQuery(searchQuery);
+                    setActiveSearchType(searchType);
+                  }}
+                  className="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-full text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-md cursor-pointer select-none"
+                >
+                  Search
+                </button>
+              </div>
+            </div>
             
             {/* Active Filters Row */}
             <div className="flex flex-wrap items-center gap-3 mb-10 pb-6 border-b border-gray-100 min-h-[44px]">
               <span className="text-[0.65rem] tracking-[0.2em] uppercase font-bold text-gray-400">
                 Active Filters:
               </span>
+
+              {activeSearchQuery && (
+                <button
+                  onClick={() => {
+                    setSearchQuery('');
+                    setActiveSearchQuery('');
+                  }}
+                  className="inline-flex items-center gap-1.5 bg-[#F3F2EE] hover:bg-[#E5E4E0] text-black text-[0.65rem] tracking-wider uppercase font-semibold px-3 py-1.5 rounded-full transition-colors cursor-pointer"
+                >
+                  {activeSearchType === 'sku' ? 'SKU: ' : activeSearchType === 'category' ? 'Category: ' : ''}
+                  "{activeSearchQuery}"
+                  <X className="w-3 h-3 text-gray-400 hover:text-black transition-colors" />
+                </button>
+              )}
 
               {selectedCategoryId && (
                 <button

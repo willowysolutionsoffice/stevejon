@@ -44,7 +44,7 @@ export default function Navbar() {
     if (searchQuery.trim()) {
       setIsSearchOpen(false);
       setIsOpen(false);
-      router.push(`/collections?search=${encodeURIComponent(searchQuery)}`);
+      router.push(`/product?search=${encodeURIComponent(searchQuery)}`);
       setSearchQuery("");
     }
   };
@@ -399,7 +399,7 @@ export default function Navbar() {
                     onClick={() => {
                       setSearchQuery(term);
                       router.push(
-                        `/collections?search=${encodeURIComponent(term)}`,
+                        `/product?search=${encodeURIComponent(term)}`,
                       );
                       setIsSearchOpen(false);
                       setIsOpen(false);

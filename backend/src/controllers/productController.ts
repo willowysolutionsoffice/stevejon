@@ -351,7 +351,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
 export const getProducts = async (req: Request, res: Response) => {
     try {
         console.log("🚀 GET /api/products called with query:", req.query);
-        const { categoryId, subCategoryId, brandId, search, sort, priceRanges, page = '1', limit = '10' } = req.query;
+        const { categoryId, subCategoryId, brandId, search, searchType, sort, priceRanges, page = '1', limit = '10' } = req.query;
 
         const skip = (parseInt(page as string) - 1) * parseInt(limit as string);
         const take = parseInt(limit as string);
@@ -364,12 +364,36 @@ export const getProducts = async (req: Request, res: Response) => {
         const andConditions: any[] = [];
 
         if (search) {
-            andConditions.push({
-                OR: [
-                    { name: { contains: search as string, mode: 'insensitive' } },
-                    { description: { contains: search as string, mode: 'insensitive' } },
-                ]
-            });
+            const searchStr = search as string;
+            if (searchType === 'sku') {
+                andConditions.push({
+                    variants: {
+                        some: {
+                            sku: { contains: searchStr, mode: 'insensitive' }
+                        }
+                    }
+                });
+            } else if (searchType === 'category') {
+                andConditions.push({
+                    category: {
+                        name: { contains: searchStr, mode: 'insensitive' }
+                    }
+                });
+            } else if (searchType === 'name') {
+                andConditions.push({
+                    name: { contains: searchStr, mode: 'insensitive' }
+                });
+            } else {
+                // Default: OR search across name, description, category, and SKU
+                andConditions.push({
+                    OR: [
+                        { name: { contains: searchStr, mode: 'insensitive' } },
+                        { description: { contains: searchStr, mode: 'insensitive' } },
+                        { category: { name: { contains: searchStr, mode: 'insensitive' } } },
+                        { variants: { some: { sku: { contains: searchStr, mode: 'insensitive' } } } }
+                    ]
+                });
+            }
         }
 
         if (priceRanges) {

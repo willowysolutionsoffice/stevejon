@@ -4,7 +4,8 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 
 export interface OrderItem {
   id: string;
-  productId: number;
+  productId: string | number;
+  variantId?: string;
   title: string;
   category: string;
   price: number;

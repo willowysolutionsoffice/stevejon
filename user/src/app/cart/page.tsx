@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Trash2, ArrowRight, ArrowLeft, ShoppingBag, ShieldCheck, Truck, RefreshCw, CheckCircle2, X, CreditCard, Smartphone } from 'lucide-react';
+import { Trash2, ArrowRight, ArrowLeft, ShoppingBag, ShieldCheck, Truck, RefreshCw, CheckCircle2, X, CreditCard, Smartphone, Check } from 'lucide-react';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useCart } from '@/context/CartContext';
@@ -14,6 +14,12 @@ export default function CartPage() {
   const { createOrder } = useOrders();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [placedOrder, setPlacedOrder] = useState<any>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (message: string) => {
+    setToastMessage(message);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   const [shippingForm, setShippingForm] = useState({
     name: 'Jane Doe',
@@ -175,6 +181,11 @@ export default function CartPage() {
                           Size: <strong className="text-black">{item.size}</strong>
                         </span>
                       )}
+                      {item.stock !== undefined && item.stock <= 5 && (
+                        <span className="text-[0.65rem] text-amber-600 font-bold uppercase tracking-wider bg-amber-50 px-2 py-0.5 rounded border border-amber-200/50">
+                          Only {item.stock} left
+                        </span>
+                      )}
                     </div>
 
                     {/* Price and Quantity row */}
@@ -190,8 +201,15 @@ export default function CartPage() {
                           {item.quantity}
                         </span>
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-black font-bold text-base transition-colors cursor-pointer"
+                          onClick={() => {
+                            if (item.stock !== undefined && item.quantity >= item.stock) {
+                              showToast(`Only ${item.stock} items left in stock.`);
+                              return;
+                            }
+                            updateQuantity(item.id, item.quantity + 1);
+                          }}
+                          disabled={item.stock !== undefined && item.quantity >= item.stock}
+                          className="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-black disabled:text-gray-300 disabled:cursor-not-allowed font-bold text-base transition-colors cursor-pointer"
                         >
                           +
                         </button>
@@ -400,6 +418,18 @@ export default function CartPage() {
               </div>
             </form>
           </div>
+        </div>
+      )}
+
+      {/* Floating Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-black text-white px-6 py-4 rounded-full shadow-2xl z-[100] flex items-center gap-3 animate-fadeIn">
+          <div className="bg-[#DF9F28] rounded-full p-1">
+            <Check className="w-3 h-3 text-white" />
+          </div>
+          <span className="text-xs font-semibold tracking-widest uppercase">
+            {toastMessage}
+          </span>
         </div>
       )}
 

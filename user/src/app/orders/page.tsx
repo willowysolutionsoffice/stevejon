@@ -54,6 +54,7 @@ function OrdersPageContent() {
     e.stopPropagation();
     addToCart({
       productId: item.productId,
+      variantId: item.variantId,
       title: item.title,
       category: item.category,
       price: item.price,

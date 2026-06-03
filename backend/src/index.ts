@@ -17,6 +17,8 @@ import variantRoutes from './routes/variantRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import bannerRoutes from './routes/bannerRoutes.js';
 import inventoryRoutes from './routes/inventoryRoutes.js';
+import cartRoutes from './routes/cartRoutes.js';
+import wishlistRoutes from './routes/wishlistRoutes.js';
 
 dotenv.config();
 
@@ -64,6 +66,8 @@ app.use('/api/variants', variantRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/banners', bannerRoutes);
 app.use('/api/inventory', inventoryRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/wishlist', wishlistRoutes);
 
 app.listen(PORT, () => {
     console.log(`🚀 Backend server running on http://localhost:${PORT}`);

@@ -11,6 +11,7 @@ import { useWishlist } from '@/context/WishlistContext';
 
 interface Product {
   id: string | number;
+  variantId?: string;
   title: string;
   category: string;
   price: number;
@@ -34,6 +35,7 @@ function ProductPageContent() {
     e.stopPropagation();
     addToCart({
       productId: prod.id,
+      variantId: prod.variantId,
       title: prod.title,
       category: prod.category,
       price: prod.price,
@@ -50,6 +52,7 @@ function ProductPageContent() {
     addToWishlist({
       id: String(prod.id),
       productId: prod.id,
+      variantId: prod.variantId,
       title: prod.title,
       category: prod.category,
       price: prod.price,
@@ -74,6 +77,7 @@ function ProductPageContent() {
   const [quantity, setQuantity] = useState<number>(1);
   const [activeTab, setActiveTab] = useState<string>('description');
   const [activeReviewIdx, setActiveReviewIdx] = useState<number>(0);
+  const [activeImage, setActiveImage] = useState<string | null>(null);
 
   // Fetch categories on mount
   useEffect(() => {
@@ -120,6 +124,7 @@ function ProductPageContent() {
             const price = p.variants?.[0]?.price || 5400;
             return {
               id: p.id,
+              variantId: p.variants?.[0]?.id,
               title: p.name,
               category: p.category?.name || "Apparel",
               price: price,
@@ -183,14 +188,94 @@ function ProductPageContent() {
   // Filtered products list is simply the productsCatalog since the API handles filtering
   const filteredProducts = productsCatalog;
 
+  const [selectedProductDetails, setSelectedProductDetails] = useState<any | null>(null);
+  const [loadingDetails, setLoadingDetails] = useState(false);
+
+  // Fetch product details on selection
+  useEffect(() => {
+    if (!selectedProduct) {
+      setSelectedProductDetails(null);
+      return;
+    }
+
+    const fetchDetails = async () => {
+      setLoadingDetails(true);
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      try {
+        const response = await fetch(`${apiUrl}/products/${selectedProduct.id}`);
+        if (response.ok) {
+          const resData = await response.json();
+          if (resData && resData.success && resData.data) {
+            const data = resData.data;
+            setSelectedProductDetails(data);
+            
+            // Extract unique sizes and colors to set defaults
+            const sizes = Array.from(new Set(
+              data.variants?.flatMap((v: any) =>
+                v.options
+                  ?.filter((opt: any) => opt.attribute?.name?.toLowerCase() === 'size')
+                  ?.map((opt: any) => opt.attributeValue?.value)
+              ).filter(Boolean)
+            )) as string[];
+
+            const colors = Array.from(new Set(
+              data.variants?.flatMap((v: any) =>
+                v.options
+                  ?.filter((opt: any) => opt.attribute?.name?.toLowerCase() === 'color')
+                  ?.map((opt: any) => opt.attributeValue?.value)
+              ).filter(Boolean)
+            )) as string[];
+
+            if (sizes.length > 0) setSelectedSize(sizes[0]);
+            if (colors.length > 0) setSelectedColor(colors[0]);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching product details:", error);
+      } finally {
+        setLoadingDetails(false);
+      }
+    };
+    fetchDetails();
+  }, [selectedProduct]);
+
   const handleAddToCart = () => {
     if (!selectedProduct) return;
+    
+    let finalPrice = selectedProduct.price;
+    let currentVariant: any = null;
+    
+    if (selectedProductDetails && selectedProductDetails.variants) {
+      currentVariant = selectedProductDetails.variants.find((v: any) => {
+        const hasSize = v.options?.some((opt: any) => opt.attribute?.name?.toLowerCase() === 'size' && opt.attributeValue?.value === selectedSize);
+        const hasColor = v.options?.some((opt: any) => opt.attribute?.name?.toLowerCase() === 'color' && opt.attributeValue?.value === selectedColor);
+        
+        const sizesInVariantList = selectedProductDetails.variants.some((v2: any) => v2.options?.some((o: any) => o.attribute?.name?.toLowerCase() === 'size'));
+        const colorsInVariantList = selectedProductDetails.variants.some((v2: any) => v2.options?.some((o: any) => o.attribute?.name?.toLowerCase() === 'color'));
+        
+        return (!sizesInVariantList || hasSize) && (!colorsInVariantList || hasColor);
+      }) || selectedProductDetails.variants[0];
+
+      if (currentVariant) {
+        finalPrice = currentVariant.price;
+        if (currentVariant.qty === 0) {
+          showToast("Sorry, this variant is out of stock.");
+          return;
+        }
+        if (quantity > currentVariant.qty) {
+          showToast(`Only ${currentVariant.qty} items left in stock.`);
+          return;
+        }
+      }
+    }
+
     addToCart({
       productId: selectedProduct.id,
+      variantId: currentVariant?.id,
       title: selectedProduct.title,
       category: selectedProduct.category,
-      price: selectedProduct.price,
-      image: selectedProduct.image,
+      price: finalPrice,
+      image: selectedProductDetails?.image || selectedProduct.image,
       size: selectedSize,
       color: selectedColor,
       quantity,
@@ -434,7 +519,64 @@ function ProductPageContent() {
       ]
     };
 
-    const reviews = reviewsDatabase[selectedProduct.id] || defaultReviews;
+    const reviews = (reviewsDatabase as any)[selectedProduct.id] || defaultReviews;
+
+    // Resolve dynamic images and gallery
+    const mainImage = selectedProductDetails?.image || selectedProduct.image;
+    const thumbnails = selectedProductDetails?.subimage?.length > 0 
+      ? [mainImage, ...selectedProductDetails.subimage]
+      : [mainImage, mainImage, mainImage];
+
+    const displayImage = activeImage || mainImage;
+
+    // Extract unique colors and sizes from variants
+    const dynamicSizes = Array.from(new Set(
+      selectedProductDetails?.variants?.flatMap((v: any) =>
+        v.options
+          ?.filter((opt: any) => opt.attribute?.name?.toLowerCase() === 'size')
+          ?.map((opt: any) => opt.attributeValue?.value)
+      ).filter(Boolean)
+    )) as string[];
+
+    const dynamicColors = Array.from(new Set(
+      selectedProductDetails?.variants?.flatMap((v: any) =>
+        v.options
+          ?.filter((opt: any) => opt.attribute?.name?.toLowerCase() === 'color')
+          ?.map((opt: any) => opt.attributeValue?.value)
+      ).filter(Boolean)
+    )) as string[];
+
+    // Fallbacks
+    const finalSizes = dynamicSizes.length > 0 ? dynamicSizes : (selectedProduct.category === 'Apparel' ? ['S', 'M', 'L', 'XL'] : []);
+    const finalColors = dynamicColors.length > 0 ? dynamicColors : [];
+
+    // Find selected variant for price updates
+    const currentVariant = selectedProductDetails?.variants?.find((v: any) => {
+      const hasSize = v.options?.some((opt: any) => opt.attribute?.name?.toLowerCase() === 'size' && opt.attributeValue?.value === selectedSize);
+      const hasColor = v.options?.some((opt: any) => opt.attribute?.name?.toLowerCase() === 'color' && opt.attributeValue?.value === selectedColor);
+      
+      const sizesInVariantList = selectedProductDetails.variants.some((v2: any) => v2.options?.some((o: any) => o.attribute?.name?.toLowerCase() === 'size'));
+      const colorsInVariantList = selectedProductDetails.variants.some((v2: any) => v2.options?.some((o: any) => o.attribute?.name?.toLowerCase() === 'color'));
+      
+      return (!sizesInVariantList || hasSize) && (!colorsInVariantList || hasColor);
+    }) || selectedProductDetails?.variants?.[0];
+
+    const displayPrice = currentVariant ? currentVariant.price : selectedProduct.price;
+    const displayOriginalPrice = currentVariant ? (currentVariant.offerPrice || Math.round(currentVariant.price * 1.2)) : selectedProduct.originalPrice;
+
+    const getColorBg = (colName: string) => {
+      const name = colName.toLowerCase();
+      if (name.includes('red')) return 'bg-red-600';
+      if (name.includes('blue')) return 'bg-blue-600';
+      if (name.includes('green')) return 'bg-green-600';
+      if (name.includes('black')) return 'bg-black';
+      if (name.includes('white')) return 'bg-white border border-gray-300';
+      if (name.includes('grey') || name.includes('gray')) return 'bg-gray-500';
+      if (name.includes('yellow')) return 'bg-yellow-500';
+      if (name.includes('tan') || name.includes('brown')) return 'bg-amber-800';
+      if (name.includes('navy')) return 'bg-blue-950';
+      return 'bg-gradient-to-br from-gray-400 to-gray-600';
+    };
 
     return (
       <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans animate-fadeIn">
@@ -457,7 +599,7 @@ function ProductPageContent() {
             <div className="lg:col-span-6 flex flex-col gap-6 lg:sticky lg:top-32">
               <div className="relative aspect-[4/5] rounded-[2.5rem] bg-[#F3F2EE] border border-gray-100 overflow-hidden shadow-sm group">
                 <Image
-                  src={selectedProduct.image}
+                  src={displayImage}
                   alt={selectedProduct.title}
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
@@ -471,11 +613,18 @@ function ProductPageContent() {
 
               {/* Thumbnail preview row */}
               <div className="grid grid-cols-3 gap-4">
-                {[selectedProduct.image, selectedProduct.image, selectedProduct.image].map((img, idx) => (
-                  <div key={idx} className={`relative aspect-square rounded-2xl bg-[#F3F2EE] border-2 overflow-hidden cursor-pointer transition-all hover:opacity-100 ${idx === 0 ? 'border-[#DF9F28] opacity-100 shadow-sm' : 'border-transparent opacity-60'}`}>
-                    <Image src={img} alt="" fill className="object-cover mix-blend-multiply p-4" />
-                  </div>
-                ))}
+                {thumbnails.map((img, idx) => {
+                  const isSelected = activeImage ? (activeImage === img) : (idx === 0);
+                  return (
+                    <div 
+                      key={idx} 
+                      onClick={() => setActiveImage(img)}
+                      className={`relative aspect-square rounded-2xl bg-[#F3F2EE] border-2 overflow-hidden cursor-pointer transition-all hover:opacity-100 ${isSelected ? 'border-[#DF9F28] opacity-100 shadow-sm' : 'border-transparent opacity-60'}`}
+                    >
+                      <Image src={img} alt="" fill className="object-cover mix-blend-multiply p-4" />
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -504,56 +653,68 @@ function ProductPageContent() {
               </h1>
 
               {/* Price & Discount */}
-              <div className="flex items-baseline gap-4 mb-8 pb-8 border-b border-gray-100">
-                <span className="text-3xl md:text-4xl font-bold text-black font-sans">
-                  ₹ {selectedProduct.price.toLocaleString()}
-                </span>
-                <span className="text-lg md:text-xl line-through text-gray-400 font-normal">
-                  ₹ {selectedProduct.originalPrice.toLocaleString()}
-                </span>
-                <span className="text-xs font-bold tracking-widest uppercase bg-green-100 text-green-700 px-3 py-1 rounded-full">
-                  Save ₹ {(selectedProduct.originalPrice - selectedProduct.price).toLocaleString()}
-                </span>
+              <div className="flex flex-col gap-3 mb-8 pb-8 border-b border-gray-100">
+                <div className="flex items-baseline gap-4">
+                  <span className="text-3xl md:text-4xl font-bold text-black font-sans">
+                    ₹ {displayPrice.toLocaleString()}
+                  </span>
+                  <span className="text-lg md:text-xl line-through text-gray-400 font-normal">
+                    ₹ {displayOriginalPrice.toLocaleString()}
+                  </span>
+                  {displayOriginalPrice > displayPrice && (
+                    <span className="text-xs font-bold tracking-widest uppercase bg-green-100 text-green-700 px-3 py-1 rounded-full">
+                      Save ₹ {(displayOriginalPrice - displayPrice).toLocaleString()}
+                    </span>
+                  )}
+                </div>
+                {/* Stock Status Indicator */}
+                {selectedProductDetails && (
+                  <div className="flex items-center gap-2 mt-1 select-none">
+                    <div className={`w-2 h-2 rounded-full ${currentVariant && currentVariant.qty > 0 ? (currentVariant.qty <= 5 ? 'bg-amber-500 animate-pulse' : 'bg-green-500') : 'bg-red-500'}`} />
+                    <span className={`text-[0.7rem] font-bold uppercase tracking-wider ${currentVariant && currentVariant.qty > 0 ? (currentVariant.qty <= 5 ? 'text-amber-600' : 'text-green-600') : 'text-red-500'}`}>
+                      {currentVariant && currentVariant.qty > 0 
+                        ? (currentVariant.qty <= 5 ? `Only ${currentVariant.qty} left in stock - order soon!` : 'In Stock')
+                        : 'Out of Stock'}
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Description snippet */}
               <p className="text-gray-600 text-sm md:text-base leading-relaxed mb-8 font-sans">
-                Experience unparalleled luxury and craftsmanship with the {selectedProduct.title}. Designed for the modern connoisseur, this masterpiece combines timeless elegance with uncompromising utility, tailored from the finest bespoke materials.
+                {selectedProductDetails?.description || `Experience unparalleled luxury and craftsmanship with the ${selectedProduct.title}. Designed for the modern connoisseur, this masterpiece combines timeless elegance with uncompromising utility, tailored from the finest bespoke materials.`}
               </p>
 
               {/* Color Selection */}
-              <div className="mb-8">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-bold tracking-[0.2em] uppercase text-gray-700">Color: <span className="text-black font-semibold">{selectedColor}</span></span>
+              {finalColors.length > 0 && (
+                <div className="mb-8">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs font-bold tracking-[0.2em] uppercase text-gray-700">Color: <span className="text-black font-semibold">{selectedColor}</span></span>
+                  </div>
+                  <div className="flex gap-3">
+                    {finalColors.map(colorName => (
+                      <button
+                        key={colorName}
+                        onClick={() => setSelectedColor(colorName)}
+                        className={`w-9 h-9 rounded-full ${getColorBg(colorName)} border-2 transition-all cursor-pointer flex items-center justify-center ${selectedColor === colorName ? 'border-[#DF9F28] scale-110 shadow-md ring-2 ring-[#DF9F28]/20' : 'border-gray-200 hover:scale-105'}`}
+                        title={colorName}
+                      >
+                        {selectedColor === colorName && <Check className={`w-4 h-4 ${colorName.toLowerCase() === 'white' ? 'text-black' : 'text-white'}`} />}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex gap-3">
-                  {[
-                    { name: 'Classic', bg: 'bg-[#3A3835]' },
-                    { name: 'Pristine White', bg: 'bg-[#F4F4F0]' },
-                    { name: 'Heritage Tan', bg: 'bg-[#C89D7C]' },
-                    { name: 'Midnight Navy', bg: 'bg-[#1C2838]' },
-                  ].map(col => (
-                    <button
-                      key={col.name}
-                      onClick={() => setSelectedColor(col.name)}
-                      className={`w-9 h-9 rounded-full ${col.bg} border-2 transition-all cursor-pointer flex items-center justify-center ${selectedColor === col.name ? 'border-[#DF9F28] scale-110 shadow-md ring-2 ring-[#DF9F28]/20' : 'border-gray-200 hover:scale-105'}`}
-                      title={col.name}
-                    >
-                      {selectedColor === col.name && <Check className={`w-4 h-4 ${col.name === 'Pristine White' ? 'text-black' : 'text-white'}`} />}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              )}
 
               {/* Size Selection */}
-              {selectedProduct.category === 'Apparel' && (
+              {finalSizes.length > 0 && (
                 <div className="mb-8">
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-xs font-bold tracking-[0.2em] uppercase text-gray-700">Size: <span className="text-black font-semibold">{selectedSize}</span></span>
                     <button className="text-xs font-semibold underline tracking-wider text-gray-500 hover:text-black cursor-pointer">Size Guide</button>
                   </div>
                   <div className="flex gap-3">
-                    {['S', 'M', 'L', 'XL'].map(size => (
+                    {finalSizes.map(size => (
                       <button 
                         key={size}
                         onClick={() => setSelectedSize(size)}
@@ -578,23 +739,38 @@ function ProductPageContent() {
                   </button>
                   <span className="w-12 text-center text-sm font-bold text-black font-sans">{quantity}</span>
                   <button 
-                    onClick={() => setQuantity(q => q + 1)}
-                    className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-black font-bold text-lg transition-colors cursor-pointer"
+                    onClick={() => setQuantity(q => {
+                      if (currentVariant && q >= currentVariant.qty) {
+                        showToast(`Only ${currentVariant.qty} items left in stock.`);
+                        return q;
+                      }
+                      return q + 1;
+                    })}
+                    disabled={currentVariant && quantity >= currentVariant.qty}
+                    className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-black disabled:text-gray-300 disabled:cursor-not-allowed font-bold text-lg transition-colors cursor-pointer"
                   >
                     +
                   </button>
                 </div>
 
                 {/* Add to Cart Button */}
-                <button onClick={handleAddToCart} className="flex-1 bg-[#DF9F28] hover:bg-[#c58b20] text-white px-8 py-4 rounded-full flex items-center justify-center gap-3 transition-all text-xs font-bold tracking-[0.2em] uppercase shadow-xl shadow-[#DF9F28]/20 hover:shadow-2xl hover:shadow-[#DF9F28]/30 cursor-pointer group">
+                <button 
+                  onClick={handleAddToCart} 
+                  disabled={currentVariant && currentVariant.qty === 0}
+                  className="flex-1 bg-[#DF9F28] hover:bg-[#c58b20] disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none text-white px-8 py-4 rounded-full flex items-center justify-center gap-3 transition-all text-xs font-bold tracking-[0.2em] uppercase shadow-xl shadow-[#DF9F28]/20 hover:shadow-2xl hover:shadow-[#DF9F28]/30 cursor-pointer group"
+                >
                   <ShoppingBag className="w-4 h-4 transition-transform group-hover:scale-110" />
-                  Add To Cart
+                  {currentVariant && currentVariant.qty === 0 ? 'Out of Stock' : 'Add To Cart'}
                 </button>
               </div>
 
               {/* Buy Now Button */}
-              <button onClick={handleAddToCart} className="w-full bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-full flex items-center justify-center gap-2 transition-all text-xs font-bold tracking-[0.2em] uppercase mb-12 shadow-lg cursor-pointer">
-                Buy It Now
+              <button 
+                onClick={handleAddToCart} 
+                disabled={currentVariant && currentVariant.qty === 0}
+                className="w-full bg-black hover:bg-gray-800 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none text-white px-8 py-4 rounded-full flex items-center justify-center gap-2 transition-all text-xs font-bold tracking-[0.2em] uppercase mb-12 shadow-lg cursor-pointer"
+              >
+                {currentVariant && currentVariant.qty === 0 ? 'Out of Stock' : 'Buy It Now'}
               </button>
 
               {/* Premium Guarantees Grid */}

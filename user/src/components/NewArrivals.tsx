@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 
 interface Product {
   id: string;
+  variantId?: string;
   name: string;
   category: string;
   price: number;
@@ -39,6 +40,7 @@ export default function NewArrivals() {
               const price = p.variants?.[0]?.price || 5400;
               return {
                 id: p.id,
+                variantId: p.variants?.[0]?.id,
                 name: p.name,
                 category: p.category?.name || "Apparel",
                 price: price,
@@ -69,6 +71,7 @@ export default function NewArrivals() {
     e.preventDefault();
     addToCart({
       productId: prod.id,
+      variantId: prod.variantId,
       title: prod.name,
       category: prod.category,
       price: prod.price,
@@ -89,6 +92,7 @@ export default function NewArrivals() {
     addToWishlist({
       id: String(prod.id),
       productId: prod.id,
+      variantId: prod.variantId,
       title: prod.name,
       category: prod.category,
       price: prod.price,
@@ -104,6 +108,7 @@ export default function NewArrivals() {
     e.preventDefault();
     addToCart({
       productId: prod.id,
+      variantId: prod.variantId,
       title: prod.name,
       category: prod.category,
       price: prod.price,

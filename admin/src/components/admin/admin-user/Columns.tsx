@@ -38,7 +38,8 @@ function ActionsCell({ user }: { user: User }) {
     setLoading(true);
     try {
         const response = await fetch(`${API_URL}/users/${user.id}/unban`, {
-            method: "POST"
+            method: "POST",
+            credentials: "include"
         });
         const res = await response.json();
         if (response.ok) {

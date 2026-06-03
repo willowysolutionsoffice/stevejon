@@ -6,15 +6,49 @@ export const getAllUsers = async (req: Request, res: Response) => {
         const page = parseInt(req.query.page as string) || 1;
         const limit = parseInt(req.query.limit as string) || 10;
         const search = req.query.search as string;
+        const status = req.query.status as string; // 'active' | 'banned'
+        const sort = req.query.sort as string || 'desc'; // 'asc' | 'desc'
+        const joinedDate = req.query.joinedDate as string;
 
-        const where: any = {};
+        const conditions: any[] = [
+            { role: { not: 'admin' } }
+        ];
+
         if (search) {
-            where.OR = [
-                { name: { contains: search, mode: 'insensitive' } },
-                { email: { contains: search, mode: 'insensitive' } },
-            ];
+            conditions.push({
+                OR: [
+                    { name: { contains: search, mode: 'insensitive' } },
+                    { email: { contains: search, mode: 'insensitive' } },
+                    { phone: { contains: search, mode: 'insensitive' } },
+                ]
+            });
         }
 
+        if (status === 'banned') {
+            conditions.push({ banned: true });
+        } else if (status === 'active') {
+            conditions.push({
+                OR: [
+                    { banned: false },
+                    { banned: null }
+                ]
+            });
+        }
+
+        if (joinedDate) {
+            const startOfDay = new Date(joinedDate);
+            startOfDay.setHours(0, 0, 0, 0);
+            const endOfDay = new Date(joinedDate);
+            endOfDay.setHours(23, 59, 59, 999);
+            conditions.push({
+                createdAt: {
+                    gte: startOfDay,
+                    lte: endOfDay,
+                }
+            });
+        }
+
+        const where = { AND: conditions };
         const skip = (page - 1) * limit;
 
         const [users, total] = await Promise.all([
@@ -28,8 +62,9 @@ export const getAllUsers = async (req: Request, res: Response) => {
                     image: true,
                     createdAt: true,
                     banned: true,
+                    banExpires: true,
                 },
-                orderBy: { createdAt: 'desc' },
+                orderBy: { createdAt: sort === 'asc' ? 'asc' : 'desc' },
                 skip,
                 take: limit,
             }),
@@ -38,6 +73,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
         res.json({
             data: users,
+            users: users,
             pagination: {
                 total,
                 page,
@@ -46,6 +82,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
             }
         });
     } catch (error) {
+        console.error("Failed to fetch users:", error);
         res.status(500).json({ error: "Failed to fetch users" });
     }
 };

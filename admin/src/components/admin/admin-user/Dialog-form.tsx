@@ -35,6 +35,7 @@ export function DialogForm({
         const response = await fetch(`${API_URL}/users/${user.id}/ban`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify({
                 reason,
                 expires: expires ? new Date(expires) : undefined,

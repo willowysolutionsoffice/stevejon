@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -10,72 +11,87 @@ export default function LoginPage() {
   const [isChangePassword, setIsChangePassword] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isExecuting, setIsExecuting] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isChangePassword) {
-      const storedUserData = localStorage.getItem('stevejon_user');
-      if (storedUserData) {
-        const storedUser = JSON.parse(storedUserData);
-        if (storedUser.email === email && storedUser.password === oldPassword) {
-          storedUser.password = password;
-          localStorage.setItem('stevejon_user', JSON.stringify(storedUser));
+    setIsExecuting(true);
+
+    try {
+      if (isChangePassword) {
+        const { error } = await (authClient as any).changePassword({
+          newPassword: password,
+          currentPassword: oldPassword,
+          revokeOtherSessions: true,
+        });
+
+        if (error) {
+          alert(error.message || "Failed to change password.");
+        } else {
           alert("Password changed successfully! Please login with your new password.");
           setIsChangePassword(false);
           setIsLogin(true);
           setPassword("");
           setOldPassword("");
-        } else {
-          alert("Invalid email or old password.");
         }
-      } else {
-        alert("No account found. Please sign up.");
+        return;
       }
-      return;
-    }
 
-    if (isForgotPassword) {
-      const storedUserData = localStorage.getItem('stevejon_user');
-      if (storedUserData) {
-        const storedUser = JSON.parse(storedUserData);
-        if (storedUser.email === email) {
-          storedUser.password = password;
-          localStorage.setItem('stevejon_user', JSON.stringify(storedUser));
-          alert("Password reset successfully! Please login with your new password.");
+      if (isForgotPassword) {
+        const { error } = await (authClient as any).forgetPassword({
+          email: email,
+          redirectTo: `${window.location.origin}/login`,
+        });
+
+        if (error) {
+          alert(error.message || "Failed to initiate password reset.");
+        } else {
+          alert("If an account exists for " + email + ", a password reset link has been sent.");
           setIsForgotPassword(false);
           setIsLogin(true);
           setPassword("");
+        }
+        return;
+      }
+
+      if (!isLogin) {
+        // Create Account
+        const { error } = await authClient.signUp.email({
+          email,
+          password,
+          name,
+          phone,
+        } as any);
+
+        if (error) {
+          alert(error.message || "Failed to create account.");
         } else {
-          alert("No account found with this email address.");
+          alert("Account created successfully!");
+          router.push('/');
         }
       } else {
-        alert("No account found. Please sign up.");
-      }
-      return;
-    }
+        // Login
+        const { error } = await authClient.signIn.email({
+          email,
+          password,
+        });
 
-    if (!isLogin) {
-      // Create Account
-      localStorage.setItem('stevejon_user', JSON.stringify({ name, email, password }));
-      alert("Account created successfully!");
-      router.push('/');
-    } else {
-      // Login
-      const storedUserData = localStorage.getItem('stevejon_user');
-      if (storedUserData) {
-        const storedUser = JSON.parse(storedUserData);
-        if (storedUser.email === email && storedUser.password === password) {
+        if (error) {
+          alert(error.message || "Invalid email or password.");
+        } else {
           alert("Logged in successfully!");
           router.push('/');
-        } else {
-          alert("Invalid email or password");
         }
-      } else {
-        alert("No account found. Please sign up.");
       }
+    } catch (err: any) {
+      console.error("Auth error:", err);
+      alert("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsExecuting(false);
     }
   };
 
@@ -119,19 +135,35 @@ export default function LoginPage() {
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             {!isLogin && !isForgotPassword && !isChangePassword && (
-              <div>
-                <label className="block text-xs font-bold tracking-widest text-[#1A1A1A] mb-2 uppercase">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full border-b border-[#ccc] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
-                  placeholder="John Doe"
-                  required
-                />
-              </div>
+              <>
+                <div>
+                  <label className="block text-xs font-bold tracking-widest text-[#1A1A1A] mb-2 uppercase">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full border-b border-[#ccc] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
+                    placeholder="John Doe"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold tracking-widest text-[#1A1A1A] mb-2 uppercase">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full border-b border-[#ccc] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
+                    placeholder="+1 (555) 000-0000"
+                    required
+                  />
+                </div>
+              </>
             )}
 
             <div>
@@ -200,9 +232,18 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full bg-[#1A1A1A] hover:bg-black text-white py-4 rounded-none text-xs font-bold tracking-[0.2em] uppercase transition-colors mt-8"
+              disabled={isExecuting}
+              className="w-full bg-[#1A1A1A] hover:bg-black text-white py-4 rounded-none text-xs font-bold tracking-[0.2em] uppercase transition-colors mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isChangePassword ? "Change Password" : isForgotPassword ? "Reset Password" : isLogin ? "Sign In" : "Create Account"}
+              {isExecuting
+                ? "Processing..."
+                : isChangePassword
+                ? "Change Password"
+                : isForgotPassword
+                ? "Reset Password"
+                : isLogin
+                ? "Sign In"
+                : "Create Account"}
             </button>
           </form>
 

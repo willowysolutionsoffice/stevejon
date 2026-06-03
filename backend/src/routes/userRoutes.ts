@@ -8,8 +8,8 @@ const router = Router();
 router.use(adminMiddleware);
 
 router.get('/', getAllUsers);
-router.get('/:userId', getUserDetails);
-router.post('/:userId/ban', banUser);
-router.post('/:userId/unban', unbanUser);
+router.get('/:id', getUserDetails);
+router.post('/:id/ban', banUser);
+router.post('/:id/unban', unbanUser);
 
 export default router;

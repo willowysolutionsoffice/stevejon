@@ -4,12 +4,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from "date-fns";
 import { API_URL } from '@/lib/api-client';
+import { cookies } from 'next/headers';
 
 // This is a Server Component, so we can use async directly
 export default async function UserDetailPage({ id }: { id: string }) {
   let result;
   try {
-    const response = await fetch(`${API_URL}/users/${id}`, { cache: 'no-store' });
+    const cookieStore = await cookies();
+    const cookieHeader = cookieStore.toString();
+    const response = await fetch(`${API_URL}/users/${id}`, {
+      cache: 'no-store',
+      headers: {
+        'Cookie': cookieHeader
+      }
+    });
     result = await response.json();
   } catch (error) {
     return (

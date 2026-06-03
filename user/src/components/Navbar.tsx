@@ -18,6 +18,7 @@ import {
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,6 +28,14 @@ export default function Navbar() {
   const { totalItems } = useCart();
   const { totalItems: totalWishlistItems } = useWishlist();
   const router = useRouter();
+  const { data: session } = authClient.useSession();
+
+  const handleLogout = async () => {
+    await authClient.signOut();
+    setIsUserMenuOpen(false);
+    setIsOpen(false);
+    router.push("/login");
+  };
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -110,14 +119,18 @@ export default function Navbar() {
                 <div className="absolute right-0 mt-4 w-72 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] z-50 overflow-hidden border border-gray-100 font-sans text-gray-800 tracking-normal transform transition-all">
                   <div className="p-5 border-b border-gray-100 flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center border border-gray-200">
-                      <User className="w-5 h-5 text-gray-600 stroke-[1.5]" />
+                      {session?.user?.image ? (
+                        <img src={session.user.image} alt={session.user.name} className="w-10 h-10 rounded-full object-cover" />
+                      ) : (
+                        <User className="w-5 h-5 text-gray-600 stroke-[1.5]" />
+                      )}
                     </div>
                     <div>
                       <h3 className="text-base font-medium text-gray-900">
-                        User
+                        {session?.user ? session.user.name : "Guest"}
                       </h3>
                       <p className="text-xs text-gray-500">
-                        Welcome to Stevejon
+                        {session?.user ? session.user.email : "Welcome to Stevejon"}
                       </p>
                     </div>
                   </div>
@@ -155,14 +168,24 @@ export default function Navbar() {
                   </div>
 
                   <div className="p-5 pt-2">
-                    <Link
-                      href="/login"
-                      onClick={() => setIsUserMenuOpen(false)}
-                      className="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-900 py-3.5 rounded-full text-xs font-bold tracking-widest transition-colors flex items-center justify-center gap-2"
-                    >
-                      LOGIN/SIGNUP
-                      <LogIn className="w-4 h-4 stroke-[2]" />
-                    </Link>
+                    {session?.user ? (
+                      <button
+                        onClick={handleLogout}
+                        className="w-full bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 py-3.5 rounded-full text-xs font-bold tracking-widest transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                      >
+                        LOGOUT
+                        <LogIn className="w-4 h-4 stroke-[2]" />
+                      </button>
+                    ) : (
+                      <Link
+                        href="/login"
+                        onClick={() => setIsUserMenuOpen(false)}
+                        className="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-900 py-3.5 rounded-full text-xs font-bold tracking-widest transition-colors flex items-center justify-center gap-2"
+                      >
+                        LOGIN/SIGNUP
+                        <LogIn className="w-4 h-4 stroke-[2]" />
+                      </Link>
+                    )}
                   </div>
                 </div>
               </>
@@ -293,13 +316,22 @@ export default function Navbar() {
           >
             ORDERS
           </Link>
-          <Link
-            href="/login"
-            onClick={toggleMenu}
-            className="text-xs tracking-[0.15em] font-medium text-white/50 hover:text-white transition-colors flex items-center gap-2"
-          >
-            LOGIN / SIGNUP
-          </Link>
+          {session?.user ? (
+            <button
+              onClick={handleLogout}
+              className="text-xs tracking-[0.15em] font-medium text-red-400 hover:text-red-300 transition-colors flex items-center gap-2 uppercase cursor-pointer"
+            >
+              LOGOUT
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              onClick={toggleMenu}
+              className="text-xs tracking-[0.15em] font-medium text-white/50 hover:text-white transition-colors flex items-center gap-2"
+            >
+              LOGIN / SIGNUP
+            </Link>
+          )}
           <Link
             href="/wishlist"
             onClick={toggleMenu}

@@ -8,7 +8,11 @@ export const auth = betterAuth({
     provider: 'mongodb',
   }),
   baseURL: process.env.BETTER_AUTH_URL,
-  trustedOrigins: [process.env.FRONTEND_URL || 'http://localhost:3000'],
+  trustedOrigins: [
+    process.env.FRONTEND_URL || 'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002'
+  ],
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,

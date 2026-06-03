@@ -61,7 +61,9 @@ export function DataTable({ columns }: DataTableProps) {
         joinedDate: joinedDate ? format(joinedDate, "yyyy-MM-dd") : "",
       }).toString();
 
-      const response = await fetch(`${API_URL}/users?${query}`);
+      const response = await fetch(`${API_URL}/users?${query}`, {
+        credentials: "include"
+      });
       const res = await response.json();
 
       if (response.ok) {

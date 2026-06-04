@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Trash2, ArrowRight, ArrowLeft, ShoppingBag, ShieldCheck, Truck, RefreshCw, CheckCircle2, X, CreditCard, Smartphone, Check } from 'lucide-react';
@@ -8,6 +8,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useCart } from '@/context/CartContext';
 import { useOrders } from '@/context/OrderContext';
+import { authClient } from '@/lib/auth-client';
 
 export default function CartPage() {
   const { items, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
@@ -21,6 +22,10 @@ export default function CartPage() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
+  const { data: session } = authClient.useSession();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
+
   const [shippingForm, setShippingForm] = useState({
     name: 'Jane Doe',
     phone: '+91 98765 43210',
@@ -29,6 +34,49 @@ export default function CartPage() {
     state: 'Maharashtra',
     pincode: '400052',
   });
+
+  // Fetch saved addresses of the user when checkout is opened
+  useEffect(() => {
+    if (isCheckoutOpen && session?.user) {
+      const fetchSavedAddresses = async () => {
+        try {
+          const res = await fetch(`${apiUrl}/profile/addresses`, { credentials: 'include' });
+          if (res.ok) {
+            const result = await res.json();
+            if (result.success && Array.isArray(result.data)) {
+              setSavedAddresses(result.data);
+              
+              // Auto-fill default address if available
+              const defaultAddr = result.data.find((a: any) => a.isDefault);
+              if (defaultAddr) {
+                setShippingForm({
+                  name: defaultAddr.name,
+                  phone: defaultAddr.phone,
+                  street: defaultAddr.street,
+                  city: defaultAddr.city,
+                  state: defaultAddr.state,
+                  pincode: defaultAddr.pincode,
+                });
+              } else if (result.data.length > 0) {
+                // Fallback to first address
+                setShippingForm({
+                  name: result.data[0].name,
+                  phone: result.data[0].phone,
+                  street: result.data[0].street,
+                  city: result.data[0].city,
+                  state: result.data[0].state,
+                  pincode: result.data[0].pincode,
+                });
+              }
+            }
+          }
+        } catch (err) {
+          console.error("Failed to load checkout addresses:", err);
+        }
+      };
+      fetchSavedAddresses();
+    }
+  }, [isCheckoutOpen, session, apiUrl]);
 
   const [paymentMethod, setPaymentMethod] = useState('UPI');
 
@@ -307,6 +355,35 @@ export default function CartPage() {
 
             {/* Modal Content */}
             <form onSubmit={handleCheckoutSubmit} className="flex-1 overflow-y-auto p-8 space-y-6">
+              {/* Saved Address Selector */}
+              {session?.user && savedAddresses.length > 0 && (
+                <div className="bg-gray-50/50 p-5 rounded-3xl border border-gray-100 mb-2">
+                  <label className="block text-[0.65rem] font-bold tracking-widest uppercase text-[#DF9F28] mb-2 font-sans">Select Saved Address</label>
+                  <select
+                    onChange={(e) => {
+                      const selected = savedAddresses.find(a => a.id === e.target.value);
+                      if (selected) {
+                        setShippingForm({
+                          name: selected.name,
+                          phone: selected.phone,
+                          street: selected.street,
+                          city: selected.city,
+                          state: selected.state,
+                          pincode: selected.pincode
+                        });
+                      }
+                    }}
+                    className="w-full bg-white border border-gray-200 rounded-full px-4 py-2.5 text-xs font-bold tracking-wider text-gray-700 focus:outline-none focus:border-[#DF9F28] cursor-pointer"
+                  >
+                    {savedAddresses.map(addr => (
+                      <option key={addr.id} value={addr.id}>
+                        {addr.name} - {addr.street.substring(0, 25)}... {addr.isDefault ? '(Default)' : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
               {/* Recipient Details */}
               <div className="space-y-4">
                 <div>

@@ -96,7 +96,7 @@ export const batchUpdateStock = async (req: Request, res: Response) => {
             return res.status(400).json({ error: "No variants selected" });
         }
 
-        await prisma.$transaction(async (tx) => {
+        await prisma.$transaction(async (tx: any) => {
             for (const id of variantIds) {
                 if (type === 'set') {
                     await tx.productVariant.update({ where: { id }, data: { qty: parseInt(qty) } });

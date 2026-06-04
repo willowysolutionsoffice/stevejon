@@ -136,6 +136,18 @@ export default function Navbar() {
                   </div>
 
                   <div className="py-2">
+                    {session?.user && (
+                      <Link
+                        href="/profile"
+                        onClick={() => setIsUserMenuOpen(false)}
+                        className="px-5 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors group"
+                      >
+                        <User className="w-4 h-4 text-gray-400 group-hover:text-gray-700" />
+                        <span className="text-sm text-gray-700 group-hover:text-black">
+                          My Profile
+                        </span>
+                      </Link>
+                    )}
                     <a
                       href="#"
                       className="px-5 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors group"
@@ -316,6 +328,15 @@ export default function Navbar() {
           >
             ORDERS
           </Link>
+          {session?.user && (
+            <Link
+              href="/profile"
+              onClick={toggleMenu}
+              className="text-xs tracking-[0.15em] font-medium text-white/50 hover:text-white transition-colors"
+            >
+              MY PROFILE
+            </Link>
+          )}
           {session?.user ? (
             <button
               onClick={handleLogout}

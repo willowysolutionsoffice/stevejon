@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
-import { prisma } from '../lib/prisma.js';
+import { prisma as prismaClient } from '../lib/prisma.js';
 import { orderStatusSchema } from '../schemas/order-schema.js';
+
+const prisma = prismaClient as any;
 
 export const getAllOrders = async (req: Request, res: Response) => {
     try {
@@ -113,5 +115,119 @@ export const getOrderById = async (req: Request, res: Response) => {
     } catch (error) {
         console.error("❌ Fetch order error:", error);
         res.status(500).json({ error: "Failed to fetch order" });
+    }
+};
+
+// POST /api/orders
+export const createOrder = async (req: Request, res: Response) => {
+    try {
+        const userId = (req as any).user.id;
+        const { shippingDetails, paymentMethod, items } = req.body;
+
+        if (!shippingDetails || !items || !Array.isArray(items) || items.length === 0) {
+            return res.status(400).json({ error: "Missing shipping details or items" });
+        }
+
+        const totalAmount = items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
+
+        // Run order creation and stock decrement in a transaction
+        const order = await prisma.$transaction(async (tx: any) => {
+            // 1. Create the Order
+            const newOrder = await tx.order.create({
+                data: {
+                    userId,
+                    totalAmount,
+                    status: "PROCESSING",
+                    paymentMethod,
+                    phoneNumber: shippingDetails.phone,
+                    street: shippingDetails.street,
+                    city: shippingDetails.city,
+                    state: shippingDetails.state,
+                    pincode: shippingDetails.pincode,
+                    items: {
+                        create: items.map((item: any) => ({
+                            variantId: item.variantId,
+                            quantity: item.quantity,
+                            price: item.price
+                        }))
+                    }
+                },
+                include: {
+                    items: true
+                }
+            });
+
+            // 2. Decrement quantities of the variants in stock
+            for (const item of items) {
+                const variant = await tx.productVariant.findUnique({
+                    where: { id: item.variantId }
+                });
+
+                if (!variant || variant.qty < item.quantity) {
+                    throw new Error(`Insufficient stock for item: ${item.title || item.variantId}`);
+                }
+
+                await tx.productVariant.update({
+                    where: { id: item.variantId },
+                    data: {
+                        qty: {
+                            decrement: item.quantity
+                        }
+                    }
+                });
+            }
+
+            // 3. Clear user's Cart in MongoDB
+            const userCart = await tx.cart.findUnique({
+                where: { userId }
+            });
+
+            if (userCart) {
+                await tx.cartItem.deleteMany({
+                    where: { cartId: userCart.id }
+                });
+            }
+
+            return newOrder;
+        });
+
+        res.status(201).json({ success: true, data: order });
+    } catch (error: any) {
+        console.error("Create order error:", error);
+        res.status(500).json({ error: error.message || "Failed to place order" });
+    }
+};
+
+// GET /api/orders/my-orders
+export const getMyOrders = async (req: Request, res: Response) => {
+    try {
+        const userId = (req as any).user.id;
+
+        const orders = await prisma.order.findMany({
+            where: { userId },
+            include: {
+                items: {
+                    include: {
+                        variant: {
+                            include: {
+                                product: true,
+                                options: {
+                                    include: {
+                                        attribute: true,
+                                        attributeValue: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            orderBy: { createdAt: 'desc' }
+        });
+
+        res.json({ success: true, data: orders });
+    } catch (error: any) {
+        console.error("Get my orders error:", error);
+        res.status(500).json({ error: error.message || "Failed to fetch orders" });
     }
 };

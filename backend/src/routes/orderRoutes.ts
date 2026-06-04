@@ -1,14 +1,22 @@
 import { Router } from 'express';
-import { getAllOrders, getOrderById, updateOrderStatus } from '../controllers/orderController.js';
-import { adminMiddleware } from '../middleware/authMiddleware.js';
+import { 
+    getAllOrders, 
+    getOrderById, 
+    updateOrderStatus,
+    createOrder,
+    getMyOrders
+} from '../controllers/orderController.js';
+import { authMiddleware, adminMiddleware } from '../middleware/authMiddleware.js';
 
 const router = Router();
 
-// All order routes are admin only
-router.use(adminMiddleware);
+// Customer Order Endpoints (require login)
+router.post('/', authMiddleware, createOrder);
+router.get('/my-orders', authMiddleware, getMyOrders);
 
-router.get('/', getAllOrders);
-router.get('/:id', getOrderById);
-router.patch('/:id/status', updateOrderStatus);
+// Admin Order Endpoints (require admin role)
+router.get('/', adminMiddleware, getAllOrders);
+router.get('/:id', adminMiddleware, getOrderById);
+router.patch('/:id/status', adminMiddleware, updateOrderStatus);
 
 export default router;

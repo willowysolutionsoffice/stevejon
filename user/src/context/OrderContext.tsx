@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { authClient } from '@/lib/auth-client';
 
 export interface OrderItem {
   id: string;
@@ -38,58 +39,113 @@ export interface Order {
 
 interface OrderContextType {
   orders: Order[];
-  createOrder: (items: OrderItem[], shippingDetails: ShippingDetails, paymentMethod: string) => Order;
+  createOrder: (items: OrderItem[], shippingDetails: ShippingDetails, paymentMethod: string) => Promise<Order>;
   cancelOrder: (orderId: string) => void;
   isInitialized: boolean;
 }
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
-const initialMockOrders: Order[] = [];
-
 export const OrderProvider = ({ children }: { children: ReactNode }) => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
+  const { data: session } = authClient.useSession();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
-  // Load from localStorage on mount
+  // Fetch orders from backend when user session changes
   useEffect(() => {
-    const storedOrders = localStorage.getItem('stevejon_orders');
-    if (storedOrders) {
+    if (!session?.user) {
+      setOrders([]);
+      setIsInitialized(true);
+      return;
+    }
+
+    const fetchOrders = async () => {
       try {
-        setOrders(JSON.parse(storedOrders));
-      } catch (e) {
-        console.error('Failed to parse orders from localStorage', e);
-        setOrders(initialMockOrders);
+        const res = await fetch(`${apiUrl}/orders/my-orders`, { credentials: 'include' });
+        if (res.ok) {
+          const result = await res.json();
+          if (result.success && Array.isArray(result.data)) {
+            // Map backend order structure to local context structure
+            const formatted: Order[] = result.data.map((o: any) => ({
+              id: o.id,
+              date: o.createdAt,
+              items: o.items.map((i: any) => ({
+                id: i.id,
+                productId: i.variant?.productId || '',
+                variantId: i.variantId,
+                title: i.variant?.product?.name || 'Luxury Item',
+                category: i.variant?.product?.category?.name || 'Apparel',
+                price: i.price,
+                image: i.variant?.images?.[0] || i.variant?.product?.image || '',
+                size: i.variant?.options?.find((opt: any) => opt.attribute?.name?.toLowerCase() === 'size')?.attributeValue?.value || '',
+                color: i.variant?.options?.find((opt: any) => opt.attribute?.name?.toLowerCase() === 'color')?.attributeValue?.value || '',
+                quantity: i.quantity
+              })),
+              totalAmount: o.totalAmount,
+              status: o.status as OrderStatus,
+              paymentMethod: o.paymentMethod,
+              shippingDetails: {
+                name: o.user?.name || '',
+                phone: o.phoneNumber || '',
+                street: o.street || '',
+                city: o.city || '',
+                state: o.state || '',
+                pincode: o.pincode || ''
+              }
+            }));
+            setOrders(formatted);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load user orders:', err);
+      } finally {
+        setIsInitialized(true);
       }
-    } else {
-      // Seed with initial mock orders
-      setOrders(initialMockOrders);
-      localStorage.setItem('stevejon_orders', JSON.stringify(initialMockOrders));
-    }
-    setIsInitialized(true);
-  }, []);
+    };
 
-  // Save to localStorage when orders change
-  useEffect(() => {
-    if (isInitialized) {
-      localStorage.setItem('stevejon_orders', JSON.stringify(orders));
-    }
-  }, [orders, isInitialized]);
+    fetchOrders();
+  }, [session, apiUrl]);
 
-  const createOrder = (
+  const createOrder = async (
     items: OrderItem[],
     shippingDetails: ShippingDetails,
     paymentMethod: string
-  ): Order => {
-    const randomNum = Math.floor(10000 + Math.random() * 90000); // 5 digit number
+  ): Promise<Order> => {
+    const res = await fetch(`${apiUrl}/orders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        shippingDetails,
+        paymentMethod,
+        items: items.map(item => ({
+          variantId: item.variantId,
+          quantity: item.quantity,
+          price: item.price
+        }))
+      }),
+      credentials: 'include'
+    });
+
+    if (!res.ok) {
+      const errorResult = await res.json();
+      throw new Error(errorResult.error || 'Failed to place order');
+    }
+
+    const result = await res.json();
+    if (!result.success || !result.data) {
+      throw new Error('Invalid response from order endpoint');
+    }
+
+    const newOrderRaw = result.data;
     const newOrder: Order = {
-      id: `SJ-${randomNum}`,
-      date: new Date().toISOString(),
-      items,
-      totalAmount: items.reduce((sum, item) => sum + item.price * item.quantity, 0),
-      status: 'PROCESSING',
-      paymentMethod,
-      shippingDetails,
+      id: newOrderRaw.id,
+      date: newOrderRaw.createdAt,
+      items: items, // Preserve frontend details for optimistic visual display
+      totalAmount: newOrderRaw.totalAmount,
+      status: newOrderRaw.status as OrderStatus,
+      paymentMethod: newOrderRaw.paymentMethod,
+      shippingDetails
     };
 
     setOrders(prevOrders => [newOrder, ...prevOrders]);
@@ -97,6 +153,7 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const cancelOrder = (orderId: string) => {
+    // Keep local cancellation fallback state
     setOrders(prevOrders =>
       prevOrders.map(order =>
         order.id === orderId && (order.status === 'PENDING' || order.status === 'PROCESSING' || order.status === 'SHIPPED')

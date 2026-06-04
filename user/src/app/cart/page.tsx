@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Trash2, ArrowRight, ArrowLeft, ShoppingBag, ShieldCheck, Truck, RefreshCw, CheckCircle2, X, CreditCard, Smartphone, Check } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Trash2, ArrowRight, ArrowLeft, ShoppingBag, ShieldCheck, Truck, RefreshCw, CheckCircle2, X, CreditCard, Smartphone, Check, AlertCircle } from 'lucide-react';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useCart } from '@/context/CartContext';
@@ -11,6 +12,7 @@ import { useOrders } from '@/context/OrderContext';
 import { authClient } from '@/lib/auth-client';
 
 export default function CartPage() {
+  const router = useRouter();
   const { items, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
   const { createOrder } = useOrders();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -78,27 +80,40 @@ export default function CartPage() {
     }
   }, [isCheckoutOpen, session, apiUrl]);
 
-  const [paymentMethod, setPaymentMethod] = useState('UPI');
+  const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
 
-  const handleCheckoutSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+
+  const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setCheckoutError(null);
     
-    const orderItems = items.map(item => ({
-      id: item.id,
-      productId: item.productId,
-      title: item.title,
-      category: item.category,
-      price: item.price,
-      image: item.image,
-      size: item.size,
-      color: item.color,
-      quantity: item.quantity,
-    }));
+    try {
+      const orderItems = items.map(item => ({
+        id: item.id,
+        productId: item.productId,
+        variantId: item.variantId,
+        title: item.title,
+        category: item.category,
+        price: item.price,
+        image: item.image,
+        size: item.size,
+        color: item.color,
+        quantity: item.quantity,
+      }));
 
-    const newOrder = createOrder(orderItems, shippingForm, paymentMethod);
-    setPlacedOrder(newOrder);
-    setIsCheckoutOpen(false);
-    clearCart();
+      const newOrder = await createOrder(orderItems, shippingForm, paymentMethod);
+      setPlacedOrder(newOrder);
+      setIsCheckoutOpen(false);
+      clearCart();
+    } catch (err: any) {
+      console.error("Failed to place order:", err);
+      setCheckoutError(err.message || "Failed to place order. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (placedOrder) {
@@ -301,7 +316,13 @@ export default function CartPage() {
                 </div>
 
                 <button
-                  onClick={() => setIsCheckoutOpen(true)}
+                  onClick={() => {
+                    if (!session?.user) {
+                      router.push('/login?callback=/cart');
+                    } else {
+                      setIsCheckoutOpen(true);
+                    }
+                  }}
                   className="w-full bg-[#DF9F28] hover:bg-[#c58b20] text-white py-5 rounded-full flex items-center justify-center gap-3 transition-all text-xs font-bold tracking-[0.2em] uppercase shadow-xl shadow-[#DF9F28]/20 hover:shadow-2xl hover:shadow-[#DF9F28]/30 cursor-pointer group mb-6"
                 >
                   Proceed to Checkout
@@ -384,6 +405,35 @@ export default function CartPage() {
                 </div>
               )}
 
+              {/* Checkout Order Summary */}
+              <div className="bg-[#F9F8F4] p-5 rounded-[8px] border border-gray-100 space-y-4">
+                <label className="block text-[0.65rem] font-bold tracking-widest uppercase text-[#DF9F28] font-sans">
+                  Order Summary
+                </label>
+                <div className="max-h-[160px] overflow-y-auto pr-1 space-y-3 scrollbar-thin">
+                  {items.map((item) => (
+                    <div key={item.id} className="flex items-center gap-3 text-xs">
+                      <div className="relative w-10 h-12 bg-white rounded border border-gray-100 overflow-hidden flex-shrink-0">
+                        <img src={item.image} alt={item.title} className="w-full h-full object-cover mix-blend-multiply p-0.5" />
+                      </div>
+                      <div className="flex-1 text-left min-w-0">
+                        <p className="font-serif text-black truncate font-semibold">{item.title}</p>
+                        <p className="text-[0.65rem] text-gray-400 mt-0.5">
+                          Qty: {item.quantity} {item.size ? `| Size: ${item.size}` : ''} | Color: {item.color}
+                        </p>
+                      </div>
+                      <div className="text-right font-semibold text-black">
+                        ₹{(item.price * item.quantity).toLocaleString()}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="border-t border-gray-100 pt-3 flex justify-between text-xs font-bold text-black uppercase tracking-wider">
+                  <span>Grand Total</span>
+                  <span className="font-sans">₹{totalPrice.toLocaleString()}</span>
+                </div>
+              </div>
+
               {/* Recipient Details */}
               <div className="space-y-4">
                 <div>
@@ -457,39 +507,32 @@ export default function CartPage() {
               {/* Payment Method */}
               <div>
                 <label className="block text-[0.65rem] font-bold tracking-widest uppercase text-gray-500 mb-2.5">Payment Method</label>
-                <div className="grid grid-cols-3 gap-3">
-                  {[
-                    { id: 'UPI', label: 'UPI / QR', icon: Smartphone },
-                    { id: 'Credit Card', label: 'Card', icon: CreditCard },
-                    { id: 'Cash on Delivery', label: 'Cash', icon: Truck },
-                  ].map((pay) => {
-                    const Icon = pay.icon;
-                    return (
-                      <button
-                        key={pay.id}
-                        type="button"
-                        onClick={() => setPaymentMethod(pay.id)}
-                        className={`flex flex-col items-center gap-2 p-3 border rounded-[8px] transition-all cursor-pointer text-center ${
-                          paymentMethod === pay.id
-                            ? 'border-[#DF9F28] bg-[#FDF8EE] ring-1 ring-[#DF9F28]/20 text-black'
-                            : 'border-gray-200 hover:border-gray-400 text-gray-500 bg-white'
-                        }`}
-                      >
-                        <Icon className="w-5 h-5 text-gray-800" />
-                        <span className="text-[0.6rem] font-bold tracking-wider uppercase leading-tight">{pay.label}</span>
-                      </button>
-                    );
-                  })}
+                <div className="bg-[#FDF8EE] border border-[#DF9F28]/30 rounded-[8px] p-4 flex items-center gap-4">
+                  <div className="w-10 h-10 bg-[#DF9F28]/10 rounded-full flex items-center justify-center text-[#DF9F28] flex-shrink-0">
+                    <Truck className="w-5 h-5" />
+                  </div>
+                  <div className="text-left">
+                    <span className="text-xs font-bold text-black uppercase tracking-wider block">Cash on Delivery (COD)</span>
+                    <span className="text-[0.65rem] text-gray-400 uppercase tracking-widest font-semibold block mt-0.5">Pay in cash or UPI QR code upon delivery</span>
+                  </div>
                 </div>
               </div>
+
+              {checkoutError && (
+                <div className="bg-red-50 text-red-600 text-xs p-4 rounded-2xl border border-red-100 flex items-start gap-2 mb-4">
+                  <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                  <span>{checkoutError}</span>
+                </div>
+              )}
 
               {/* Submit Button */}
               <div className="pt-4">
                 <button
                   type="submit"
-                  className="w-full bg-[#DF9F28] hover:bg-[#c58b20] text-white py-4 rounded-full flex items-center justify-center gap-3 transition-all text-xs font-bold tracking-[0.2em] uppercase shadow-xl shadow-[#DF9F28]/20 hover:shadow-2xl hover:shadow-[#DF9F28]/30 cursor-pointer"
+                  disabled={isSubmitting}
+                  className="w-full bg-[#DF9F28] hover:bg-[#c58b20] disabled:bg-gray-200 disabled:cursor-not-allowed text-white py-4 rounded-full flex items-center justify-center gap-3 transition-all text-xs font-bold tracking-[0.2em] uppercase shadow-xl shadow-[#DF9F28]/20 hover:shadow-2xl hover:shadow-[#DF9F28]/30 cursor-pointer"
                 >
-                  Pay & Place Order (₹ {totalPrice.toLocaleString()})
+                  {isSubmitting ? 'Placing Order...' : `Place Order (₹ ${totalPrice.toLocaleString()})`}
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>

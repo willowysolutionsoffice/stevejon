@@ -35,9 +35,9 @@ export default async function UserDetailPage({ id }: { id: string }) {
     );
   }
 
-  const user = result.user;
+  const user = result.user || result;
 
-  if (!user) {
+  if (!user || !user.id) {
     return (
       <div className="p-4 text-center text-gray-500">
         User not found.

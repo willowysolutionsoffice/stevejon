@@ -115,7 +115,7 @@ export const getUserDetails = async (req: Request, res: Response) => {
 
         if (!user) return res.status(404).json({ error: "User not found" });
 
-        res.json(user);
+        res.json({ success: true, user });
     } catch (error) {
         console.error("getUserDetails error:", error);
         res.status(500).json({ error: "Failed to fetch user details" });

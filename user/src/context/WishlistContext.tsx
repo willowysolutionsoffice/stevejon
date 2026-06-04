@@ -2,10 +2,9 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authClient } from '@/lib/auth-client';
-import { useRouter } from 'next/navigation';
 
 export interface WishlistItem {
-  id: string; // using variantId as id
+  id: string;
   productId: string | number;
   variantId?: string;
   title: string;
@@ -28,14 +27,50 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const { data: session } = authClient.useSession();
-  const router = useRouter();
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
-  // Fetch wishlist on mount or session changes
+  // Load from localStorage on mount (for guest/offline mode)
   useEffect(() => {
-    const fetchWishlist = async () => {
+    const storedWishlist = localStorage.getItem('stevejon_wishlist');
+    if (storedWishlist) {
+      try {
+        setItems(JSON.parse(storedWishlist));
+      } catch (e) {
+        console.error("Failed to parse wishlist", e);
+      }
+    }
+    setIsInitialized(true);
+  }, []);
+
+  // Save to localStorage on items change (only if not logged in)
+  useEffect(() => {
+    if (isInitialized && !session?.user) {
+      localStorage.setItem('stevejon_wishlist', JSON.stringify(items));
+    }
+  }, [items, isInitialized, session]);
+
+  // Sync wishlist with database on session change
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    const syncAndFetchWishlist = async () => {
       if (session?.user) {
         try {
+          const storedWishlist = localStorage.getItem('stevejon_wishlist');
+          const localItems = storedWishlist ? JSON.parse(storedWishlist) : [];
+
+          if (localItems.length > 0) {
+            // Sync local wishlist with database
+            await fetch(`${apiUrl}/wishlist/sync`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ items: localItems }),
+              credentials: 'include'
+            });
+            localStorage.removeItem('stevejon_wishlist');
+          }
+
+          // Fetch fresh user wishlist from DB
           const res = await fetch(`${apiUrl}/wishlist`, { credentials: 'include' });
           if (res.ok) {
             const result = await res.json();
@@ -44,23 +79,27 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
             }
           }
         } catch (e) {
-          console.error("Error fetching wishlist from DB:", e);
+          console.error("Error syncing wishlist with DB:", e);
         }
       } else {
-        setItems([]);
+        // Logged out, restore guest wishlist
+        const storedWishlist = localStorage.getItem('stevejon_wishlist');
+        if (storedWishlist) {
+          try {
+            setItems(JSON.parse(storedWishlist));
+          } catch (e) {
+            console.error("Failed to restore wishlist:", e);
+          }
+        } else {
+          setItems([]);
+        }
       }
-      setIsInitialized(true);
     };
 
-    fetchWishlist();
-  }, [session, apiUrl]);
+    syncAndFetchWishlist();
+  }, [session, isInitialized, apiUrl]);
 
   const addToWishlist = async (newItem: WishlistItem) => {
-    if (!session?.user) {
-      router.push('/login');
-      return;
-    }
-
     // 1. Optimistic UI update
     setItems(prevItems => {
       const existingIndex = prevItems.findIndex(item => String(item.productId) === String(newItem.productId));
@@ -71,32 +110,32 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
       }
     });
 
-    // 2. Persist to DB
-    try {
-      await fetch(`${apiUrl}/wishlist`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          productId: newItem.productId,
-          variantId: newItem.variantId
-        }),
-        credentials: 'include'
-      });
-    } catch (e) {
-      console.error("Failed to save wishlist item to DB:", e);
+    // 2. Persist to DB if logged in
+    if (session?.user) {
+      try {
+        await fetch(`${apiUrl}/wishlist`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            productId: newItem.productId,
+            variantId: newItem.variantId
+          }),
+          credentials: 'include'
+        });
+      } catch (e) {
+        console.error("Failed to save wishlist item to DB:", e);
+      }
     }
   };
 
   const removeFromWishlist = async (productId: string | number) => {
-    if (!session?.user) return;
-
     const itemToRemove = items.find(item => String(item.productId) === String(productId));
 
     // 1. Optimistic UI update
     setItems(prevItems => prevItems.filter(item => String(item.productId) !== String(productId)));
 
-    // 2. Persist to DB
-    if (itemToRemove) {
+    // 2. Persist to DB if logged in
+    if (session?.user && itemToRemove) {
       const targetId = itemToRemove.variantId || itemToRemove.id;
       try {
         await fetch(`${apiUrl}/wishlist/items/${targetId}`, {

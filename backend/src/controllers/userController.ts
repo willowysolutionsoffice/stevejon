@@ -97,6 +97,19 @@ export const getUserDetails = async (req: Request, res: Response) => {
                     include: { items: true },
                     orderBy: { createdAt: 'desc' },
                 },
+                wishlists: {
+                    include: {
+                        items: {
+                            include: {
+                                variant: {
+                                    include: {
+                                        product: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         });
 
@@ -104,6 +117,7 @@ export const getUserDetails = async (req: Request, res: Response) => {
 
         res.json(user);
     } catch (error) {
+        console.error("getUserDetails error:", error);
         res.status(500).json({ error: "Failed to fetch user details" });
     }
 };

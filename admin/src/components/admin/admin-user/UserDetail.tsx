@@ -96,6 +96,43 @@ export default async function UserDetailPage({ id }: { id: string }) {
           )}
         </CardContent>
       </Card>
+
+      {/* User Wishlist */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Wishlisted Items</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {user.wishlists?.[0]?.items && user.wishlists[0].items.length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Product</TableHead>
+                  <TableHead>SKU</TableHead>
+                  <TableHead>Price</TableHead>
+                  <TableHead>Added Date</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {user.wishlists[0].items.map((item: any) => (
+                  <TableRow key={item.id}>
+                    <TableCell className="font-medium">
+                      {item.variant?.product?.name || "N/A"}
+                    </TableCell>
+                    <TableCell>{item.variant?.sku || "N/A"}</TableCell>
+                    <TableCell>₹ {item.variant?.price?.toLocaleString() || "N/A"}</TableCell>
+                    <TableCell>{format(new Date(item.createdAt), "PPP")}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <p className="text-sm text-center text-muted-foreground">
+              No wishlisted items found for this user.
+            </p>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -8,10 +8,12 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useWishlist } from '@/context/WishlistContext';
 import { useCart } from '@/context/CartContext';
+import { authClient } from '@/lib/auth-client';
 
 export default function WishlistPage() {
   const { items: wishlistItems, removeFromWishlist } = useWishlist();
   const { addToCart } = useCart();
+  const { data: session, isPending } = authClient.useSession();
 
   const handleMoveToCart = (item: any) => {
     addToCart({
@@ -27,6 +29,46 @@ export default function WishlistPage() {
     });
     removeFromWishlist(item.productId);
   };
+
+  if (isPending) {
+    return (
+      <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans flex flex-col justify-between">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="w-8 h-8 border-4 border-[#DF9F28] border-t-transparent rounded-full animate-spin"></div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!session?.user) {
+    return (
+      <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans flex flex-col justify-between animate-fadeIn">
+        <Navbar />
+
+        <div className="max-w-7xl mx-auto px-4 md:px-8 pt-40 pb-24 flex-1 w-full flex flex-col items-center justify-center">
+          <div className="text-center py-20 bg-white rounded-[2.5rem] border border-gray-100 shadow-sm flex flex-col items-center justify-center max-w-xl w-full px-8 md:px-12 my-8">
+            <div className="w-20 h-20 bg-[#F5EAD4]/30 text-[#DF9F28] rounded-full flex items-center justify-center mb-6">
+              <Heart className="w-8 h-8 stroke-[1.5] fill-current" />
+            </div>
+            <h2 className="text-2xl md:text-3xl font-serif tracking-wide text-black mb-3">Login to view Wishlist</h2>
+            <p className="text-gray-500 text-xs md:text-sm max-w-sm mx-auto mb-10 leading-relaxed font-sans">
+              Create an account or log in to your profile to save and view your curated collection of bespoke items.
+            </p>
+            <Link
+              href="/login"
+              className="bg-[#DF9F28] hover:bg-[#c58b20] text-white px-10 py-4 rounded-full text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-xl shadow-[#DF9F28]/25 hover:shadow-2xl hover:shadow-[#DF9F28]/35 cursor-pointer w-full sm:w-auto"
+            >
+              Go to Login
+            </Link>
+          </div>
+        </div>
+
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans flex flex-col justify-between animate-fadeIn">

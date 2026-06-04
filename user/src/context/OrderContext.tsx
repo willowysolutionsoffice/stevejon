@@ -40,7 +40,7 @@ export interface Order {
 interface OrderContextType {
   orders: Order[];
   createOrder: (items: OrderItem[], shippingDetails: ShippingDetails, paymentMethod: string) => Promise<Order>;
-  cancelOrder: (orderId: string) => void;
+  cancelOrder: (orderId: string) => Promise<void>;
   isInitialized: boolean;
 }
 
@@ -152,11 +152,20 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
     return newOrder;
   };
 
-  const cancelOrder = (orderId: string) => {
-    // Keep local cancellation fallback state
+  const cancelOrder = async (orderId: string): Promise<void> => {
+    const res = await fetch(`${apiUrl}/orders/${orderId}/cancel`, {
+      method: 'PATCH',
+      credentials: 'include'
+    });
+
+    if (!res.ok) {
+      const errorResult = await res.json();
+      throw new Error(errorResult.error || 'Failed to cancel order');
+    }
+
     setOrders(prevOrders =>
       prevOrders.map(order =>
-        order.id === orderId && (order.status === 'PENDING' || order.status === 'PROCESSING' || order.status === 'SHIPPED')
+        order.id === orderId
           ? { ...order, status: 'CANCELLED' }
           : order
       )

@@ -4,7 +4,8 @@ import {
     getOrderById, 
     updateOrderStatus,
     createOrder,
-    getMyOrders
+    getMyOrders,
+    cancelMyOrder
 } from '../controllers/orderController.js';
 import { authMiddleware, adminMiddleware } from '../middleware/authMiddleware.js';
 
@@ -13,6 +14,7 @@ const router = Router();
 // Customer Order Endpoints (require login)
 router.post('/', authMiddleware, createOrder);
 router.get('/my-orders', authMiddleware, getMyOrders);
+router.patch('/:id/cancel', authMiddleware, cancelMyOrder);
 
 // Admin Order Endpoints (require admin role)
 router.get('/', adminMiddleware, getAllOrders);

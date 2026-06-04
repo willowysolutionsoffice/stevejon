@@ -76,15 +76,19 @@ function OrdersPageContent() {
     setOrderToCancel(orderId);
   };
 
-  const handleConfirmCancel = () => {
+  const handleConfirmCancel = async () => {
     if (orderToCancel) {
-      cancelOrder(orderToCancel);
-      setOrderToCancel(null);
-      
-      setToastMessage(`Order ${orderToCancel} has been cancelled`);
-      setTimeout(() => {
-        setToastMessage(null);
-      }, 3000);
+      try {
+        await cancelOrder(orderToCancel);
+        setToastMessage(`Order ${orderToCancel} has been cancelled`);
+      } catch (err: any) {
+        setToastMessage(err.message || `Failed to cancel order ${orderToCancel}`);
+      } finally {
+        setOrderToCancel(null);
+        setTimeout(() => {
+          setToastMessage(null);
+        }, 3000);
+      }
     }
   };
 

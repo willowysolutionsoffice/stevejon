@@ -101,8 +101,8 @@ function StatusUpdateDialog({
 
     setIsLoading(true);
     try {
-      const res = await apiFetch(`/admin-orders/${order.id}/status`, {
-        method: "POST",
+      const res = await apiFetch(`/orders/${order.id}/status`, {
+        method: "PATCH",
         body: JSON.stringify({ status: selectedStatus }),
       });
       if (!res.ok) throw new Error("Failed to update status");

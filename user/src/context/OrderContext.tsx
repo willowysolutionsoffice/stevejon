@@ -39,7 +39,7 @@ export interface Order {
 
 interface OrderContextType {
   orders: Order[];
-  createOrder: (items: OrderItem[], shippingDetails: ShippingDetails, paymentMethod: string) => Promise<Order>;
+  createOrder: (items: OrderItem[], shippingDetails: ShippingDetails, paymentMethod: string, couponCode?: string) => Promise<Order>;
   cancelOrder: (orderId: string) => Promise<void>;
   isInitialized: boolean;
 }
@@ -110,7 +110,8 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
   const createOrder = async (
     items: OrderItem[],
     shippingDetails: ShippingDetails,
-    paymentMethod: string
+    paymentMethod: string,
+    couponCode?: string
   ): Promise<Order> => {
     const res = await fetch(`${apiUrl}/orders`, {
       method: 'POST',
@@ -118,6 +119,7 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
       body: JSON.stringify({
         shippingDetails,
         paymentMethod,
+        couponCode: couponCode || undefined,
         items: items.map(item => ({
           variantId: item.variantId,
           quantity: item.quantity,

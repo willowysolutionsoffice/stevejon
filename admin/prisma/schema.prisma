@@ -44,6 +44,7 @@ model Product {
   name          String
   description   String?
   image         String 
+  subimage      String[]
   brandId       String?  @db.ObjectId
   categoryId    String?  @db.ObjectId
   subCategoryId String?  @db.ObjectId
@@ -194,6 +195,7 @@ model User {
   wishlists     Wishlist[]
   orders        Order[]
   reviews       Review[]
+  addresses     Address[]
 
   @@unique([email])
   @@map("user")
@@ -208,6 +210,8 @@ model Order {
   razorpayOrderId   String?
   razorpayPaymentId String?
   razorpaySignature String?
+  couponCode        String?
+  discountAmount    Float    @default(0)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   phoneNumber       String
@@ -331,4 +335,68 @@ model Review {
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("review")
-}
+}
+
+// Tracks every order ID entered into the weekly lucky draw pool
+model LuckyDrawEntry {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderId   String   @unique
+  buyerName String
+  location  String
+  isUser    Boolean  @default(false)
+  week      Int
+  drawn     Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("lucky_draw_entry")
+}
+
+// Records each week's drawn winner
+model LuckyDrawWinner {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  week      Int      @unique
+  orderId   String
+  buyerName String
+  location  String
+  prize     String
+  isUser    Boolean  @default(false)
+  drawnAt   DateTime @default(now())
+
+  @@map("lucky_draw_winner")
+}
+
+model Address {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String
+  name      String
+  phone     String
+  street    String
+  city      String
+  state     String
+  pincode   String
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("address")
+}
+
+model Coupon {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  code          String   @unique
+  discountType  String   // "PERCENTAGE" | "FIXED"
+  discountValue Float
+  minCartAmount Float    @default(0)
+  maxDiscount   Float?   // Optional limit for PERCENTAGE type
+  startDate     DateTime?
+  endDate       DateTime?
+  usageLimit    Int?     // Max number of total uses
+  usedCount     Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("coupon")
+}

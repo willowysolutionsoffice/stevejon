@@ -210,6 +210,8 @@ model Order {
   razorpayOrderId   String?
   razorpayPaymentId String?
   razorpaySignature String?
+  couponCode        String?
+  discountAmount    Float    @default(0)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   phoneNumber       String
@@ -379,4 +381,22 @@ model Address {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("address")
+}
+
+model Coupon {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  code          String   @unique
+  discountType  String   // "PERCENTAGE" | "FIXED"
+  discountValue Float
+  minCartAmount Float    @default(0)
+  maxDiscount   Float?   // Optional limit for PERCENTAGE type
+  startDate     DateTime?
+  endDate       DateTime?
+  usageLimit    Int?     // Max number of total uses
+  usedCount     Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("coupon")
 }

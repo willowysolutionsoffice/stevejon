@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { prisma as prismaClient } from '../lib/prisma.js';
 import { orderStatusSchema } from '../schemas/order-schema.js';
+import { calculateCouponDiscount } from './couponController.js';
 
 const prisma = prismaClient as any;
 
@@ -169,21 +170,49 @@ export const getOrderById = async (req: Request, res: Response) => {
 export const createOrder = async (req: Request, res: Response) => {
     try {
         const userId = (req as any).user.id;
-        const { shippingDetails, paymentMethod, items } = req.body;
+        const { shippingDetails, paymentMethod, items, couponCode } = req.body;
 
         if (!shippingDetails || !items || !Array.isArray(items) || items.length === 0) {
             return res.status(400).json({ error: "Missing shipping details or items" });
         }
 
-        const totalAmount = items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
+        const subtotal = items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
 
         // Run order creation and stock decrement in a transaction
         const order = await prisma.$transaction(async (tx: any) => {
+            let discountAmount = 0;
+            let finalAmount = subtotal;
+
+            if (couponCode) {
+                const coupon = await tx.coupon.findUnique({
+                    where: { code: couponCode }
+                });
+
+                if (!coupon) {
+                    throw new Error("Coupon code is invalid");
+                }
+
+                try {
+                    discountAmount = calculateCouponDiscount(coupon, subtotal);
+                    finalAmount = subtotal - discountAmount;
+                } catch (err: any) {
+                    throw new Error(`Coupon error: ${err.message}`);
+                }
+
+                // Increment coupon usage count
+                await tx.coupon.update({
+                    where: { id: coupon.id },
+                    data: { usedCount: { increment: 1 } }
+                });
+            }
+
             // 1. Create the Order
             const newOrder = await tx.order.create({
                 data: {
                     userId,
-                    totalAmount,
+                    totalAmount: finalAmount,
+                    discountAmount,
+                    couponCode: couponCode || null,
                     status: "PROCESSING",
                     paymentMethod,
                     phoneNumber: shippingDetails.phone,

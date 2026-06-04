@@ -48,6 +48,7 @@ const navigation: NavItem[] = [
   { title: "Analytics", href: "/analytics", icon: BarChart3 },
   { title: "Banners", href: "/banners", icon: ImageIcon },
   { title: "Offer Slides", href: "/offer-slides", icon: LayoutTemplate },
+  { title: "Coupons", href: "/coupons", icon: Tag },
   { title: "Settings", href: "/settings", icon: Settings },
 ];
 

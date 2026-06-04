@@ -37,6 +37,52 @@ export default function CartPage() {
     pincode: '400052',
   });
 
+  const [couponInput, setCouponInput] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
+  const [couponError, setCouponError] = useState<string | null>(null);
+  const [isCheckingCoupon, setIsCheckingCoupon] = useState(false);
+
+  const handleApplyCoupon = async () => {
+    if (!couponInput.trim()) return;
+    setIsCheckingCoupon(true);
+    setCouponError(null);
+    try {
+      const response = await fetch(`${apiUrl}/coupons/validate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: couponInput.trim(), cartTotal: totalPrice }),
+        credentials: "include"
+      });
+      const res = await response.json();
+      if (response.ok && res.success) {
+        setAppliedCoupon(res);
+        setCouponInput("");
+        showToast(`Coupon "${res.code}" applied!`);
+      } else {
+        setCouponError(res.error || "Invalid coupon code");
+      }
+    } catch (err) {
+      setCouponError("Error validating coupon code");
+    } finally {
+      setIsCheckingCoupon(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponError(null);
+    setCouponInput("");
+    showToast("Coupon removed");
+  };
+
+  useEffect(() => {
+    if (!isCheckoutOpen) {
+      setAppliedCoupon(null);
+      setCouponInput("");
+      setCouponError(null);
+    }
+  }, [isCheckoutOpen]);
+
   // Fetch saved addresses of the user when checkout is opened
   useEffect(() => {
     if (isCheckoutOpen && session?.user) {
@@ -47,7 +93,7 @@ export default function CartPage() {
             const result = await res.json();
             if (result.success && Array.isArray(result.data)) {
               setSavedAddresses(result.data);
-              
+
               // Auto-fill default address if available
               const defaultAddr = result.data.find((a: any) => a.isDefault);
               if (defaultAddr) {
@@ -89,7 +135,7 @@ export default function CartPage() {
     e.preventDefault();
     setIsSubmitting(true);
     setCheckoutError(null);
-    
+
     try {
       const orderItems = items.map(item => ({
         id: item.id,
@@ -104,7 +150,7 @@ export default function CartPage() {
         quantity: item.quantity,
       }));
 
-      const newOrder = await createOrder(orderItems, shippingForm, paymentMethod);
+      const newOrder = await createOrder(orderItems, shippingForm, paymentMethod, appliedCoupon?.code);
       setPlacedOrder(newOrder);
       setIsCheckoutOpen(false);
       clearCart();
@@ -195,7 +241,7 @@ export default function CartPage() {
         ) : (
           /* Cart Content Grid */
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-            
+
             {/* Left: Items List (7 cols) */}
             <div className="lg:col-span-7 flex flex-col gap-6">
               {items.map(item => (
@@ -428,10 +474,69 @@ export default function CartPage() {
                     </div>
                   ))}
                 </div>
-                <div className="border-t border-gray-100 pt-3 flex justify-between text-xs font-bold text-black uppercase tracking-wider">
-                  <span>Grand Total</span>
-                  <span className="font-sans">₹{totalPrice.toLocaleString()}</span>
+                <div className="border-t border-gray-100 pt-3 flex flex-col gap-2">
+                  {appliedCoupon && (
+                    <div className="flex justify-between text-xs text-gray-500 font-sans">
+                      <span>Subtotal</span>
+                      <span>₹ {totalPrice.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {appliedCoupon && (
+                    <div className="flex justify-between text-xs text-red-600 font-sans font-medium">
+                      <span>Discount ({appliedCoupon.code})</span>
+                      <span>- ₹ {appliedCoupon.discountAmount.toLocaleString()}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-xs font-bold text-black uppercase tracking-wider mt-1 pt-2 border-t border-gray-100">
+                    <span>Grand Total</span>
+                    <span className="font-sans">₹ {(totalPrice - (appliedCoupon?.discountAmount || 0)).toLocaleString()}</span>
+                  </div>
                 </div>
+              </div>
+
+              {/* Coupon Code Section */}
+              <div className="bg-white p-5 rounded-[8px] border border-gray-200/60 space-y-3">
+                <label className="block text-[0.65rem] font-bold tracking-widest uppercase text-gray-500 font-sans">
+                  Have a Coupon / Promo Code?
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Enter Coupon Code"
+                    value={couponInput}
+                    onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                    disabled={appliedCoupon !== null}
+                    className="flex-1 border border-gray-200 rounded-[8px] px-4 py-2.5 text-xs font-semibold tracking-wider bg-white focus:outline-none focus:border-[#DF9F28]"
+                  />
+                  {appliedCoupon ? (
+                    <button
+                      type="button"
+                      onClick={handleRemoveCoupon}
+                      className="bg-red-50 text-red-600 hover:bg-red-100 px-5 py-2.5 rounded-[8px] text-[0.65rem] font-bold tracking-wider uppercase transition-all cursor-pointer"
+                    >
+                      Remove
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleApplyCoupon}
+                      disabled={isCheckingCoupon}
+                      className="bg-black hover:bg-gray-800 text-white px-6 py-2.5 rounded-[8px] text-[0.65rem] font-bold tracking-wider uppercase transition-all cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed"
+                    >
+                      {isCheckingCoupon ? 'Applying...' : 'Apply'}
+                    </button>
+                  )}
+                </div>
+                {couponError && (
+                  <p className="text-red-500 text-[0.7rem] font-sans font-semibold mt-1">
+                    {couponError}
+                  </p>
+                )}
+                {appliedCoupon && (
+                  <p className="text-green-600 text-[0.7rem] font-sans font-semibold mt-1 flex items-center gap-1">
+                    ✓ Coupon "{appliedCoupon.code}" applied! Saved ₹{appliedCoupon.discountAmount.toLocaleString()}
+                  </p>
+                )}
               </div>
 
               {/* Recipient Details */}
@@ -532,7 +637,7 @@ export default function CartPage() {
                   disabled={isSubmitting}
                   className="w-full bg-[#DF9F28] hover:bg-[#c58b20] disabled:bg-gray-200 disabled:cursor-not-allowed text-white py-4 rounded-full flex items-center justify-center gap-3 transition-all text-xs font-bold tracking-[0.2em] uppercase shadow-xl shadow-[#DF9F28]/20 hover:shadow-2xl hover:shadow-[#DF9F28]/30 cursor-pointer"
                 >
-                  {isSubmitting ? 'Placing Order...' : `Place Order (₹ ${totalPrice.toLocaleString()})`}
+                  {isSubmitting ? 'Placing Order...' : `Place Order (₹ ${(totalPrice - (appliedCoupon?.discountAmount || 0)).toLocaleString()})`}
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>

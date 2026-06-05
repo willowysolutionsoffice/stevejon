@@ -7,7 +7,8 @@ import {
   IconIcons,
   IconShoppingBag,
   IconTruck,
-  IconUserPlus
+  IconUserPlus,
+  IconGift
 } from '@tabler/icons-react';
 import type { SidebarData } from '@/types/navigation';
 import { APP_CONFIG } from '@/config/app';
@@ -73,6 +74,11 @@ export const SIDEBAR_DATA: SidebarData = {
       title: "Users",
       url: "/users",
       icon: IconUserPlus,
+    },
+    {
+      title: "Draw Campaigns",
+      url: "/draws",
+      icon: IconGift,
     },
   ],
 

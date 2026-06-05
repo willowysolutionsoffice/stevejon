@@ -18,7 +18,8 @@ import {
   X,
   Boxes,
   ImageIcon,
-  LayoutTemplate
+  LayoutTemplate,
+  Gift
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -49,6 +50,7 @@ const navigation: NavItem[] = [
   { title: "Banners", href: "/banners", icon: ImageIcon },
   { title: "Offer Slides", href: "/offer-slides", icon: LayoutTemplate },
   { title: "Coupons", href: "/coupons", icon: Tag },
+  { title: "Draw Campaigns", href: "/draws", icon: Gift },
   { title: "Settings", href: "/settings", icon: Settings },
 ];
 

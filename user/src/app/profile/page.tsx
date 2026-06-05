@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { 
   User, MapPin, Phone, Mail, Calendar, Check, 
   Trash2, Edit, Plus, ArrowLeft, Eye, ShieldCheck, 
-  UserCheck, AlertCircle, Camera, CheckCircle, X
+  UserCheck, AlertCircle, Camera, CheckCircle, X, Ticket
 } from 'lucide-react';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -28,7 +28,11 @@ export default function ProfilePage() {
   const { data: session, isPending } = authClient.useSession();
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
-  const [activeTab, setActiveTab] = useState<'profile' | 'addresses'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'addresses' | 'tickets'>('profile');
+  
+  // Lucky Tickets States
+  const [tickets, setTickets] = useState<any[]>([]);
+  const [loadingTickets, setLoadingTickets] = useState(true);
   
   // Profile Info States
   const [profileData, setProfileData] = useState({
@@ -118,8 +122,26 @@ export default function ProfilePage() {
       }
     };
 
+    const fetchTickets = async () => {
+      try {
+        setLoadingTickets(true);
+        const res = await fetch(`${apiUrl}/profile/tickets`, { credentials: 'include' });
+        if (res.ok) {
+          const result = await res.json();
+          if (result.success && Array.isArray(result.data)) {
+            setTickets(result.data);
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching tickets:", err);
+      } finally {
+        setLoadingTickets(false);
+      }
+    };
+
     fetchProfile();
     fetchAddresses();
+    fetchTickets();
   }, [session, isPending, apiUrl, router]);
 
   // Handle Profile Update Submission
@@ -356,6 +378,17 @@ export default function ProfilePage() {
             <MapPin className="w-4 h-4 text-[#DF9F28]" />
             Address Book ({addresses.length})
           </button>
+          <button
+            onClick={() => setActiveTab('tickets')}
+            className={`py-4 px-6 text-xs font-bold tracking-[0.2em] uppercase border-b-2 transition-all cursor-pointer flex items-center gap-2 ${
+              activeTab === 'tickets'
+                ? 'border-[#DF9F28] text-black font-extrabold bg-[#DF9F28]/5 rounded-t-2xl'
+                : 'border-transparent text-gray-400 hover:text-gray-600'
+            }`}
+          >
+            <Ticket className="w-4 h-4 text-[#DF9F28]" />
+            Lucky Tickets ({tickets.length})
+          </button>
         </div>
 
         {/* TAB 1: PROFILE MANAGEMENT */}
@@ -528,6 +561,114 @@ export default function ProfilePage() {
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 3: LUCKY TICKETS */}
+        {activeTab === 'tickets' && (
+          <div className="space-y-6 animate-fadeIn text-left">
+            <div className="pb-5 border-b border-gray-100 flex items-center justify-between select-none">
+              <div>
+                <h2 className="text-xl font-serif font-semibold text-black">
+                  Your Lucky Tickets
+                </h2>
+                <p className="text-[0.65rem] text-gray-400 uppercase tracking-widest mt-0.5 font-semibold">
+                  Tickets generated for active draw campaigns
+                </p>
+              </div>
+            </div>
+
+            {loadingTickets ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[1, 2].map((_, i) => (
+                  <div key={i} className="bg-white border border-gray-100 p-6 rounded-[2rem] shadow-sm h-36 animate-pulse"></div>
+                ))}
+              </div>
+            ) : tickets.length === 0 ? (
+              <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm flex flex-col items-center justify-center my-4 select-none">
+                <div className="w-16 h-16 bg-[#F3F2EE] text-gray-400 rounded-full flex items-center justify-center mb-4">
+                  <Ticket className="w-6 h-6 stroke-[1.5]" />
+                </div>
+                <h3 className="text-lg font-serif tracking-wide text-black mb-1">No Lucky Tickets</h3>
+                <p className="text-gray-500 text-xs max-w-xs mx-auto mb-6 leading-relaxed">
+                  You don't have any lucky tickets yet. Purchase products during an active draw campaign to automatically receive tickets!
+                </p>
+                <Link
+                  href="/product"
+                  className="bg-black hover:bg-gray-800 text-white px-8 py-3.5 rounded-full text-xs font-bold tracking-widest uppercase transition-colors cursor-pointer"
+                >
+                  Shop Now & Get Tickets
+                </Link>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {tickets.map(ticket => {
+                  const isInvalid = ticket.order?.status === 'CANCELLED' || ticket.order?.status === 'FAILED';
+                  return (
+                    <div
+                      key={ticket.id}
+                      className={`relative bg-white border border-gray-200 rounded-[2rem] shadow-sm hover:shadow-md transition-all flex flex-row overflow-hidden border-dashed ${isInvalid ? 'opacity-60 saturate-50' : ''}`}
+                    >
+                      {/* Punch Holes Decorators */}
+                      <div className="absolute top-1/2 -translate-y-1/2 -left-3 w-6 h-6 rounded-full bg-[#FDFCF8] border border-gray-200 z-10"></div>
+                      <div className="absolute top-1/2 -translate-y-1/2 -right-3 w-6 h-6 rounded-full bg-[#FDFCF8] border border-gray-200 z-10"></div>
+
+                      {/* Left side: Ticket Details */}
+                      <div className="flex-1 p-6 flex flex-col justify-between pl-8">
+                        <div>
+                          <span className="inline-flex items-center gap-1 bg-[#DF9F28]/10 text-[#DF9F28] border border-[#DF9F28]/10 px-2 py-0.5 rounded-full text-[0.55rem] font-bold uppercase tracking-widest mb-3 select-none">
+                            Lucky Ticket
+                          </span>
+                          <h4 className="text-base font-serif font-extrabold text-black uppercase tracking-wide leading-tight">
+                            {ticket.drawCampaign?.name || "Lucky Draw"}
+                          </h4>
+                          <p className="text-[0.7rem] text-gray-500 font-semibold mt-1">
+                            Prize: {ticket.drawCampaign?.prizeName || "Premium Reward"}
+                          </p>
+                        </div>
+
+                        <div className="mt-4 pt-4 border-t border-gray-50 flex flex-col gap-1">
+                          <span className="text-[0.6rem] font-bold text-gray-400 uppercase tracking-widest block">Ticket ID</span>
+                          <span className="font-mono text-sm font-extrabold text-black tracking-wide">
+                            {ticket.ticketNumber}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Visual Divider (Dashed) */}
+                      <div className="border-l border-dashed border-gray-200 my-4 h-auto"></div>
+
+                      {/* Right side: Linked Order details */}
+                      <div className="w-1/3 p-6 bg-gray-50/50 flex flex-col justify-between items-center text-center select-none pr-8">
+                        <div className="flex flex-col items-center">
+                          <span className="text-[0.6rem] font-bold text-gray-400 uppercase tracking-widest block">Linked Order</span>
+                          <span className="text-xs font-bold text-gray-800 mt-1 font-mono tracking-wide">
+                            {ticket.order?.id}
+                          </span>
+                        </div>
+
+                        <div className="flex flex-col items-center mt-4 pt-4 border-t border-gray-100/50 w-full">
+                          <span className="text-[0.55rem] font-bold text-gray-400 uppercase tracking-widest">Status</span>
+                          {isInvalid ? (
+                            <span className="inline-flex items-center gap-1 bg-red-50 text-red-700 border border-red-100 px-2 py-0.5 rounded-full text-[0.55rem] font-bold uppercase tracking-wider mt-1">
+                              Invalid
+                            </span>
+                          ) : ticket.drawCampaign?.status === 'ACTIVE' ? (
+                            <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-0.5 rounded-full text-[0.55rem] font-bold uppercase tracking-wider mt-1">
+                              Active
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-500 border border-gray-200 px-2 py-0.5 rounded-full text-[0.55rem] font-bold uppercase tracking-wider mt-1">
+                              Closed
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>

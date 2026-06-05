@@ -25,7 +25,7 @@ export interface ShippingDetails {
   pincode: string;
 }
 
-export type OrderStatus = 'PENDING' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+export type OrderStatus = 'PENDING' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED' | 'FAILED' | 'PAID';
 
 export interface Order {
   id: string;
@@ -35,6 +35,7 @@ export interface Order {
   status: OrderStatus;
   paymentMethod: string;
   shippingDetails: ShippingDetails;
+  tickets?: any[];
 }
 
 interface OrderContextType {
@@ -92,7 +93,8 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
                 city: o.city || '',
                 state: o.state || '',
                 pincode: o.pincode || ''
-              }
+              },
+              tickets: o.tickets || []
             }));
             setOrders(formatted);
           }

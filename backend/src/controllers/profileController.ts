@@ -251,3 +251,39 @@ export const setDefaultAddress = async (req: Request, res: Response) => {
         res.status(500).json({ error: error.message || "Failed to set default address" });
     }
 };
+
+// GET /api/profile/tickets
+export const getMyTickets = async (req: Request, res: Response) => {
+    try {
+        const userId = (req as any).user.id;
+        const tickets = await prisma.luckyTicket.findMany({
+            where: { userId },
+            include: {
+                drawCampaign: {
+                    select: {
+                        name: true,
+                        prizeName: true,
+                        prizeImage: true,
+                        startDate: true,
+                        endDate: true,
+                        status: true
+                    }
+                },
+                order: {
+                    select: {
+                        id: true,
+                        totalAmount: true,
+                        status: true,
+                        createdAt: true
+                    }
+                }
+            },
+            orderBy: { createdAt: 'desc' }
+        });
+
+        res.json({ success: true, data: tickets });
+    } catch (error: any) {
+        console.error("❌ Get my tickets error:", error);
+        res.status(500).json({ error: error.message || "Failed to fetch tickets" });
+    }
+};

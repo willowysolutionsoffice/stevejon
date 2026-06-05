@@ -196,6 +196,7 @@ model User {
   orders        Order[]
   reviews       Review[]
   addresses     Address[]
+  tickets       LuckyTicket[]
 
   @@unique([email])
   @@map("user")
@@ -222,6 +223,7 @@ model Order {
 
   user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   items OrderItem[]
+  tickets LuckyTicket[]
 
   @@map("order")
 }
@@ -399,4 +401,35 @@ model Coupon {
   updatedAt     DateTime @updatedAt
 
   @@map("coupon")
+}
+
+model DrawCampaign {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  prizeName   String
+  prizeImage  String
+  startDate   DateTime
+  endDate     DateTime
+  winnerCount Int
+  status      String   @default("DRAFT") // "DRAFT" | "ACTIVE" | "COMPLETED"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tickets     LuckyTicket[]
+
+  @@map("draw_campaign")
+}
+
+model LuckyTicket {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  ticketNumber   String       @unique // E.g., DRAW-2026-000001
+  orderId        String       @db.ObjectId
+  drawCampaignId String       @db.ObjectId
+  userId         String
+  createdAt      DateTime     @default(now())
+
+  order        Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  drawCampaign DrawCampaign @relation(fields: [drawCampaignId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("lucky_ticket")
 }

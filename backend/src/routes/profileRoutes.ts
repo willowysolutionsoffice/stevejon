@@ -6,7 +6,8 @@ import {
     createAddress, 
     updateAddress, 
     deleteAddress, 
-    setDefaultAddress 
+    setDefaultAddress,
+    getMyTickets
 } from '../controllers/profileController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 
@@ -18,6 +19,7 @@ router.use(authMiddleware);
 // Profile detail endpoints
 router.get('/', getProfile);
 router.put('/', updateProfile);
+router.get('/tickets', getMyTickets);
 
 // Address book endpoints
 router.get('/addresses', getAddresses);

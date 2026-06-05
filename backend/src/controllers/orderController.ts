@@ -5,6 +5,65 @@ import { calculateCouponDiscount } from './couponController.js';
 
 const prisma = prismaClient as any;
 
+// Helper to generate lucky tickets for an order if there are active draw campaigns
+async function generateTicketsForOrder(tx: any, orderId: string, userId: string) {
+    // Check if tickets already exist for this order to avoid duplicates
+    const existingTickets = await tx.luckyTicket.findFirst({
+        where: { orderId }
+    });
+
+    if (existingTickets) {
+        return; // already generated
+    }
+
+    const now = new Date();
+    const activeCampaigns = await tx.drawCampaign.findMany({
+        where: {
+            status: "ACTIVE",
+            startDate: { lte: now },
+            endDate: { gte: now }
+        }
+    });
+
+    if (activeCampaigns.length === 0) {
+        return; // no active campaign
+    }
+
+    for (const campaign of activeCampaigns) {
+        const year = now.getFullYear();
+        // Find the last generated ticket for this year
+        const lastTicket = await tx.luckyTicket.findFirst({
+            where: {
+                ticketNumber: {
+                    startsWith: `DRAW-${year}-`
+                }
+            },
+            orderBy: {
+                ticketNumber: 'desc'
+            }
+        });
+
+        let nextNum = 1;
+        if (lastTicket) {
+            const match = lastTicket.ticketNumber.match(/DRAW-(\d{4})-(\d{6})/);
+            if (match) {
+                nextNum = parseInt(match[2]) + 1;
+            }
+        }
+
+        const ticketNumber = `DRAW-${year}-${String(nextNum).padStart(6, '0')}`;
+
+        await tx.luckyTicket.create({
+            data: {
+                ticketNumber,
+                orderId,
+                drawCampaignId: campaign.id,
+                userId
+            }
+        });
+    }
+}
+
 export const getAllOrders = async (req: Request, res: Response) => {
     try {
         const page = parseInt(req.query.page as string) || 1;
@@ -63,63 +122,86 @@ export const getAllOrders = async (req: Request, res: Response) => {
 
 export const updateOrderStatus = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
+        const id = req.params.id as string;
         const { status: targetStatus } = req.body;
 
         // validate status using schema
         orderStatusSchema.parse(targetStatus);
 
-        const updatedOrder = await prisma.$transaction(async (tx: any) => {
-            // Get current order and its items
-            const order = await tx.order.findUnique({
-                where: { id },
-                include: { items: true }
-            });
-
-            if (!order) {
-                throw new Error("Order not found");
-            }
-
-            const currentStatus = order.status;
-
-            if (currentStatus === targetStatus) {
-                return order; // No change
-            }
-
-            const isCurrentCancelledOrFailed = currentStatus === 'CANCELLED' || currentStatus === 'FAILED';
-            const isTargetCancelledOrFailed = targetStatus === 'CANCELLED' || targetStatus === 'FAILED';
-
-            // Transition: Active -> Cancelled/Failed (Restore stock)
-            if (!isCurrentCancelledOrFailed && isTargetCancelledOrFailed) {
-                for (const item of order.items) {
-                    await tx.productVariant.update({
-                        where: { id: item.variantId },
-                        data: { qty: { increment: item.quantity } }
+        let updatedOrder;
+        let attempts = 0;
+        const maxAttempts = 5;
+        while (attempts < maxAttempts) {
+            try {
+                updatedOrder = await prisma.$transaction(async (tx: any) => {
+                    // Get current order and its items
+                    const order = await tx.order.findUnique({
+                        where: { id },
+                        include: { items: true }
                     });
-                }
-            }
-            // Transition: Cancelled/Failed -> Active (Deduct stock)
-            else if (isCurrentCancelledOrFailed && !isTargetCancelledOrFailed) {
-                for (const item of order.items) {
-                    const variant = await tx.productVariant.findUnique({
-                        where: { id: item.variantId }
-                    });
-                    if (!variant || variant.qty < item.quantity) {
-                        throw new Error(`Insufficient stock to reactivate order. Item SKU ${variant?.sku || item.variantId} is out of stock.`);
+
+                    if (!order) {
+                        throw new Error("Order not found");
                     }
-                    await tx.productVariant.update({
-                        where: { id: item.variantId },
-                        data: { qty: { decrement: item.quantity } }
-                    });
-                }
-            }
 
-            // Update order status
-            return tx.order.update({
-                where: { id },
-                data: { status: targetStatus }
-            });
-        });
+                    const currentStatus = order.status;
+
+                    if (currentStatus === targetStatus) {
+                        return order; // No change
+                    }
+
+                    const isCurrentCancelledOrFailed = currentStatus === 'CANCELLED' || currentStatus === 'FAILED';
+                    const isTargetCancelledOrFailed = targetStatus === 'CANCELLED' || targetStatus === 'FAILED';
+
+                    // Transition: Active -> Cancelled/Failed (Restore stock)
+                    if (!isCurrentCancelledOrFailed && isTargetCancelledOrFailed) {
+                        for (const item of order.items) {
+                            await tx.productVariant.update({
+                                where: { id: item.variantId },
+                                data: { qty: { increment: item.quantity } }
+                            });
+                        }
+                    }
+                    // Transition: Cancelled/Failed -> Active (Deduct stock)
+                    else if (isCurrentCancelledOrFailed && !isTargetCancelledOrFailed) {
+                        for (const item of order.items) {
+                            const variant = await tx.productVariant.findUnique({
+                                where: { id: item.variantId }
+                            });
+                            if (!variant || variant.qty < item.quantity) {
+                                throw new Error(`Insufficient stock to reactivate order. Item SKU ${variant?.sku || item.variantId} is out of stock.`);
+                            }
+                            await tx.productVariant.update({
+                                where: { id: item.variantId },
+                                data: { qty: { decrement: item.quantity } }
+                            });
+                        }
+                    }
+
+                    // Update order status
+                    const updated = await tx.order.update({
+                        where: { id },
+                        data: { status: targetStatus }
+                    });
+
+                    // Generate ticket if order transitions to PAID
+                    if (targetStatus === 'PAID') {
+                        await generateTicketsForOrder(tx, id, order.userId);
+                    }
+
+                    return updated;
+                });
+                break; // success
+            } catch (error: any) {
+                if (error.code === 'P2002' && error.message?.includes('ticketNumber')) {
+                    attempts++;
+                    if (attempts >= maxAttempts) throw error;
+                    await new Promise(resolve => setTimeout(resolve, 50 + Math.random() * 100));
+                    continue;
+                }
+                throw error;
+            }
+        }
 
         res.json(updatedOrder);
     } catch (error: any) {
@@ -152,6 +234,11 @@ export const getOrderById = async (req: Request, res: Response) => {
                         },
                     },
                 },
+                tickets: {
+                    include: {
+                        drawCampaign: true
+                    }
+                }
             },
         });
 
@@ -179,93 +266,113 @@ export const createOrder = async (req: Request, res: Response) => {
         const subtotal = items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
 
         // Run order creation and stock decrement in a transaction
-        const order = await prisma.$transaction(async (tx: any) => {
-            let discountAmount = 0;
-            let finalAmount = subtotal;
+        let order;
+        let attempts = 0;
+        const maxAttempts = 5;
+        while (attempts < maxAttempts) {
+            try {
+                order = await prisma.$transaction(async (tx: any) => {
+                    let discountAmount = 0;
+                    let finalAmount = subtotal;
 
-            if (couponCode) {
-                const coupon = await tx.coupon.findUnique({
-                    where: { code: couponCode }
-                });
+                    if (couponCode) {
+                        const coupon = await tx.coupon.findUnique({
+                            where: { code: couponCode }
+                        });
 
-                if (!coupon) {
-                    throw new Error("Coupon code is invalid");
-                }
-
-                try {
-                    discountAmount = calculateCouponDiscount(coupon, subtotal);
-                    finalAmount = subtotal - discountAmount;
-                } catch (err: any) {
-                    throw new Error(`Coupon error: ${err.message}`);
-                }
-
-                // Increment coupon usage count
-                await tx.coupon.update({
-                    where: { id: coupon.id },
-                    data: { usedCount: { increment: 1 } }
-                });
-            }
-
-            // 1. Create the Order
-            const newOrder = await tx.order.create({
-                data: {
-                    userId,
-                    totalAmount: finalAmount,
-                    discountAmount,
-                    couponCode: couponCode || null,
-                    status: "PROCESSING",
-                    paymentMethod,
-                    phoneNumber: shippingDetails.phone,
-                    street: shippingDetails.street,
-                    city: shippingDetails.city,
-                    state: shippingDetails.state,
-                    pincode: shippingDetails.pincode,
-                    items: {
-                        create: items.map((item: any) => ({
-                            variantId: item.variantId,
-                            quantity: item.quantity,
-                            price: item.price
-                        }))
-                    }
-                },
-                include: {
-                    items: true
-                }
-            });
-
-            // 2. Decrement quantities of the variants in stock
-            for (const item of items) {
-                const variant = await tx.productVariant.findUnique({
-                    where: { id: item.variantId }
-                });
-
-                if (!variant || variant.qty < item.quantity) {
-                    throw new Error(`Insufficient stock for item: ${item.title || item.variantId}`);
-                }
-
-                await tx.productVariant.update({
-                    where: { id: item.variantId },
-                    data: {
-                        qty: {
-                            decrement: item.quantity
+                        if (!coupon) {
+                            throw new Error("Coupon code is invalid");
                         }
+
+                        try {
+                            discountAmount = calculateCouponDiscount(coupon, subtotal);
+                            finalAmount = subtotal - discountAmount;
+                        } catch (err: any) {
+                            throw new Error(`Coupon error: ${err.message}`);
+                        }
+
+                        // Increment coupon usage count
+                        await tx.coupon.update({
+                            where: { id: coupon.id },
+                            data: { usedCount: { increment: 1 } }
+                        });
                     }
+
+                    // 1. Create the Order
+                    const newOrder = await tx.order.create({
+                        data: {
+                            userId,
+                            totalAmount: finalAmount,
+                            discountAmount,
+                            couponCode: couponCode || null,
+                            status: "PROCESSING",
+                            paymentMethod,
+                            phoneNumber: shippingDetails.phone,
+                            street: shippingDetails.street,
+                            city: shippingDetails.city,
+                            state: shippingDetails.state,
+                            pincode: shippingDetails.pincode,
+                            items: {
+                                create: items.map((item: any) => ({
+                                    variantId: item.variantId,
+                                    quantity: item.quantity,
+                                    price: item.price
+                                }))
+                            }
+                        },
+                        include: {
+                            items: true
+                        }
+                    });
+
+                    // 2. Decrement quantities of the variants in stock
+                    for (const item of items) {
+                        const variant = await tx.productVariant.findUnique({
+                            where: { id: item.variantId }
+                        });
+
+                        if (!variant || variant.qty < item.quantity) {
+                            throw new Error(`Insufficient stock for item: ${item.title || item.variantId}`);
+                        }
+
+                        await tx.productVariant.update({
+                            where: { id: item.variantId },
+                            data: {
+                                qty: {
+                                    decrement: item.quantity
+                                }
+                            }
+                        });
+                    }
+
+                    // 3. Clear user's Cart in MongoDB
+                    const userCart = await tx.cart.findUnique({
+                        where: { userId }
+                    });
+
+                    if (userCart) {
+                        await tx.cartItem.deleteMany({
+                            where: { cartId: userCart.id }
+                        });
+                    }
+
+                    // 4. Generate lucky tickets if active draw campaigns exist
+                    await generateTicketsForOrder(tx, newOrder.id, userId);
+
+                    return newOrder;
                 });
+                break; // success
+            } catch (error: any) {
+                if (error.code === 'P2002' && error.message?.includes('ticketNumber')) {
+                    attempts++;
+                    if (attempts >= maxAttempts) throw error;
+                    // Wait 50-150ms to avoid retry collision
+                    await new Promise(resolve => setTimeout(resolve, 50 + Math.random() * 100));
+                    continue;
+                }
+                throw error;
             }
-
-            // 3. Clear user's Cart in MongoDB
-            const userCart = await tx.cart.findUnique({
-                where: { userId }
-            });
-
-            if (userCart) {
-                await tx.cartItem.deleteMany({
-                    where: { cartId: userCart.id }
-                });
-            }
-
-            return newOrder;
-        });
+        }
 
         res.status(201).json({ success: true, data: order });
     } catch (error: any) {
@@ -295,6 +402,11 @@ export const getMyOrders = async (req: Request, res: Response) => {
                                 }
                             }
                         }
+                    }
+                },
+                tickets: {
+                    include: {
+                        drawCampaign: true
                     }
                 }
             },

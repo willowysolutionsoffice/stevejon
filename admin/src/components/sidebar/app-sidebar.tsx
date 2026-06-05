@@ -18,6 +18,7 @@ import {
   Menu,
   X,
   Boxes,
+  Gift,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -62,6 +63,7 @@ const adminNavigation: AdminNavItem[] = [
   { title: "Inventory", href: "/inventory", icon: Boxes },
   { title: "Analytics", href: "/analytics", icon: BarChart3 },
   { title: "Variations", href: "/variations", icon: Layers },
+  { title: "Draw Campaigns", href: "/draws", icon: Gift },
   { title: "Settings", href: "/settings", icon: Settings },
 ];
 

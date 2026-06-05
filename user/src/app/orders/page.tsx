@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { 
   ArrowLeft, Search, X, Check, ShoppingBag, 
-  Calendar, CreditCard, MapPin, ChevronDown, ChevronUp, AlertCircle, Clock
+  Calendar, CreditCard, MapPin, ChevronDown, ChevronUp, AlertCircle, Clock, Ticket
 } from 'lucide-react';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -155,6 +155,20 @@ function OrdersPageContent() {
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.65rem] font-bold tracking-wider uppercase bg-red-50 text-red-700 border border-red-200/50">
             <X className="w-3 h-3" />
             Cancelled
+          </span>
+        );
+      case 'FAILED':
+        return (
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.65rem] font-bold tracking-wider uppercase bg-red-50 text-red-700 border border-red-200/50">
+            <X className="w-3 h-3" />
+            Payment Failed
+          </span>
+        );
+      case 'PAID':
+        return (
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.65rem] font-bold tracking-wider uppercase bg-green-50 text-green-700 border border-green-200/50">
+            <Check className="w-3 h-3" />
+            Paid
           </span>
         );
       default:
@@ -403,6 +417,55 @@ function OrdersPageContent() {
                                 </div>
                               ))}
                             </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Lucky Tickets */}
+                      {order.tickets && order.tickets.length > 0 && (
+                        <div className="bg-white p-6 rounded-3xl border border-gray-100/50 shadow-sm space-y-4">
+                          <h4 className="text-xs font-bold tracking-[0.15em] uppercase text-black border-b border-gray-50 pb-3 flex items-center gap-2">
+                            <Ticket className="w-4 h-4 text-[#DF9F28]" />
+                            Linked Lucky Tickets
+                          </h4>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {order.tickets.map((ticket: any) => {
+                              const isInvalid = order.status === 'CANCELLED' || order.status === 'FAILED';
+                              return (
+                                <div 
+                                  key={ticket.id}
+                                  className={`relative bg-[#FDFCF8] border border-gray-200 rounded-[1.5rem] shadow-sm hover:shadow-md transition-all flex flex-row overflow-hidden border-dashed p-4 ${isInvalid ? 'opacity-60 saturate-50' : ''}`}
+                                >
+                                  {/* Punch Holes Decorators */}
+                                  <div className="absolute top-1/2 -translate-y-1/2 -left-2 w-4 h-4 rounded-full bg-white border border-gray-200 z-10"></div>
+                                  <div className="absolute top-1/2 -translate-y-1/2 -right-2 w-4 h-4 rounded-full bg-white border border-gray-200 z-10"></div>
+                                  
+                                  <div className="flex-1 pl-4 text-left">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-[0.6rem] font-bold text-gray-400 uppercase tracking-widest">Ticket ID</span>
+                                      {isInvalid && (
+                                        <span className="text-[0.55rem] bg-red-50 text-red-600 font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border border-red-100 leading-none">
+                                          Invalid
+                                        </span>
+                                      )}
+                                    </div>
+                                    <span className="font-mono text-xs font-extrabold text-black tracking-wide block mt-1">
+                                      {ticket.ticketNumber}
+                                    </span>
+                                    <span className="text-[0.55rem] text-[#DF9F28] font-bold uppercase tracking-wide block mt-1">
+                                      {ticket.drawCampaign?.name || "Lucky Draw"}
+                                    </span>
+                                  </div>
+                                  <div className="border-l border-dashed border-gray-200 my-1 mx-3 h-auto"></div>
+                                  <div className="w-1/3 flex flex-col justify-center items-center text-center select-none pr-4">
+                                    <span className="text-[0.55rem] font-bold text-gray-400 uppercase tracking-widest">Prize</span>
+                                    <span className="text-[10px] font-bold text-gray-800 mt-1 max-w-[80px] truncate" title={ticket.drawCampaign?.prizeName || "Premium Reward"}>
+                                      {ticket.drawCampaign?.prizeName || "Premium Reward"}
+                                    </span>
+                                  </div>
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       )}

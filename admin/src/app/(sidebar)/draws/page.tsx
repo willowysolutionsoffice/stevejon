@@ -49,6 +49,8 @@ import {
   Search,
   Image as ImageIcon,
   Ticket,
+  Mail,
+  Phone,
 } from "lucide-react";
 import { toast } from "sonner";
 import { API_URL } from "@/lib/api-client";
@@ -91,6 +93,59 @@ export default function DrawsPage() {
   const [tickets, setTickets] = useState<any[]>([]);
   const [loadingTickets, setLoadingTickets] = useState(false);
   const [isTicketsDialogOpen, setIsTicketsDialogOpen] = useState(false);
+
+  // Draw Winner execution state
+  const [activeDrawCampaign, setActiveDrawCampaign] = useState<DrawCampaign | null>(null);
+  const [isDrawRunning, setIsDrawRunning] = useState(false);
+  const [drawStep, setDrawStep] = useState<'idle' | 'gathering' | 'shuffling' | 'cycling' | 'revealed'>('idle');
+  const [cycledTicket, setCycledTicket] = useState("DRAW-2026-000000");
+  const [winningTickets, setWinningTickets] = useState<any[]>([]);
+  const [drawError, setDrawError] = useState<string | null>(null);
+
+  const startDrawExecution = async (campaign: DrawCampaign) => {
+    setActiveDrawCampaign(campaign);
+    setIsDrawRunning(true);
+    setDrawStep('gathering');
+    setDrawError(null);
+    setWinningTickets([]);
+
+    try {
+      const response = await fetch(`${API_URL}/draws/${campaign.id}/draw-winners`, {
+        method: 'POST'
+      });
+      const res = await response.json();
+
+      if (!response.ok || !res.success) {
+        setDrawError(res.error || "Failed to execute draw");
+        return;
+      }
+
+      const winners = res.data.winners || [];
+
+      // Suspsense phases
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setDrawStep('shuffling');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setDrawStep('cycling');
+
+      const cycleInterval = setInterval(() => {
+        const randomNum = Math.floor(100000 + Math.random() * 900000);
+        setCycledTicket(`DRAW-2026-${randomNum}`);
+      }, 50);
+
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      clearInterval(cycleInterval);
+
+      setWinningTickets(winners);
+      setDrawStep('revealed');
+      fetchCampaigns();
+      toast.success(`Successfully drew winners for ${campaign.name}!`);
+    } catch (err: any) {
+      console.error(err);
+      setDrawError(err.message || "Error executing draw");
+    }
+  };
+
 
   const openTicketsDialog = async (campaign: DrawCampaign) => {
     setTicketsCampaign(campaign);
@@ -553,6 +608,17 @@ export default function DrawsPage() {
                       </TableCell>
                       <TableCell className="text-right pr-6">
                         <div className="flex items-center justify-end gap-1.5">
+                          {campaign.status === "ACTIVE" && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/20"
+                              onClick={() => startDrawExecution(campaign)}
+                              title="Draw Winners"
+                            >
+                              <Trophy className="h-4 w-4" />
+                            </Button>
+                          )}
                           <Button
                             variant="ghost"
                             size="icon"
@@ -656,6 +722,10 @@ export default function DrawsPage() {
                               <Badge className="bg-red-500 hover:bg-red-600 text-white border-none py-0.5 px-1.5 text-[9px]">
                                 Invalid
                               </Badge>
+                            ) : t.isWinner ? (
+                              <Badge className="bg-amber-500 hover:bg-amber-600 text-white border-none py-0.5 px-1.5 text-[9px] flex items-center gap-1 font-extrabold animate-pulse">
+                                <Trophy className="w-3.5 h-3.5 text-white" /> Winner
+                              </Badge>
                             ) : (
                               <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white border-none py-0.5 px-1.5 text-[9px]">
                                 Valid
@@ -682,6 +752,142 @@ export default function DrawsPage() {
           <DialogFooter className="pt-4 border-t flex justify-end">
             <Button onClick={() => setIsTicketsDialogOpen(false)} variant="outline">
               Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Suspense Draw Execution Modal */}
+      <Dialog open={isDrawRunning} onOpenChange={(open) => { if (!open && drawStep === 'revealed') { setIsDrawRunning(false); setDrawStep('idle'); } }}>
+        <DialogContent className="sm:max-w-[550px] p-8 text-center flex flex-col items-center justify-center min-h-[400px]">
+          <DialogHeader className="w-full flex flex-col items-center">
+            <DialogTitle className="flex items-center gap-2 text-2xl font-extrabold uppercase tracking-wide bg-gradient-to-r from-amber-500 to-yellow-600 bg-clip-text text-transparent">
+              <Trophy className="h-6 w-6 text-amber-500" />
+              Lucky Draw Selection
+            </DialogTitle>
+            <DialogDescription className="text-xs font-semibold tracking-widest uppercase text-muted-foreground mt-1">
+              {activeDrawCampaign?.name}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="my-8 flex-1 w-full flex flex-col items-center justify-center min-h-[200px]">
+            {drawStep === 'gathering' && (
+              <div className="flex flex-col items-center gap-4 animate-pulse">
+                <RefreshCw className="h-12 w-12 animate-spin text-amber-500" />
+                <h3 className="text-lg font-bold text-gray-800">Gathering Active Entries...</h3>
+                <p className="text-xs text-muted-foreground">Filtering out cancelled and failed order tickets.</p>
+              </div>
+            )}
+
+            {drawStep === 'shuffling' && (
+              <div className="flex flex-col items-center gap-4 animate-pulse">
+                <RefreshCw className="h-12 w-12 animate-spin text-amber-500" />
+                <h3 className="text-lg font-bold text-gray-800">Shuffling Ticket Pool...</h3>
+                <p className="text-xs text-muted-foreground">Ensuring equal probability for all active tickets.</p>
+              </div>
+            )}
+
+            {drawStep === 'cycling' && (
+              <div className="flex flex-col items-center gap-4">
+                <Sparkles className="h-12 w-12 animate-bounce text-amber-500" />
+                <h3 className="text-lg font-bold text-gray-800">Selecting Final Winners...</h3>
+                <div className="font-mono text-3xl font-black bg-amber-50 text-amber-700 px-6 py-3.5 rounded-2xl border border-amber-200 shadow-sm animate-pulse tracking-wider">
+                  {cycledTicket}
+                </div>
+              </div>
+            )}
+
+            {drawStep === 'revealed' && (
+              <div className="w-full space-y-6 animate-in zoom-in duration-300">
+                <div className="flex flex-col items-center">
+                  <div className="h-16 w-16 bg-amber-50 border border-amber-200 rounded-full flex items-center justify-center mb-3 shadow-md shadow-amber-100">
+                    <Trophy className="h-8 w-8 text-amber-500 animate-bounce" />
+                  </div>
+                  <h3 className="text-xl font-black text-gray-900">Congratulations to the Winner(s)!</h3>
+                  <p className="text-xs text-muted-foreground mt-1">Draw successfully executed for {activeDrawCampaign?.prizeName}.</p>
+                </div>
+
+                <div className="space-y-4 max-h-[300px] overflow-y-auto p-1">
+                  {winningTickets.map((winner, idx) => (
+                    <div key={winner.id} className="bg-gradient-to-br from-amber-500/5 to-yellow-600/5 border border-amber-200/50 rounded-2xl p-5 flex flex-col md:flex-row items-center justify-between gap-4 text-left shadow-sm">
+                      <div className="space-y-1.5 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] bg-amber-500/10 text-amber-700 font-extrabold px-2 py-0.5 rounded-full border border-amber-200/30 uppercase tracking-wider">
+                            Winner #{idx + 1}
+                          </span>
+                          <span className="font-mono text-sm font-black text-amber-700 tracking-wide">
+                            {winner.ticketNumber}
+                          </span>
+                        </div>
+                        <div className="text-xs">
+                          <p className="font-bold text-gray-800">{winner.user?.name || "Unknown Customer"}</p>
+                          <p className="text-muted-foreground text-[11px]">{winner.user?.email || "No email"}</p>
+                          {winner.user?.phone && (
+                            <p className="text-muted-foreground text-[11px] font-medium">Phone: {winner.user.phone}</p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row gap-2 shrink-0 w-full md:w-auto">
+                        <Button 
+                          asChild
+                          variant="outline" 
+                          size="sm" 
+                          className="h-8 text-xs font-semibold gap-1 bg-white hover:bg-amber-50 border-amber-200/50 text-amber-700"
+                        >
+                          <a href={`mailto:${winner.user?.email}?subject=Congratulations! You won the Stevejon Lucky Draw!&body=Hi ${winner.user?.name || "Customer"},%0D%0A%0D%0AWe are thrilled to inform you that your ticket number ${winner.ticketNumber} has been drawn as a winner for the prize: ${activeDrawCampaign?.prizeName}!%0D%0A%0D%0APlease contact us to claim your reward.%0D%0A%0D%0ABest regards,%0D%0AStevejon Atelier Team`}>
+                            <Mail className="h-3.5 w-3.5" /> Email
+                          </a>
+                        </Button>
+                        {winner.user?.phone && (
+                          <Button 
+                            asChild
+                            variant="outline" 
+                            size="sm" 
+                            className="h-8 text-xs font-semibold gap-1 bg-white hover:bg-emerald-50 border-emerald-200/40 text-emerald-700"
+                          >
+                            <a href={`tel:${winner.user.phone}`}>
+                              <Phone className="h-3.5 w-3.5" /> Call
+                            </a>
+                          </Button>
+                        )}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 text-[11px] text-gray-500 hover:text-black font-medium"
+                          onClick={() => {
+                            navigator.clipboard.writeText(`${winner.user?.name || ''} <${winner.user?.email || ''}> ${winner.user?.phone || ''}`);
+                            toast.success("Contact details copied!");
+                          }}
+                        >
+                          Copy Info
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {drawError && (
+              <div className="flex flex-col items-center gap-4 text-red-500 text-center">
+                <AlertCircle className="h-12 w-12" />
+                <h3 className="text-lg font-bold">Draw Selection Failed</h3>
+                <p className="text-xs max-w-xs">{drawError}</p>
+                <Button variant="outline" size="sm" onClick={() => setIsDrawRunning(false)} className="mt-2">
+                  Close
+                </Button>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter className="w-full border-t pt-4 flex justify-end">
+            <Button 
+              disabled={drawStep !== 'revealed' && !drawError} 
+              onClick={() => { setIsDrawRunning(false); setDrawStep('idle'); }}
+              className="bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white w-full sm:w-auto"
+            >
+              {drawStep === 'revealed' ? "Close & Complete Draw" : drawError ? "Failed" : "Drawing Winners..."}
             </Button>
           </DialogFooter>
         </DialogContent>

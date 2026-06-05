@@ -425,6 +425,7 @@ model LuckyTicket {
   orderId        String       @db.ObjectId
   drawCampaignId String       @db.ObjectId
   userId         String
+  isWinner       Boolean      @default(false)
   createdAt      DateTime     @default(now())
 
   order        Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)

@@ -5,7 +5,8 @@ import {
     createDrawCampaign,
     updateDrawCampaign,
     deleteDrawCampaign,
-    getDrawCampaignTickets
+    getDrawCampaignTickets,
+    drawCampaignWinners
 } from '../controllers/drawCampaignController.js';
 import { adminMiddleware } from '../middleware/authMiddleware.js';
 
@@ -18,8 +19,10 @@ router.use(adminMiddleware);
 router.get('/', getAllDrawCampaigns);
 router.post('/', upload.single('prizeImage'), createDrawCampaign);
 router.get('/:id/tickets', getDrawCampaignTickets);
+router.post('/:id/draw-winners', drawCampaignWinners);
 router.patch('/:id', upload.single('prizeImage'), updateDrawCampaign);
 router.delete('/:id', deleteDrawCampaign);
 
 export default router;
+
 

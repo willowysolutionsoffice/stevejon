@@ -443,11 +443,21 @@ function OrdersPageContent() {
                                   <div className="flex-1 pl-4 text-left">
                                     <div className="flex items-center gap-2">
                                       <span className="text-[0.6rem] font-bold text-gray-400 uppercase tracking-widest">Ticket ID</span>
-                                      {isInvalid && (
+                                      {isInvalid ? (
                                         <span className="text-[0.55rem] bg-red-50 text-red-600 font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border border-red-100 leading-none">
                                           Invalid
                                         </span>
-                                      )}
+                                      ) : ticket.drawCampaign?.status === 'COMPLETED' ? (
+                                        ticket.isWinner ? (
+                                          <span className="text-[0.55rem] bg-amber-50 text-amber-700 font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded border border-amber-200 leading-none animate-pulse">
+                                            Winner 🎉
+                                          </span>
+                                        ) : (
+                                          <span className="text-[0.55rem] bg-gray-50 text-gray-500 font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border border-gray-200 leading-none">
+                                            No Win
+                                          </span>
+                                        )
+                                      ) : null}
                                     </div>
                                     <span className="font-mono text-xs font-extrabold text-black tracking-wide block mt-1">
                                       {ticket.ticketNumber}

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { 
   User, MapPin, Phone, Mail, Calendar, Check, 
   Trash2, Edit, Plus, ArrowLeft, Eye, ShieldCheck, 
-  UserCheck, AlertCircle, Camera, CheckCircle, X, Ticket
+  UserCheck, AlertCircle, Camera, CheckCircle, X, Ticket, Trophy
 } from 'lucide-react';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -627,6 +627,23 @@ export default function ProfilePage() {
                           <p className="text-[0.7rem] text-gray-500 font-semibold mt-1">
                             Prize: {ticket.drawCampaign?.prizeName || "Premium Reward"}
                           </p>
+
+                          {ticket.drawCampaign?.status === 'COMPLETED' && !isInvalid && (
+                            <div className={`mt-3 p-3 rounded-2xl border text-xs font-semibold select-none ${
+                              ticket.isWinner 
+                                ? 'bg-amber-50 border-amber-200 text-amber-800 animate-pulse' 
+                                : 'bg-gray-50 border-gray-100 text-gray-500'
+                            }`}>
+                              {ticket.isWinner ? (
+                                <span className="flex items-center gap-1.5 font-extrabold">
+                                  <Trophy className="w-4 h-4 text-amber-500" />
+                                  Winner! You won the {ticket.drawCampaign.prizeName}! 🎉
+                                </span>
+                              ) : (
+                                <span>Better luck next time! Thanks for participating.</span>
+                              )}
+                            </div>
+                          )}
                         </div>
 
                         <div className="mt-4 pt-4 border-t border-gray-50 flex flex-col gap-1">

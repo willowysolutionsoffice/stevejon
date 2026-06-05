@@ -182,3 +182,92 @@ export const getDrawCampaignTickets = async (req: Request, res: Response) => {
     }
 };
 
+// POST /api/draws/:id/draw-winners
+export const drawCampaignWinners = async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id as string;
+
+        const result = await prisma.$transaction(async (tx: any) => {
+            const campaign = await tx.drawCampaign.findUnique({
+                where: { id }
+            });
+
+            if (!campaign) {
+                throw new Error("Draw campaign not found");
+            }
+
+            if (campaign.status !== "ACTIVE") {
+                throw new Error(`Campaign must be ACTIVE to draw winners. Current status: ${campaign.status}`);
+            }
+
+            // Fetch all tickets for this campaign that belong to ACTIVE orders (status is not CANCELLED or FAILED)
+            const tickets = await tx.luckyTicket.findMany({
+                where: {
+                    drawCampaignId: id,
+                    order: {
+                        status: {
+                            notIn: ["CANCELLED", "FAILED"]
+                        }
+                    }
+                },
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                            phone: true
+                        }
+                    }
+                }
+            });
+
+            if (tickets.length === 0) {
+                throw new Error("No active, eligible tickets found in this campaign to draw from");
+            }
+
+            // Shuffle tickets randomly using Fisher-Yates
+            const shuffled = [...tickets];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+
+            // Select up to winnerCount
+            const countToSelect = Math.min(campaign.winnerCount, shuffled.length);
+            const winners = shuffled.slice(0, countToSelect);
+
+            const winnerIds = winners.map((w: any) => w.id);
+
+            // Update winners
+            await tx.luckyTicket.updateMany({
+                where: {
+                    id: { in: winnerIds }
+                },
+                data: {
+                    isWinner: true
+                }
+            });
+
+            // Set campaign status to COMPLETED
+            const updatedCampaign = await tx.drawCampaign.update({
+                where: { id },
+                data: {
+                    status: "COMPLETED"
+                }
+            });
+
+            return {
+                campaign: updatedCampaign,
+                winners: winners
+            };
+        });
+
+        res.json({ success: true, message: `Successfully drew ${result.winners.length} winner(s)!`, data: result });
+    } catch (error: any) {
+        console.error("❌ Draw campaign winners error:", error);
+        res.status(400).json({ error: error.message || "Failed to draw winners" });
+    }
+};
+
+

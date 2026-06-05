@@ -114,7 +114,17 @@ export default async function UserDetailPage({ id }: { id: string }) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {user.wishlists[0].items.map((item: any) => (
+                {user.wishlists[0].items.map((item: {
+                  id: string;
+                  variant?: {
+                    product?: {
+                      name: string;
+                    };
+                    sku?: string;
+                    price?: number;
+                  };
+                  createdAt: string;
+                }) => (
                   <TableRow key={item.id}>
                     <TableCell className="font-medium">
                       {item.variant?.product?.name || "N/A"}

@@ -30,16 +30,34 @@ interface DbAttribute {
   values: { id: string; value: string }[];
 }
 
+interface VariantAttribute {
+  attributeId: string;
+  valueId: string;
+  attributeName: string;
+  value: string;
+}
+
+interface ShopifyVariant {
+  id: string;
+  price?: number;
+  qty?: number;
+  offerPrice?: number;
+  images: (File | string)[];
+  attributes: VariantAttribute[];
+  isNew?: boolean;
+  isModified?: boolean;
+}
+
 // Wrapper for Create Mode
 function CreateShopifyVariantsWrapper() {
   const ctx = useConfigurableProduct();
-  return <ShopifyVariantsManagerUI ctx={ctx} mode="create" />;
+  return <ShopifyVariantsManagerUI ctx={ctx as unknown as ShopifyVariantsManagerUIProps["ctx"]} mode="create" />;
 }
 
 // Wrapper for Edit Mode
 function EditShopifyVariantsWrapper() {
   const ctx = useEditProduct();
-  return <ShopifyVariantsManagerUI ctx={ctx} mode="edit" />;
+  return <ShopifyVariantsManagerUI ctx={ctx as unknown as ShopifyVariantsManagerUIProps["ctx"]} mode="edit" />;
 }
 
 // Main component delegates to wrapper
@@ -51,7 +69,15 @@ export default function ShopifyVariantsManager({ mode }: ShopifyVariantsManagerP
 }
 
 interface ShopifyVariantsManagerUIProps {
-  ctx: any;
+  ctx: {
+    baseProduct: {
+      basePrice?: number;
+      baseQuantity?: number;
+      baseDiscountPrice?: number;
+    };
+    variants: ShopifyVariant[];
+    setVariants: React.Dispatch<React.SetStateAction<ShopifyVariant[]>>;
+  };
   mode: "create" | "edit";
 }
 
@@ -102,8 +128,8 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
   useEffect(() => {
     if (variants.length > 0 && optionsState.length === 0) {
       const optionMap: { [key: string]: Set<string> } = {};
-      variants.forEach((v: any) => {
-        v.attributes.forEach((attr: any) => {
+      variants.forEach((v: ShopifyVariant) => {
+        v.attributes.forEach((attr: VariantAttribute) => {
           if (!optionMap[attr.attributeName]) {
             optionMap[attr.attributeName] = new Set<string>();
           }
@@ -138,7 +164,7 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
   useEffect(() => {
     if (variants.length > 0 && Object.keys(activeVariantIds).length === 0) {
       const initialActive: { [key: string]: boolean } = {};
-      variants.forEach((v: any) => {
+      variants.forEach((v: ShopifyVariant) => {
         initialActive[v.id] = true;
       });
       setActiveVariantIds(initialActive);
@@ -225,9 +251,10 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
       // Re-trigger combinations regeneration
       toast.success(`Option "${optName}" synced successfully!`);
       fetchAttributes(); // Refresh lists
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
-      toast.error(error.message || "Failed to sync option with backend");
+      const message = error instanceof Error ? error.message : "Failed to sync option with backend";
+      toast.error(message);
     } finally {
       setSyncingOptionId(null);
     }
@@ -243,8 +270,8 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
       return;
     }
 
-    const combinations: any[][] = [];
-    const helper = (acc: any[], index: number) => {
+    const combinations: VariantAttribute[][] = [];
+    const helper = (acc: VariantAttribute[], index: number) => {
       if (index === activeOpts.length) {
         combinations.push(acc);
         return;
@@ -282,11 +309,11 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
       // Find matching existing variant to preserve price/stock/images
       const title = combo.map(c => c.value).join(" / ");
       
-      const existing = variants.find((v: any) => {
+      const existing = variants.find((v: ShopifyVariant) => {
         if (v.attributes.length !== combo.length) return false;
         return combo.every(c =>
           v.attributes.some(
-            (a: any) =>
+            (a: VariantAttribute) =>
               a.attributeId === c.attributeId &&
               a.valueId === c.valueId
           )
@@ -388,8 +415,8 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
     if (!groupByOption) return {};
 
     const groups: { [key: string]: typeof variants } = {};
-    variants.forEach((v: any) => {
-      const match = v.attributes.find((a: any) => a.attributeName === groupByOption);
+    variants.forEach((v: ShopifyVariant) => {
+      const match = v.attributes.find((a: VariantAttribute) => a.attributeName === groupByOption);
       const key = match ? match.value : "Default";
       if (!groups[key]) groups[key] = [];
       groups[key].push(v);
@@ -400,9 +427,9 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
 
   const handleGroupPriceChange = (groupKey: string, priceStr: string) => {
     const price = parseFloat(priceStr) || 0;
-    setVariants((prev: any[]) =>
-      prev.map((v: any) => {
-        const match = v.attributes.find((a: any) => a.attributeName === groupByOption);
+    setVariants((prev: ShopifyVariant[]) =>
+      prev.map((v: ShopifyVariant) => {
+        const match = v.attributes.find((a: VariantAttribute) => a.attributeName === groupByOption);
         if (match && match.value === groupKey) {
           return { ...v, price, isModified: !v.isNew };
         }
@@ -413,9 +440,9 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
 
   const handleGroupQtyChange = (groupKey: string, qtyStr: string) => {
     const qty = parseInt(qtyStr, 10) || 0;
-    setVariants((prev: any[]) =>
-      prev.map((v: any) => {
-        const match = v.attributes.find((a: any) => a.attributeName === groupByOption);
+    setVariants((prev: ShopifyVariant[]) =>
+      prev.map((v: ShopifyVariant) => {
+        const match = v.attributes.find((a: VariantAttribute) => a.attributeName === groupByOption);
         if (match && match.value === groupKey) {
           return { ...v, qty, isModified: !v.isNew };
         }
@@ -426,15 +453,15 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
 
   const handleSinglePriceChange = (variantId: string, priceStr: string) => {
     const price = parseFloat(priceStr) || 0;
-    setVariants((prev: any[]) =>
-      prev.map((v: any) => (v.id === variantId ? { ...v, price, isModified: !v.isNew } : v))
+    setVariants((prev: ShopifyVariant[]) =>
+      prev.map((v: ShopifyVariant) => (v.id === variantId ? { ...v, price, isModified: !v.isNew } : v))
     );
   };
 
   const handleSingleQtyChange = (variantId: string, qtyStr: string) => {
     const qty = parseInt(qtyStr, 10) || 0;
-    setVariants((prev: any[]) =>
-      prev.map((v: any) => (v.id === variantId ? { ...v, qty, isModified: !v.isNew } : v))
+    setVariants((prev: ShopifyVariant[]) =>
+      prev.map((v: ShopifyVariant) => (v.id === variantId ? { ...v, qty, isModified: !v.isNew } : v))
     );
   };
 
@@ -443,8 +470,8 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
     const files = e.target.files;
     if (files && files.length > 0) {
       const newFiles = Array.from(files);
-      setVariants((prev: any[]) =>
-        prev.map((v: any) => {
+      setVariants((prev: ShopifyVariant[]) =>
+        prev.map((v: ShopifyVariant) => {
           if (v.id === variantId) {
             return {
               ...v,
@@ -459,12 +486,12 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
   };
 
   const removeVariantImage = (variantId: string, imgIdx: number) => {
-    setVariants((prev: any[]) =>
-      prev.map((v: any) => {
+    setVariants((prev: ShopifyVariant[]) =>
+      prev.map((v: ShopifyVariant) => {
         if (v.id === variantId) {
           return {
             ...v,
-            images: v.images.filter((_: any, idx: number) => idx !== imgIdx),
+            images: v.images.filter((_: File | string, idx: number) => idx !== imgIdx),
             isModified: !v.isNew,
           };
         }
@@ -700,12 +727,12 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
                           <td className="py-3 px-4 text-center">
                             <input
                               type="checkbox"
-                              checked={groupItems.every((item: any) => activeVariantIds[item.id])}
+                              checked={groupItems.every((item: ShopifyVariant) => activeVariantIds[item.id])}
                               onChange={(e) => {
                                 const checked = e.target.checked;
                                 setActiveVariantIds((prev) => {
                                   const updated = { ...prev };
-                                  groupItems.forEach((item: any) => {
+                                  groupItems.forEach((item: ShopifyVariant) => {
                                     updated[item.id] = checked;
                                   });
                                   return updated;
@@ -776,10 +803,10 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
 
                         {/* Collapsed Child Combinations Sub-rows */}
                         {isExpanded &&
-                          groupItems.map((variant: any, varIdx: number) => {
+                          groupItems.map((variant: ShopifyVariant, varIdx: number) => {
                             const subTitle = variant.attributes
-                              .filter((a: any) => a.attributeName !== groupByOption)
-                              .map((a: any) => a.value)
+                              .filter((a: VariantAttribute) => a.attributeName !== groupByOption)
+                              .map((a: VariantAttribute) => a.value)
                               .join(" / ") || "Standard";
 
                             const isSubActive = !!activeVariantIds[variant.id];
@@ -885,7 +912,7 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
               </table>
             </div>
             <p className="text-xs text-muted-foreground text-right italic">
-              Total Inventory: {variants.reduce((sum: number, v: any) => sum + (activeVariantIds[v.id] ? v.qty : 0), 0)} items available across variants.
+              Total Inventory: {variants.reduce((sum: number, v: ShopifyVariant) => sum + (activeVariantIds[v.id] ? v.qty || 0 : 0), 0)} items available across variants.
             </p>
           </div>
         )}

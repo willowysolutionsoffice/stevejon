@@ -44,9 +44,4 @@ export const auth = betterAuth({
       adminRoles: ['admin'],
     }),
   ],
-  advanced: {
-    crossSubDomainCookies: {
-      enabled: true,
-    },
-  },
 });

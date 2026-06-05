@@ -1,0 +1,12 @@
+{
+  "name": "stevejon",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm --prefix user run dev",
+    "build": "npm --prefix user run build",
+    "start": "npm --prefix user run start",
+    "lint": "npm --prefix user run lint"
+  }
+}

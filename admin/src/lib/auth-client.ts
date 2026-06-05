@@ -5,14 +5,10 @@ import type { auth } from '@/lib/auth';
 import { adminClient } from 'better-auth/client/plugins';
 
 const getBaseURL = () => {
-  if (process.env.NEXT_PUBLIC_API_URL) {
-    try {
-      return new URL(process.env.NEXT_PUBLIC_API_URL).origin;
-    } catch {
-      return "http://localhost:5000";
-    }
+  if (typeof window !== "undefined") {
+    return window.location.origin;
   }
-  return "http://localhost:5000";
+  return process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3001";
 };
 
 export const authClient = createAuthClient({

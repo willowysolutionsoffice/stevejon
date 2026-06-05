@@ -46,6 +46,18 @@ export default function Winners() {
   const [winnersList, setWinnersList] = useState<any[]>([]);
   const [mounted, setMounted] = useState(false);
 
+  const loadDefaultSeeds = React.useCallback(() => {
+    setWinnersList(DEFAULT_SEED_WINNERS.map((s, idx) => ({
+      id: idx + 1,
+      name: s.name,
+      location: s.location,
+      image: s.image,
+      weekText: `Week ${s.week}`,
+      prize: 'Stevejon Atelier Prize',
+      hasLightning: s.hasLightning,
+    })));
+  }, []);
+
   useEffect(() => {
     setMounted(true);
     const stored = localStorage.getItem('stevejon_lucky_draw_winners');
@@ -109,17 +121,6 @@ export default function Winners() {
     }
   }, []);
 
-  const loadDefaultSeeds = () => {
-    setWinnersList(DEFAULT_SEED_WINNERS.map((s, idx) => ({
-      id: idx + 1,
-      name: s.name,
-      location: s.location,
-      image: s.image,
-      weekText: `Week ${s.week}`,
-      prize: 'Stevejon Atelier Prize',
-      hasLightning: s.hasLightning,
-    })));
-  };
 
   if (!mounted) {
     return (

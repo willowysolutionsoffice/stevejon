@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import { useCart } from '@/context/CartContext';
 import { useOrders } from '@/context/OrderContext';
 import { authClient } from '@/lib/auth-client';
+import { getApiUrl } from '@/lib/api';
 
 export default function CartPage() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function CartPage() {
   };
 
   const { data: session } = authClient.useSession();
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  const apiUrl = getApiUrl();
   const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
 
   const [shippingForm, setShippingForm] = useState({

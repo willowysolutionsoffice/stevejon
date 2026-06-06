@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authClient } from '@/lib/auth-client';
+import { getApiUrl } from '@/lib/api';
 
 export interface WishlistItem {
   id: string;
@@ -27,7 +28,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const { data: session } = authClient.useSession();
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  const apiUrl = getApiUrl();
 
   // Load from localStorage on mount (for guest/offline mode)
   useEffect(() => {

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { getApiUrl } from '@/lib/api';
 
 interface Category {
   id: string;
@@ -18,7 +19,7 @@ export default function CollectionsPage() {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = getApiUrl();
       try {
         const response = await fetch(`${apiUrl}/categories`);
         if (response.ok) {

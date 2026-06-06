@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '@/lib/api';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
@@ -29,7 +30,7 @@ export default function NewArrivals() {
 
   useEffect(() => {
     const fetchNewArrivals = async () => {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = getApiUrl();
       try {
         const response = await fetch(`${apiUrl}/products?limit=100`);
         if (response.ok) {

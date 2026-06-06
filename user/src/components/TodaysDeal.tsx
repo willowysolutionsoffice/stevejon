@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '@/lib/api';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
@@ -17,7 +18,7 @@ export default function TodaysDeal() {
 
   useEffect(() => {
     const fetchDealProducts = async () => {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = getApiUrl();
       try {
         const response = await fetch(`${apiUrl}/products?limit=2`);
         if (response.ok) {

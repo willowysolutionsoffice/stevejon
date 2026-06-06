@@ -11,6 +11,7 @@ import {
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { authClient } from '@/lib/auth-client';
+import { getApiUrl } from '@/lib/api';
 
 interface SavedAddress {
   id: string;
@@ -26,7 +27,7 @@ interface SavedAddress {
 export default function ProfilePage() {
   const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  const apiUrl = getApiUrl();
 
   const [activeTab, setActiveTab] = useState<'profile' | 'addresses' | 'tickets'>('profile');
   

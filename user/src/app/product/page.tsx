@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
+import { getApiUrl } from '@/lib/api';
 
 interface Product {
   id: string | number;
@@ -88,7 +89,7 @@ function ProductPageContent() {
   // Fetch categories on mount
   useEffect(() => {
     const fetchCategories = async () => {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = getApiUrl();
       try {
         const response = await fetch(`${apiUrl}/categories`);
         if (response.ok) {
@@ -119,7 +120,7 @@ function ProductPageContent() {
       setLoading(true);
     }
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    const apiUrl = getApiUrl();
     let queryUrl = `${apiUrl}/products?page=${currentPage}&limit=9`;
     if (categoryId) {
       queryUrl += `&categoryId=${categoryId}`;
@@ -232,7 +233,7 @@ function ProductPageContent() {
 
     const fetchDetails = async () => {
       setLoadingDetails(true);
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = getApiUrl();
       try {
         const response = await fetch(`${apiUrl}/products/${selectedProduct.id}`);
         if (response.ok) {

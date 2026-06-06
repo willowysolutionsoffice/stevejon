@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authClient } from '@/lib/auth-client';
+import { getApiUrl } from '@/lib/api';
 
 export interface OrderItem {
   id: string;
@@ -51,7 +52,7 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const { data: session } = authClient.useSession();
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  const apiUrl = getApiUrl();
 
   // Fetch orders from backend when user session changes
   useEffect(() => {

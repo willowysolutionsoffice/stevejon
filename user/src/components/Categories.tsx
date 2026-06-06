@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '@/lib/api';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -16,7 +17,7 @@ export default function Categories() {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = getApiUrl();
       try {
         const res = await fetch(`${apiUrl}/categories`);
         if (res.ok) {

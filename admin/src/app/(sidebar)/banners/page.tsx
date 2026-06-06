@@ -351,7 +351,7 @@ export default function AdminBannersPage() {
           fetch(`${API_URL}/banners/${banners[swapIdx].id}`, { method: "PATCH", body: formData2 }),
         ]);
         fetchBanners();
-    } catch (err) {
+    } catch {
         toast.error("Failed to reorder");
     }
   };

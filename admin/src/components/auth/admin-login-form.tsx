@@ -27,7 +27,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginData } from "@/types/auth";
 import { IconLogout } from "@tabler/icons-react";
 import { toast } from "sonner";
-import { apiFetch } from "@/lib/api-client";
 import { authClient } from "@/lib/auth-client";
 
 export function AdminLoginForm({
@@ -51,7 +50,7 @@ export function AdminLoginForm({
     setErrorMessage(null);
 
     try {
-      const { data: session, error } = await authClient.signIn.email({
+      const { error } = await authClient.signIn.email({
         email: data.email,
         password: data.password,
       });

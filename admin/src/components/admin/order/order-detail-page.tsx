@@ -46,7 +46,7 @@ export default function OrderDetail({ order }: OrderDetailProps) {
             const res = await response.json();
             toast.error(res.error || "Failed to update status");
         }
-    } catch (err) {
+    } catch {
         toast.error("Error updating order status");
     } finally {
         setIsPending(false);

@@ -91,7 +91,6 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
   // Local state for option cards
   const [optionsState, setOptionsState] = useState<OptionBlock[]>([]);
   const [availableAttributes, setAvailableAttributes] = useState<DbAttribute[]>([]);
-  const [loadingAttributes, setLoadingAttributes] = useState(false);
   const [syncingOptionId, setSyncingOptionId] = useState<string | null>(null);
 
   // Expanded groups tracking in the grid list
@@ -106,7 +105,6 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
 
   // 1. Fetch backend attributes on mount
   const fetchAttributes = async () => {
-    setLoadingAttributes(true);
     try {
       const response = await fetch(`${API_URL}/attributes`, { credentials: "include" });
       if (response.ok) {
@@ -115,8 +113,6 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
       }
     } catch (e) {
       console.error("Failed to fetch attributes:", e);
-    } finally {
-      setLoadingAttributes(false);
     }
   };
 
@@ -150,7 +146,7 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
         setGroupByOption(reconstructed[0].name);
       }
     }
-  }, [variants]);
+  }, [variants, optionsState.length]);
 
   // Set default group by option when options change
   useEffect(() => {
@@ -169,6 +165,7 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
       });
       setActiveVariantIds(initialActive);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [variants]);
 
   // 3. Sync attribute and values with backend database on "Done" click
@@ -306,9 +303,6 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
 
     // Map combinations to VariantData/EditVariantData
     const newVariants = combinations.map((combo, idx) => {
-      // Find matching existing variant to preserve price/stock/images
-      const title = combo.map(c => c.value).join(" / ");
-      
       const existing = variants.find((v: ShopifyVariant) => {
         if (v.attributes.length !== combo.length) return false;
         return combo.every(c =>
@@ -337,6 +331,7 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
     });
 
     setVariants(newVariants);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [optionsState, availableAttributes]);
 
   // Option row manipulations
@@ -803,7 +798,7 @@ function ShopifyVariantsManagerUI({ ctx, mode }: ShopifyVariantsManagerUIProps) 
 
                         {/* Collapsed Child Combinations Sub-rows */}
                         {isExpanded &&
-                          groupItems.map((variant: ShopifyVariant, varIdx: number) => {
+                          groupItems.map((variant: ShopifyVariant) => {
                             const subTitle = variant.attributes
                               .filter((a: VariantAttribute) => a.attributeName !== groupByOption)
                               .map((a: VariantAttribute) => a.value)

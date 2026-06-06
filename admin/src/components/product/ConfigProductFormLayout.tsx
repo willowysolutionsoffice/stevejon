@@ -20,7 +20,7 @@ interface ProductFormContentProps {
   productId?: string;
 }
 
-function ProductFormContent({ isSimpleProduct }: ProductFormContentProps) {
+function ProductFormContent({}: ProductFormContentProps) {
   const router = useRouter();
   const { baseProduct, variants, setVariants, resetBaseProduct } =
     useConfigurableProduct();

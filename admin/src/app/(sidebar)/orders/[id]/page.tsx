@@ -27,7 +27,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
     }
 
     return <OrderDetail order={orderData} />;
-  } catch (error) {
+  } catch {
     return <div className="p-6 text-red-500">Error loading order</div>;
   }
 }

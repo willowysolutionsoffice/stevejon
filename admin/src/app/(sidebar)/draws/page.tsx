@@ -47,7 +47,6 @@ import {
   AlertCircle,
   RefreshCw,
   Search,
-  Image as ImageIcon,
   Ticket,
   Mail,
   Phone,
@@ -66,6 +65,22 @@ interface DrawCampaign {
   winnerCount: number;
   status: "DRAFT" | "ACTIVE" | "COMPLETED";
   createdAt: string;
+}
+
+interface DrawTicket {
+  id: string;
+  ticketNumber: string;
+  orderId: string;
+  isWinner: boolean;
+  createdAt: string;
+  user?: {
+    name?: string;
+    email?: string;
+    phone?: string;
+  };
+  order?: {
+    status?: string;
+  };
 }
 
 export default function DrawsPage() {
@@ -90,7 +105,7 @@ export default function DrawsPage() {
 
   // Tickets Dialog state
   const [ticketsCampaign, setTicketsCampaign] = useState<DrawCampaign | null>(null);
-  const [tickets, setTickets] = useState<any[]>([]);
+  const [tickets, setTickets] = useState<DrawTicket[]>([]);
   const [loadingTickets, setLoadingTickets] = useState(false);
   const [isTicketsDialogOpen, setIsTicketsDialogOpen] = useState(false);
 
@@ -99,7 +114,7 @@ export default function DrawsPage() {
   const [isDrawRunning, setIsDrawRunning] = useState(false);
   const [drawStep, setDrawStep] = useState<'idle' | 'gathering' | 'shuffling' | 'cycling' | 'revealed'>('idle');
   const [cycledTicket, setCycledTicket] = useState("DRAW-2026-000000");
-  const [winningTickets, setWinningTickets] = useState<any[]>([]);
+  const [winningTickets, setWinningTickets] = useState<DrawTicket[]>([]);
   const [drawError, setDrawError] = useState<string | null>(null);
 
   const startDrawExecution = async (campaign: DrawCampaign) => {
@@ -140,9 +155,9 @@ export default function DrawsPage() {
       setDrawStep('revealed');
       fetchCampaigns();
       toast.success(`Successfully drew winners for ${campaign.name}!`);
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
-      setDrawError(err.message || "Error executing draw");
+      setDrawError((err as Error).message || "Error executing draw");
     }
   };
 
@@ -298,7 +313,7 @@ export default function DrawsPage() {
       } else {
         toast.error(res.error || "Failed to delete campaign");
       }
-    } catch (error) {
+    } catch {
       toast.error("Error deleting campaign");
     }
   };

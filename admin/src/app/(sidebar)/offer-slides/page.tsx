@@ -296,7 +296,7 @@ const validateImageSize = (file: File): boolean => {
           fetch(`${API_URL}/offer-slides/${slides[swapIdx].id}`, { method: "PATCH", body: formData2 }),
         ]);
         fetchSlides();
-    } catch (err) {
+    } catch {
         toast.error("Failed to reorder");
     }
   };

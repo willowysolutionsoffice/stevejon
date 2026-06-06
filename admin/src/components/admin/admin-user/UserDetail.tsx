@@ -19,7 +19,7 @@ export default async function UserDetailPage({ id }: { id: string }) {
       }
     });
     result = await response.json();
-  } catch (error) {
+  } catch {
     return (
       <div className="p-4 text-center text-red-500">
         An error occurred while fetching user details.

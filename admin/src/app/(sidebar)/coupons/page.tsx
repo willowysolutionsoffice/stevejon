@@ -43,7 +43,6 @@ import {
   Calendar,
   Sparkles,
   Percent,
-  DollarSign,
   AlertCircle,
   ToggleLeft,
   ToggleRight,
@@ -177,7 +176,7 @@ export default function CouponsPage() {
       } else {
         toast.error(res.error || "Failed to toggle status");
       }
-    } catch (error) {
+    } catch {
       toast.error("Error updating coupon status");
     }
   };
@@ -196,7 +195,7 @@ export default function CouponsPage() {
       } else {
         toast.error(res.error || "Failed to delete coupon");
       }
-    } catch (error) {
+    } catch {
       toast.error("Error deleting coupon");
     }
   };

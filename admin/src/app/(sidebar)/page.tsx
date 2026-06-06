@@ -17,6 +17,9 @@ import { rupee } from "@/constants/values";
 import { API_URL } from "@/lib/api-client";
 import { cookies } from "next/headers";
 
+export const dynamic = "force-dynamic";
+
+
 // Loading component for individual stat cards
 function StatCardSkeleton() {
   return (

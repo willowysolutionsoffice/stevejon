@@ -29,7 +29,6 @@ import { IconLogout } from "@tabler/icons-react";
 import Link from "next/link"; // ✅ added
 import { syncLocalCartToBackend } from "@/lib/local-cart";
 import { toast } from "sonner";
-import { apiFetch } from "@/lib/api-client";
 import { authClient } from "@/lib/auth-client";
 import { useWishlist } from "@/context/cartContext";
 
@@ -56,7 +55,7 @@ export function LoginForm({
     setErrorMessage(null);
 
     try {
-      const { data: session, error } = await authClient.signIn.email({
+      const { error } = await authClient.signIn.email({
         email: data.email,
         password: data.password,
       });

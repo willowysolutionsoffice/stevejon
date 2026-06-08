@@ -8,6 +8,11 @@ import {
   AlertTriangle,
   DollarSign,
   RefreshCw,
+  Trophy,
+  Gift,
+  Ticket,
+  Calendar,
+  Users,
 } from "lucide-react";
 import Image from "next/image";
 import { exportOverviewPDF, exportProductsPDF, exportOrdersPDF } from "./analytic-pdf";
@@ -39,6 +44,7 @@ export interface SalesMetrics {
 
 export interface TopSellingProduct {
   id: string;
+  variantId?: string;
   name: string;
   image: string;
   brand: string;
@@ -68,6 +74,47 @@ export interface OrderSummary {
   razorpayPaymentId?: string;
 }
 
+export interface DrawCampaignAnalytic {
+  id: string;
+  name: string;
+  prizeName: string;
+  prizeImage: string;
+  startDate: string;
+  endDate: string;
+  winnerCount: number;
+  status: "DRAFT" | "ACTIVE" | "COMPLETED";
+  createdAt: string;
+  totalTickets: number;
+  uniqueParticipants: number;
+  winners: Array<{
+    ticketNumber: string;
+    userName: string;
+    userEmail: string;
+  }>;
+}
+
+export interface RecentWinnerAnalytic {
+  id: string;
+  ticketNumber: string;
+  userName: string;
+  userEmail: string;
+  userPhone: string;
+  campaignName: string;
+  prizeName: string;
+  drawnAt: string;
+}
+
+export interface DrawAnalyticsData {
+  totalCampaigns: number;
+  activeCampaigns: number;
+  completedCampaigns: number;
+  totalTickets: number;
+  totalWinners: number;
+  uniqueParticipants: number;
+  campaigns: DrawCampaignAnalytic[];
+  recentWinners: RecentWinnerAnalytic[];
+}
+
 function AnalyticsPage() {
   const [selectedDateRange, setSelectedDateRange] = useState("30d");
   const [salesMetrics, setSalesMetrics] = useState<SalesMetrics | null>(null);
@@ -76,6 +123,7 @@ function AnalyticsPage() {
     []
   );
   const [recentOrders, setRecentOrders] = useState<OrderSummary[]>([]);
+  const [drawAnalytics, setDrawAnalytics] = useState<DrawAnalyticsData | null>(null);
   const [filterOptions, setFilterOptions] = useState<{
     brands: Array<{ id: string; name: string }>;
     categories: Array<{ id: string; name: string }>;
@@ -198,6 +246,17 @@ function AnalyticsPage() {
     }
   }, []);
 
+  // Fetch draw analytics
+  const fetchDrawAnalytics = useCallback(async () => {
+    try {
+      const response = await fetch(`${API_URL}/analytics/draw-analytics`);
+      const data = await response.json();
+      if (response.ok) setDrawAnalytics(data);
+    } catch (error) {
+      console.error("Error fetching draw analytics:", error);
+    }
+  }, []);
+
   // Fetch all data
   const fetchAllData = useCallback(async () => {
     setLoading(true);
@@ -208,6 +267,7 @@ function AnalyticsPage() {
         fetchLowStockProducts(),
         fetchRecentOrders(),
         fetchFilterOptions(),
+        fetchDrawAnalytics(),
       ]);
     } finally {
       setLoading(false);
@@ -218,6 +278,7 @@ function AnalyticsPage() {
     fetchLowStockProducts,
     fetchRecentOrders,
     fetchFilterOptions,
+    fetchDrawAnalytics,
   ]);
 
   // Initial data fetch
@@ -402,6 +463,7 @@ function AnalyticsPage() {
                 { id: "overview", label: "Overview", icon: BarChart3 },
                 { id: "products", label: "Products", icon: Package },
                 { id: "orders", label: "Orders", icon: ShoppingCart },
+                { id: "draws", label: "Draw Analytics", icon: Trophy },
               ].map((tab) => {
                 const Icon = tab.icon;
                 return (
@@ -516,8 +578,8 @@ function AnalyticsPage() {
                           className="bg-orange-50 border border-orange-200 rounded-lg p-4"
                         >
                           <div className="flex items-center space-x-3">
-                            <Image
-                              src={product.images[0]}
+                             <Image
+                              src={product.images?.[0] || "/placeholder.png"}
                               alt={product.name}
                               height={48}
                               width={48}
@@ -586,11 +648,11 @@ function AnalyticsPage() {
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
                         {topProducts.map((product) => (
-                          <tr key={product.id} className="hover:bg-gray-50">
+                          <tr key={product.variantId || product.id} className="hover:bg-gray-50">
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center">
-                                <Image
-                                  src={product.image}
+                                 <Image
+                                  src={product.image || "/placeholder.png"}
                                   alt={product.name}
                                   height={48}
                                   width={48}
@@ -717,6 +779,191 @@ function AnalyticsPage() {
                             </td>
                           </tr>
                         ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "draws" && drawAnalytics && (
+              <div className="space-y-8 animate-in fade-in duration-300">
+                {/* Draw analytics cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                  <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 p-5 rounded-xl border border-indigo-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-indigo-600">Total Campaigns</p>
+                      <p className="text-2xl font-black text-indigo-900 mt-1">{drawAnalytics.totalCampaigns}</p>
+                    </div>
+                    <Gift className="h-6 w-6 text-indigo-500 self-end mt-2" />
+                  </div>
+
+                  <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-5 rounded-xl border border-emerald-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-emerald-600">Active Draws</p>
+                      <p className="text-2xl font-black text-emerald-900 mt-1">{drawAnalytics.activeCampaigns}</p>
+                    </div>
+                    <Trophy className="h-6 w-6 text-emerald-500 self-end mt-2" />
+                  </div>
+
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-5 rounded-xl border border-blue-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-blue-600">Completed Draws</p>
+                      <p className="text-2xl font-black text-blue-900 mt-1">{drawAnalytics.completedCampaigns}</p>
+                    </div>
+                    <Trophy className="h-6 w-6 text-blue-500 self-end mt-2" />
+                  </div>
+
+                  <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-5 rounded-xl border border-amber-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-amber-600">Tickets Issued</p>
+                      <p className="text-2xl font-black text-amber-900 mt-1">{drawAnalytics.totalTickets}</p>
+                    </div>
+                    <Ticket className="h-6 w-6 text-amber-500 self-end mt-2" />
+                  </div>
+
+                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-5 rounded-xl border border-purple-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-purple-600">Participants</p>
+                      <p className="text-2xl font-black text-purple-900 mt-1">{drawAnalytics.uniqueParticipants}</p>
+                    </div>
+                    <Users className="h-6 w-6 text-purple-500 self-end mt-2" />
+                  </div>
+
+                  <div className="bg-gradient-to-br from-pink-50 to-pink-100 p-5 rounded-xl border border-pink-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-pink-600">Winners Selected</p>
+                      <p className="text-2xl font-black text-pink-900 mt-1">{drawAnalytics.totalWinners}</p>
+                    </div>
+                    <Trophy className="h-6 w-6 text-pink-500 self-end mt-2" />
+                  </div>
+                </div>
+
+                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                  <div className="px-6 py-4 border-b border-gray-200 bg-gray-50/50 flex items-center gap-2">
+                    <Gift className="h-5 w-5 text-gray-500" />
+                    <h3 className="font-bold text-gray-900">Campaign Breakdown</h3>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Campaign & Prize</th>
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Period</th>
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
+                          <th className="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Tickets</th>
+                          <th className="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Unique Users</th>
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Winners Drawn</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {drawAnalytics.campaigns.map((c) => (
+                          <tr key={c.id} className="hover:bg-gray-50/50">
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="flex items-center gap-3">
+                                <div className="relative h-10 w-10 border rounded-md overflow-hidden bg-white shrink-0">
+                                  <Image
+                                    src={c.prizeImage || "/placeholder.png"}
+                                    alt={c.prizeName}
+                                    fill
+                                    className="object-contain"
+                                    sizes="40px"
+                                  />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-bold text-gray-900">{c.name}</div>
+                                  <div className="text-xs text-gray-500">Prize: {c.prizeName}</div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-xs text-gray-600">
+                              <div className="flex items-center gap-1">
+                                <Calendar className="h-3.5 w-3.5 text-gray-400" />
+                                <span>{new Date(c.startDate).toLocaleDateString()} - {new Date(c.endDate).toLocaleDateString()}</span>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full border ${
+                                c.status === "ACTIVE" ? "bg-green-50 text-green-700 border-green-200" :
+                                c.status === "COMPLETED" ? "bg-blue-50 text-blue-700 border-blue-200" :
+                                "bg-gray-50 text-gray-700 border-gray-200"
+                              }`}>
+                                {c.status}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-semibold text-gray-900">
+                              {c.totalTickets}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-semibold text-gray-900">
+                              {c.uniqueParticipants}
+                            </td>
+                            <td className="px-6 py-4">
+                              {c.winners.length > 0 ? (
+                                <div className="flex flex-col gap-1 max-w-xs">
+                                  {c.winners.map((w, i) => (
+                                    <div key={i} className="text-xs bg-amber-50 border border-amber-200 rounded px-2 py-1 flex items-center justify-between gap-2">
+                                      <div className="truncate">
+                                        <span className="font-bold text-amber-800">{w.ticketNumber}</span>: <span className="text-gray-700">{w.userName}</span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <span className="text-xs text-gray-400 italic">No winners drawn yet</span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                  <div className="px-6 py-4 border-b border-gray-200 bg-gray-50/50 flex items-center gap-2">
+                    <Trophy className="h-5 w-5 text-amber-500" />
+                    <h3 className="font-bold text-gray-900">Recent Winners History</h3>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Ticket</th>
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Winner Details</th>
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Campaign</th>
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Prize</th>
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Drawn Date</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {drawAnalytics.recentWinners.length > 0 ? (
+                          drawAnalytics.recentWinners.map((w) => (
+                            <tr key={w.id} className="hover:bg-gray-50/50">
+                              <td className="px-6 py-4 whitespace-nowrap font-mono text-xs font-bold text-amber-700">
+                                {w.ticketNumber}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm font-semibold text-gray-900">{w.userName}</div>
+                                <div className="text-xs text-gray-500">{w.userEmail} {w.userPhone && `• ${w.userPhone}`}</div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                {w.campaignName}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {w.prizeName}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-xs text-gray-500">
+                                {new Date(w.drawnAt).toLocaleString()}
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan={5} className="px-6 py-8 text-center text-sm text-gray-400 italic">
+                              No draw winners found in database history.
+                            </td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   </div>

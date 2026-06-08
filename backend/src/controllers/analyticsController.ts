@@ -78,6 +78,7 @@ export const getTopSellingProducts = async (req: Request, res: Response) => {
                     name: variant.product.name,
                     sku: variant.sku,
                     totalQuantity_sold: item._sum.quantity || 0,
+                    totalQuantitySold: item._sum.quantity || 0,
                     totalRevenue: item._sum.price || 0,
                     currentStock: variant.qty,
                     brand: variant.product.brand?.name,
@@ -196,3 +197,197 @@ export const getRecentOrders = async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Failed to fetch recent orders' });
     }
 };
+
+export const getLowStockProducts = async (req: Request, res: Response) => {
+    try {
+        const threshold = parseInt(req.query.threshold as string) || 10;
+        const lowStock = await prisma.productVariant.findMany({
+            where: { qty: { lte: threshold } },
+            include: {
+                product: { include: { brand: true, category: true } },
+            },
+            orderBy: { qty: 'asc' },
+        });
+
+        const formatted = lowStock.map(v => ({
+            id: v.id,
+            name: v.product.name,
+            brand: v.product.brand?.name || 'No Brand',
+            category: v.product.category?.name || 'No Category',
+            currentStock: v.qty,
+            price: v.price,
+            images: v.images.length > 0 ? v.images : [v.product.image],
+        }));
+
+        res.json(formatted);
+    } catch (error) {
+        console.error("Error fetching low stock products:", error);
+        res.status(500).json({ error: 'Failed to fetch low stock products' });
+    }
+};
+
+export const getOrdersSummary = async (req: Request, res: Response) => {
+    try {
+        const { startDate, endDate, status, paymentMethod } = req.query;
+        const whereClause: any = {};
+
+        if (startDate || endDate) {
+            whereClause.createdAt = {};
+            if (startDate) whereClause.createdAt.gte = new Date(startDate as string);
+            if (endDate) whereClause.createdAt.lte = new Date(endDate as string);
+        }
+
+        if (status) whereClause.status = status as string;
+        if (paymentMethod) whereClause.paymentMethod = paymentMethod as string;
+
+        const orders = await prisma.order.findMany({
+            where: whereClause,
+            orderBy: { createdAt: 'desc' },
+            include: {
+                user: {
+                    select: {
+                        name: true,
+                        email: true,
+                    }
+                }
+            }
+        });
+
+        const formatted = orders.map(o => ({
+            id: o.id,
+            userName: o.user?.name || 'Guest',
+            userEmail: o.user?.email || 'N/A',
+            totalAmount: o.totalAmount,
+            status: o.status,
+            paymentMethod: o.paymentMethod,
+            createdAt: o.createdAt,
+            razorpayPaymentId: o.razorpayPaymentId || undefined
+        }));
+
+        res.json(formatted);
+    } catch (error) {
+        console.error("Error fetching orders summary:", error);
+        res.status(500).json({ error: 'Failed to fetch orders summary' });
+    }
+};
+
+export const getFilterOptions = async (req: Request, res: Response) => {
+    try {
+        const [brands, categories, subCategories] = await Promise.all([
+            prisma.brand.findMany({ select: { id: true, name: true }, orderBy: { name: 'asc' } }),
+            prisma.category.findMany({ select: { id: true, name: true }, orderBy: { name: 'asc' } }),
+            prisma.subCategory.findMany({ select: { id: true, name: true, categoryId: true }, orderBy: { name: 'asc' } }),
+        ]);
+
+        res.json({
+            brands,
+            categories,
+            subCategories,
+        });
+    } catch (error) {
+        console.error("Error fetching filter options:", error);
+        res.status(500).json({ error: 'Failed to fetch filter options' });
+    }
+};
+
+export const getDrawAnalytics = async (req: Request, res: Response) => {
+    try {
+        const [
+            totalCampaigns,
+            activeCampaigns,
+            completedCampaigns,
+            totalTickets,
+            totalWinners,
+            uniqueParticipants
+        ] = await Promise.all([
+            prisma.drawCampaign.count(),
+            prisma.drawCampaign.count({ where: { status: 'ACTIVE' } }),
+            prisma.drawCampaign.count({ where: { status: 'COMPLETED' } }),
+            prisma.luckyTicket.count(),
+            prisma.luckyTicket.count({ where: { isWinner: true } }),
+            prisma.luckyTicket.groupBy({
+                by: ['userId'],
+                _count: true
+            }).then(groups => groups.length)
+        ]);
+
+        // Get campaign-specific stats
+        const campaigns = await prisma.drawCampaign.findMany({
+            orderBy: { createdAt: 'desc' },
+            include: {
+                _count: {
+                    select: { tickets: true }
+                }
+            }
+        });
+
+        const campaignsData = await Promise.all(campaigns.map(async (c) => {
+            // Get unique users for this campaign
+            const uniqueUsersCount = await prisma.luckyTicket.groupBy({
+                by: ['userId'],
+                where: { drawCampaignId: c.id },
+                _count: true
+            }).then(groups => groups.length);
+
+            // Get winners details
+            const winners = await prisma.luckyTicket.findMany({
+                where: { drawCampaignId: c.id, isWinner: true },
+                include: { user: { select: { name: true, email: true } } }
+            });
+
+            return {
+                id: c.id,
+                name: c.name,
+                prizeName: c.prizeName,
+                prizeImage: c.prizeImage,
+                startDate: c.startDate,
+                endDate: c.endDate,
+                winnerCount: c.winnerCount,
+                status: c.status,
+                createdAt: c.createdAt,
+                totalTickets: c._count.tickets,
+                uniqueParticipants: uniqueUsersCount,
+                winners: winners.map(w => ({
+                    ticketNumber: w.ticketNumber,
+                    userName: w.user?.name || 'Unknown',
+                    userEmail: w.user?.email || ''
+                }))
+            };
+        }));
+
+        // Get recent winners across all campaigns
+        const recentWinners = await prisma.luckyTicket.findMany({
+            where: { isWinner: true },
+            orderBy: { createdAt: 'desc' },
+            take: 5,
+            include: {
+                user: { select: { name: true, email: true, phone: true } },
+                drawCampaign: { select: { name: true, prizeName: true } }
+            }
+        });
+
+        res.json({
+            totalCampaigns,
+            activeCampaigns,
+            completedCampaigns,
+            totalTickets,
+            totalWinners,
+            uniqueParticipants,
+            campaigns: campaignsData,
+            recentWinners: recentWinners.map(w => ({
+                id: w.id,
+                ticketNumber: w.ticketNumber,
+                userName: w.user?.name || 'Unknown',
+                userEmail: w.user?.email || '',
+                userPhone: w.user?.phone || '',
+                campaignName: w.drawCampaign?.name || 'Unknown Campaign',
+                prizeName: w.drawCampaign?.prizeName || 'Unknown Prize',
+                drawnAt: w.createdAt
+            }))
+        });
+    } catch (error: any) {
+        console.error("❌ Draw analytics error:", error);
+        res.status(500).json({ error: error.message || "Failed to fetch draw analytics" });
+    }
+};
+

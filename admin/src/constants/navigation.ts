@@ -61,6 +61,18 @@ export const SIDEBAR_DATA: SidebarData = {
       icon: IconFileText,
       children: [
         {
+          title: "Order Report",
+          url: "/reports/order-reports",
+        },
+        {
+          title: "Customer Report",
+          url: "/reports/customer-reports",
+        },
+        {
+          title: "Lucky Draw Report",
+          url: "/reports/lucky-draw-reports",
+        },
+        {
           title: "Sales Report",
           url: "/reports/sales-reports",
         },

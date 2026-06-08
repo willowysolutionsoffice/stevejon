@@ -8,7 +8,8 @@ import {
     getLowStockProducts,
     getOrdersSummary,
     getFilterOptions,
-    getDrawAnalytics
+    getDrawAnalytics,
+    getCustomerAnalytics
 } from '../controllers/analyticsController.js';
 import { adminMiddleware } from '../middleware/authMiddleware.js';
 
@@ -27,5 +28,6 @@ router.get('/low-stock', getLowStockProducts);
 router.get('/orders-summary', getOrdersSummary);
 router.get('/filters', getFilterOptions);
 router.get('/draw-analytics', getDrawAnalytics);
+router.get('/customers-report', getCustomerAnalytics);
 
 export default router;

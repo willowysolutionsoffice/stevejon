@@ -5,6 +5,68 @@ function formatVariantOptions(options: any[]): string {
     return options.map(opt => `${opt.attribute.name}: ${opt.attributeValue.value}`).join(', ');
 }
 
+export const getCustomerAnalytics = async (req: Request, res: Response) => {
+    try {
+        const totalCustomers = await prisma.user.count({
+            where: {
+                role: { not: 'ADMIN' }
+            }
+        });
+
+        // Get top 10 customers by order amount
+        const topCustomersData = await prisma.order.groupBy({
+            by: ['userId'],
+            _sum: {
+                totalAmount: true
+            },
+            _count: {
+                id: true
+            },
+            orderBy: {
+                _sum: {
+                    totalAmount: 'desc'
+                }
+            },
+            take: 10
+        });
+
+        const topCustomers = await Promise.all(
+            topCustomersData.map(async (data) => {
+                const user = await prisma.user.findUnique({
+                    where: { id: data.userId },
+                    select: { id: true, name: true, email: true, phone: true, createdAt: true }
+                });
+                return {
+                    id: data.userId,
+                    name: user?.name || 'Unknown',
+                    email: user?.email || 'N/A',
+                    phone: user?.phone || 'N/A',
+                    joinedAt: user?.createdAt,
+                    totalSpent: data._sum.totalAmount || 0,
+                    totalOrders: data._count.id
+                };
+            })
+        );
+
+        // Get recent signups
+        const recentSignups = await prisma.user.findMany({
+            where: { role: { not: 'ADMIN' } },
+            orderBy: { createdAt: 'desc' },
+            take: 5,
+            select: { id: true, name: true, email: true, createdAt: true }
+        });
+
+        res.json({
+            totalCustomers,
+            topCustomers,
+            recentSignups
+        });
+    } catch (error) {
+        console.error("Error fetching customer analytics:", error);
+        res.status(500).json({ error: 'Failed to fetch customer analytics' });
+    }
+};
+
 export const getSalesMetrics = async (req: Request, res: Response) => {
     try {
         const { startDate, endDate, status, paymentMethod, userId } = req.query;

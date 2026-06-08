@@ -86,6 +86,28 @@ interface OrderSummary {
   createdAt: Date;
 }
 
+export interface CustomerSummary {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  joinedAt: Date | string;
+  totalSpent: number;
+  totalOrders: number;
+}
+
+export interface DrawCampaignSummary {
+  id: string;
+  name: string;
+  prizeName: string;
+  startDate: Date | string;
+  endDate: Date | string;
+  winnerCount: number;
+  status: string;
+  totalTickets: number;
+  uniqueParticipants: number;
+}
+
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
@@ -334,4 +356,120 @@ export const exportOrdersPDF = (
   
   // Save the PDF
   doc.save(`recent-orders-${new Date().toISOString().split('T')[0]}.pdf`);
+};
+
+export const exportCustomersPDF = (
+  customers: CustomerSummary[],
+  dateRange: string
+) => {
+  const doc = new jsPDF();
+  
+  // Add title
+  doc.setFontSize(20);
+  doc.text('Customer Report', 20, 20);
+  
+  // Add date range
+  doc.setFontSize(12);
+  doc.text(`Date Range: ${dateRange}`, 20, 35);
+  doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, 45);
+  
+  // Customers table
+  const customersData = customers.map(customer => [
+    customer.name,
+    customer.email,
+    customer.phone,
+    formatDate(new Date(customer.joinedAt)),
+    customer.totalOrders.toString(),
+    formatCurrency(customer.totalSpent)
+  ]);
+  
+  autoTable(doc, {
+    startY: 60,
+    head: [['Customer Name', 'Email', 'Phone', 'Joined At', 'Total Orders', 'Total Spent']],
+    body: customersData,
+    theme: 'striped',
+    styles: { fontSize: 9 },
+    headStyles: { fillColor: [79, 70, 229] }, // Indigo color
+    columnStyles: {
+      0: { cellWidth: 35 },
+      1: { cellWidth: 45 },
+      2: { cellWidth: 25 },
+      3: { cellWidth: 25 },
+      4: { cellWidth: 20 },
+      5: { cellWidth: 25 }
+    }
+  });
+  
+  const finalY = (doc.lastAutoTable?.finalY || 150) + 20;
+  doc.setFontSize(14);
+  doc.text('Summary:', 20, finalY);
+  doc.setFontSize(12);
+  
+  const totalSpentAll = customers.reduce((sum, customer) => sum + customer.totalSpent, 0);
+  const totalOrdersAll = customers.reduce((sum, customer) => sum + customer.totalOrders, 0);
+  
+  doc.text(`Total Customers Listed: ${customers.length}`, 25, finalY + 10);
+  doc.text(`Total Orders: ${totalOrdersAll.toLocaleString()}`, 25, finalY + 20);
+  doc.text(`Total Spent: ${formatCurrency(totalSpentAll)}`, 25, finalY + 30);
+  
+  // Save the PDF
+  doc.save(`customer-report-${new Date().toISOString().split('T')[0]}.pdf`);
+};
+
+export const exportDrawAnalyticsPDF = (
+  campaigns: DrawCampaignSummary[],
+  dateRange: string
+) => {
+  const doc = new jsPDF();
+  
+  // Add title
+  doc.setFontSize(20);
+  doc.text('Lucky Draw Campaigns Report', 20, 20);
+  
+  // Add date range
+  doc.setFontSize(12);
+  doc.text(`Date Range: ${dateRange}`, 20, 35);
+  doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, 45);
+  
+  // Campaigns table
+  const campaignsData = campaigns.map(campaign => [
+    campaign.name,
+    campaign.prizeName,
+    campaign.status,
+    campaign.winnerCount.toString(),
+    campaign.totalTickets.toString(),
+    campaign.uniqueParticipants.toString(),
+    formatDate(new Date(campaign.startDate))
+  ]);
+  
+  autoTable(doc, {
+    startY: 60,
+    head: [['Campaign Name', 'Prize', 'Status', 'Winners', 'Total Tickets', 'Participants', 'Start Date']],
+    body: campaignsData,
+    theme: 'striped',
+    styles: { fontSize: 8 },
+    headStyles: { fillColor: [236, 72, 153] }, // Pink color
+    columnStyles: {
+      0: { cellWidth: 35 },
+      1: { cellWidth: 35 },
+      2: { cellWidth: 20 },
+      3: { cellWidth: 15 },
+      4: { cellWidth: 20 },
+      5: { cellWidth: 20 },
+      6: { cellWidth: 30 }
+    }
+  });
+  
+  const finalY = (doc.lastAutoTable?.finalY || 150) + 20;
+  doc.setFontSize(14);
+  doc.text('Summary:', 20, finalY);
+  doc.setFontSize(12);
+  
+  const totalTicketsAll = campaigns.reduce((sum, campaign) => sum + campaign.totalTickets, 0);
+  
+  doc.text(`Total Campaigns Listed: ${campaigns.length}`, 25, finalY + 10);
+  doc.text(`Total Tickets Generated: ${totalTicketsAll.toLocaleString()}`, 25, finalY + 20);
+  
+  // Save the PDF
+  doc.save(`lucky-draw-report-${new Date().toISOString().split('T')[0]}.pdf`);
 };

@@ -51,6 +51,9 @@ const navigation: NavItem[] = [
   { title: "Offer Slides", href: "/offer-slides", icon: LayoutTemplate },
   { title: "Coupons", href: "/coupons", icon: Tag },
   { title: "Draw Campaigns", href: "/draws", icon: Gift },
+  { title: "Order Reports", href: "/reports/order-reports", icon: FileText },
+  { title: "Customer Reports", href: "/reports/customer-reports", icon: FileText },
+  { title: "Lucky Draw Reports", href: "/reports/lucky-draw-reports", icon: FileText },
   { title: "Settings", href: "/settings", icon: Settings },
 ];
 

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { prisma as prismaClient } from '../lib/prisma.js';
 import { orderStatusSchema } from '../schemas/order-schema.js';
 import { calculateCouponDiscount } from './couponController.js';
+import { sendOrderEmails } from '../lib/mailer.js';
 
 const prisma = prismaClient as any;
 
@@ -372,6 +373,13 @@ export const createOrder = async (req: Request, res: Response) => {
                 }
                 throw error;
             }
+        }
+
+        // Send order confirmation & admin alert emails asynchronously
+        if (order && order.id) {
+            sendOrderEmails(order.id).catch((err) => {
+                console.error("❌ Failed to trigger order email notifications:", err);
+            });
         }
 
         res.status(201).json({ success: true, data: order });

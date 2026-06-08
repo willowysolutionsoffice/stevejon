@@ -54,6 +54,7 @@ const navigation: NavItem[] = [
   { title: "Order Reports", href: "/reports/order-reports", icon: FileText },
   { title: "Customer Reports", href: "/reports/customer-reports", icon: FileText },
   { title: "Lucky Draw Reports", href: "/reports/lucky-draw-reports", icon: FileText },
+  { title: "Winner Reports", href: "/reports/winner-reports", icon: FileText },
   { title: "Settings", href: "/settings", icon: Settings },
 ];
 

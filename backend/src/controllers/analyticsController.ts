@@ -453,3 +453,33 @@ export const getDrawAnalytics = async (req: Request, res: Response) => {
     }
 };
 
+export const getWinnerAnalytics = async (req: Request, res: Response) => {
+    try {
+        const winners = await prisma.luckyTicket.findMany({
+            where: { isWinner: true },
+            orderBy: { createdAt: 'desc' },
+            include: {
+                user: { select: { name: true, email: true, phone: true } },
+                drawCampaign: { select: { name: true, prizeName: true } }
+            }
+        });
+
+        const formatted = winners.map((w: any) => ({
+            id: w.id,
+            ticketNumber: w.ticketNumber,
+            userName: w.user?.name || 'Unknown',
+            userEmail: w.user?.email || 'N/A',
+            userPhone: w.user?.phone || 'N/A',
+            campaignName: w.drawCampaign?.name || 'Unknown Campaign',
+            prizeName: w.drawCampaign?.prizeName || 'Unknown Prize',
+            drawnAt: w.createdAt
+        }));
+
+        res.json(formatted);
+    } catch (error: any) {
+        console.error("❌ Winner analytics error:", error);
+        res.status(500).json({ error: error.message || "Failed to fetch winner analytics" });
+    }
+};
+
+

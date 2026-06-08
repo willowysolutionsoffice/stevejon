@@ -9,7 +9,8 @@ import {
     getOrdersSummary,
     getFilterOptions,
     getDrawAnalytics,
-    getCustomerAnalytics
+    getCustomerAnalytics,
+    getWinnerAnalytics
 } from '../controllers/analyticsController.js';
 import { adminMiddleware } from '../middleware/authMiddleware.js';
 
@@ -29,5 +30,6 @@ router.get('/orders-summary', getOrdersSummary);
 router.get('/filters', getFilterOptions);
 router.get('/draw-analytics', getDrawAnalytics);
 router.get('/customers-report', getCustomerAnalytics);
+router.get('/winners-report', getWinnerAnalytics);
 
 export default router;

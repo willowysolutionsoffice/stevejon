@@ -73,6 +73,10 @@ export const SIDEBAR_DATA: SidebarData = {
           url: "/reports/lucky-draw-reports",
         },
         {
+          title: "Winner Report",
+          url: "/reports/winner-reports",
+        },
+        {
           title: "Sales Report",
           url: "/reports/sales-reports",
         },

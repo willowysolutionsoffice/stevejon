@@ -473,3 +473,70 @@ export const exportDrawAnalyticsPDF = (
   // Save the PDF
   doc.save(`lucky-draw-report-${new Date().toISOString().split('T')[0]}.pdf`);
 };
+
+export interface WinnerSummary {
+  id: string;
+  ticketNumber: string;
+  userName: string;
+  userEmail: string;
+  userPhone: string;
+  campaignName: string;
+  prizeName: string;
+  drawnAt: Date | string;
+}
+
+export const exportWinnersPDF = (
+  winners: WinnerSummary[],
+  dateRange: string
+) => {
+  const doc = new jsPDF('landscape');
+  
+  // Add title
+  doc.setFontSize(20);
+  doc.text('Lucky Draw Winners Report', 20, 20);
+  
+  // Add date range
+  doc.setFontSize(12);
+  doc.text(`Date Range: ${dateRange}`, 20, 35);
+  doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, 45);
+  
+  // Winners table
+  const winnersData = winners.map(w => [
+    w.ticketNumber,
+    w.userName,
+    w.userEmail,
+    w.userPhone,
+    w.campaignName,
+    w.prizeName,
+    formatDate(new Date(w.drawnAt))
+  ]);
+  
+  autoTable(doc, {
+    startY: 60,
+    head: [['Ticket Number', 'Winner Name', 'Email', 'Phone', 'Campaign Name', 'Prize Won', 'Drawn At']],
+    body: winnersData,
+    theme: 'striped',
+    styles: { fontSize: 9 },
+    headStyles: { fillColor: [14, 165, 233] },
+    columnStyles: {
+      0: { cellWidth: 35 },
+      1: { cellWidth: 35 },
+      2: { cellWidth: 45 },
+      3: { cellWidth: 30 },
+      4: { cellWidth: 40 },
+      5: { cellWidth: 40 },
+      6: { cellWidth: 35 }
+    }
+  });
+  
+  const finalY = (doc.lastAutoTable?.finalY || 150) + 20;
+  doc.setFontSize(14);
+  doc.text('Summary:', 20, finalY);
+  doc.setFontSize(12);
+  
+  doc.text(`Total Winners: ${winners.length}`, 25, finalY + 10);
+  
+  // Save the PDF
+  doc.save(`lucky-draw-winners-report-${new Date().toISOString().split('T')[0]}.pdf`);
+};
+

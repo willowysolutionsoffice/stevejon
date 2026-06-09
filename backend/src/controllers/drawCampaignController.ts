@@ -296,7 +296,7 @@ export const getWinnersShowcase = async (req: Request, res: Response) => {
 // PATCH /api/draws/winners/:ticketId/showcase – admin uploads winner photo + sets display info
 export const updateWinnerShowcase = async (req: Request, res: Response) => {
     try {
-        const { ticketId } = req.params;
+        const ticketId = req.params.ticketId as string;
         const { winnerName, winnerPlace } = req.body;
         const file = req.file;
 

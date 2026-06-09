@@ -12,7 +12,7 @@ const uploadPhoto = async (photoFile: File | null) => {
     // Upload the base64 string to Cloudinary
     try {
         const uploadResult = await cloudinary.uploader.upload(`data:image/jpeg;base64,${base64}`, {
-            folder: 'Deco moja', // Optional: organize your uploads
+            folder: 'Steve John', // Optional: organize your uploads
         });
         console.log('Cloudinary upload success:', uploadResult.secure_url);
         return uploadResult.secure_url; 

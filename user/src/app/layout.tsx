@@ -15,6 +15,9 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "STEVEJON",
   description: "The New Standard of Refinement",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 import { CartProvider } from "@/context/CartContext";

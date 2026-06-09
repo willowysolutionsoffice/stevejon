@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#DFBA73" />
+      <stop offset="50%" stop-color="#C5A059" />
+      <stop offset="100%" stop-color="#9E7D3B" />
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="8" fill="#121212" />
+  <rect x="1.5" y="1.5" width="29" height="29" rx="6.5" fill="none" stroke="url(#gold-grad)" stroke-width="1" opacity="0.4" />
+  <text x="16" y="22" font-family="-apple-system, BlinkMacSystemFont, 'Playfair Display', serif" font-size="14" font-weight="900" fill="url(#gold-grad)" text-anchor="middle" letter-spacing="0.5">SJ</text>
+</svg>

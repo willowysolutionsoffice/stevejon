@@ -103,12 +103,12 @@ export function AdminSidebar({ className }: SidebarProps) {
       >
         {/* Header */}
         <div className="flex h-16 items-center border-b border-gray-200 dark:border-gray-800 p-6 flex-shrink-0">
-          <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
-              <LayoutDashboard className="h-4 w-4 text-white" />
+          <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-yellow-500 via-amber-600 to-amber-700 shadow-md">
+              <span className="text-xs font-extrabold text-white tracking-tighter">SJ</span>
             </div>
-            <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              Admin Panel
+            <span className="text-md font-bold tracking-tight text-gray-900 dark:text-gray-100">
+              STEVE JOHN
             </span>
           </Link>
         </div>

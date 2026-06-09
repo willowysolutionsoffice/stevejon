@@ -21,7 +21,7 @@ export default function Footer() {
               <Link href="/">
                 <Image
                   src="/logo.svg"
-                  alt="Deco Moja"
+                  alt="Steve John"
                   width={0}
                   height={0}
                   sizes="100vw"
@@ -38,7 +38,7 @@ export default function Footer() {
             {/* Social Icons */}
             <div className="flex gap-3 justify-start">
               <a
-                href="https://www.facebook.com/decomoja"
+                href="#"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 transition"
@@ -49,7 +49,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="https://www.instagram.com/decomoja?igsh=MWg3MXd2ajI1Y2doaA%3D%3D"
+                href="#"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 transition"
@@ -110,7 +110,7 @@ export default function Footer() {
                     <path strokeWidth={2} d="M3 8l9 5 9-5"/>
                     <path strokeWidth={2} d="M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                   </svg>
-                  <span>info@decomoja.com</span>
+                  <span>info@stevejohn.com</span>
                 </div>
 
               </div>
@@ -124,7 +124,7 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
           
-          <p>© {new Date().getFullYear()} Deco moja. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Steve John. All rights reserved.</p>
 
           <div className="flex gap-6">
             <Link href="#" className="hover:text-white transition">Privacy Policy</Link>

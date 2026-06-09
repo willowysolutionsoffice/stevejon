@@ -1,5 +1,5 @@
 export const APP_CONFIG = {
-  name: "Deco moja",
+  name: "Steve John",
   description: "E-Commerce and Inventory Management System",
   version: "1.0.0",
   author: {

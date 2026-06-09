@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="flex flex-col gap-4">
           <h5 className="tracking-widest uppercase mb-2 opacity-80">CUSTOMER CARE</h5>
           <Link href="/about" className="text-[#888] hover:text-white transition-colors">About Us</Link>
-          <a href="#" className="text-[#888] hover:text-white transition-colors">Customer Care</a>
+          <Link href="/faq" className="text-[#888] hover:text-white transition-colors">FAQs</Link>
           <a href="#" className="text-[#888] hover:text-white transition-colors">Shipping</a>
           <a href="#" className="text-[#888] hover:text-white transition-colors">Returns</a>
         </div>

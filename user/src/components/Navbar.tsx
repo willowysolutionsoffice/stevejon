@@ -148,15 +148,16 @@ export default function Navbar() {
                         </span>
                       </Link>
                     )}
-                    <a
-                      href="#"
+                    <Link
+                      href="/faq"
+                      onClick={() => setIsUserMenuOpen(false)}
                       className="px-5 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors group"
                     >
                       <MessageSquare className="w-4 h-4 text-gray-400 group-hover:text-gray-700" />
                       <span className="text-sm text-gray-700 group-hover:text-black">
                         FAQs
                       </span>
-                    </a>
+                    </Link>
 
                     <a
                       href="#"

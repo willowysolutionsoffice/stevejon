@@ -434,3 +434,33 @@ model LuckyTicket {
 
   @@map("lucky_ticket")
 }
+
+model ActivityLog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  action    String
+  details   String
+  userId    String?
+  userEmail String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@map("activity_log")
+}
+
+model PaymentLog {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderId           String?
+  amount            Float
+  currency          String   @default("INR")
+  status            String
+  paymentMethod     String
+  gatewayPaymentId  String?
+  gatewayOrderId    String?
+  gatewaySignature  String?
+  errorMessage      String?
+  buyerName         String?
+  buyerEmail        String?
+  createdAt         DateTime @default(now())
+
+  @@map("payment_log")
+}

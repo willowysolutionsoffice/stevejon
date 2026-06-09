@@ -22,6 +22,7 @@ import wishlistRoutes from './routes/wishlistRoutes.js';
 import profileRoutes from './routes/profileRoutes.js';
 import couponRoutes from './routes/couponRoutes.js';
 import drawCampaignRoutes from './routes/drawCampaignRoutes.js';
+import logRoutes from './routes/logRoutes.js';
 
 dotenv.config();
 
@@ -81,6 +82,7 @@ app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/coupons', couponRoutes);
 app.use('/api/draws', drawCampaignRoutes);
+app.use('/api/logs', logRoutes);
 
 app.listen(PORT, () => {
     console.log(`🚀 Backend server running on http://localhost:${PORT}`);

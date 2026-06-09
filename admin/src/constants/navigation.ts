@@ -96,6 +96,16 @@ export const SIDEBAR_DATA: SidebarData = {
       url: "/draws",
       icon: IconGift,
     },
+    {
+      title: "Activity Logs",
+      url: "/activity-logs",
+      icon: IconFileText,
+    },
+    {
+      title: "Payment Logs",
+      url: "/payment-logs",
+      icon: IconFileText,
+    },
   ],
 
 };

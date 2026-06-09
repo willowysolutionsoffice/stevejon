@@ -3,6 +3,7 @@ import { prisma } from '../lib/prisma.js';
 import { uploadToCloudinary } from '../lib/upload.js';
 import cloudinary from '../lib/cloudinary.js';
 import { createProductSchema, updateProductSchema } from '../schemas/product-schema.js';
+import { logActivity } from '../lib/activityLogger.js';
 
 export const createProductWithVariants = async (req: Request, res: Response) => {
     try {
@@ -57,6 +58,7 @@ export const createProductWithVariants = async (req: Request, res: Response) => 
             include: { variants: true },
         });
 
+        logActivity('CREATE_PRODUCT', `Created new product "${product.name}" with variants.`, req);
         res.status(201).json({ success: true, data: product });
     } catch (error: any) {
         console.error("Create product with variants error:", error);
@@ -194,6 +196,9 @@ export const updateProductWithVariants = async (req: Request, res: Response) => 
             });
         });
 
+        if (updatedProduct) {
+            logActivity('UPDATE_PRODUCT', `Updated product "${updatedProduct.name}" and variants.`, req);
+        }
         res.json({ success: true, data: updatedProduct });
     } catch (error: any) {
         console.error("Update product with variants error:", error);
@@ -340,7 +345,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
         }
 
         await prisma.product.delete({ where: { id: id as string } });
-
+        logActivity('DELETE_PRODUCT', `Permanently deleted product "${product.name}" (ID: ${id}) and variants.`, req);
         res.json({ success: true, message: "Product deleted successfully" });
     } catch (error: any) {
         console.error("Delete product error:", error);

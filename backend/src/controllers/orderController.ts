@@ -3,6 +3,7 @@ import { prisma as prismaClient } from '../lib/prisma.js';
 import { orderStatusSchema } from '../schemas/order-schema.js';
 import { calculateCouponDiscount } from './couponController.js';
 import { sendOrderEmails } from '../lib/mailer.js';
+import { logActivity } from '../lib/activityLogger.js';
 
 const prisma = prismaClient as any;
 
@@ -204,6 +205,9 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
             }
         }
 
+        if (updatedOrder) {
+            logActivity('UPDATE_ORDER_STATUS', `Updated Order #${id} status to ${targetStatus}.`, req);
+        }
         res.json(updatedOrder);
     } catch (error: any) {
         console.error("❌ Update order status error:", error);
@@ -359,6 +363,22 @@ export const createOrder = async (req: Request, res: Response) => {
 
                     // 4. Generate lucky tickets if active draw campaigns exist
                     await generateTicketsForOrder(tx, newOrder.id, userId);
+
+                    // 5. Create real payment log entry
+                    const userObj = await tx.user.findUnique({
+                        where: { id: userId }
+                    });
+                    await tx.paymentLog.create({
+                        data: {
+                            orderId: newOrder.id,
+                            amount: finalAmount,
+                            currency: "INR",
+                            status: paymentMethod === "COD" ? "PENDING" : "SUCCESS",
+                            paymentMethod,
+                            buyerName: userObj?.name || "Customer",
+                            buyerEmail: userObj?.email || "",
+                        }
+                    });
 
                     return newOrder;
                 });

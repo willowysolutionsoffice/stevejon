@@ -5,7 +5,6 @@ import Categories from "@/components/Categories";
 import NewArrivals from "@/components/NewArrivals";
 import PromoSection from "@/components/PromoSection";
 import LuckyDrawPoster from "@/components/LuckyDrawPoster";
-import TodaysDeal from "@/components/TodaysDeal";
 import Banner from "@/components/Banner";
 import ProductCollectionGrid from "@/components/ProductCollectionGrid";
 import Winners from "@/components/Winners";
@@ -22,7 +21,6 @@ export default function Home() {
       <NewArrivals />
       <PromoSection />
       <LuckyDrawPoster />
-      <TodaysDeal />
       <Banner />
       <ProductCollectionGrid />
       <Winners />

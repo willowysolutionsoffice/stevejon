@@ -427,6 +427,10 @@ model LuckyTicket {
   drawCampaignId String       @db.ObjectId
   userId         String
   isWinner       Boolean      @default(false)
+  // Admin-filled showcase fields (after winner selection)
+  winnerImage    String?
+  winnerName     String?
+  winnerPlace    String?
   createdAt      DateTime     @default(now())
 
   order        Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)

@@ -270,4 +270,57 @@ export const drawCampaignWinners = async (req: Request, res: Response) => {
     }
 };
 
+// GET /api/draws/showcase – public, returns winners that have showcase data filled
+export const getWinnersShowcase = async (req: Request, res: Response) => {
+    try {
+        const winners = await prisma.luckyTicket.findMany({
+            where: {
+                isWinner: true,
+                winnerImage: { not: null },
+            },
+            include: {
+                drawCampaign: {
+                    select: { name: true, prizeName: true }
+                }
+            },
+            orderBy: { createdAt: 'desc' },
+            take: 8,
+        });
+        res.json({ success: true, data: winners });
+    } catch (error: any) {
+        console.error('❌ Get showcase error:', error);
+        res.status(500).json({ error: error.message || 'Failed to fetch showcase winners' });
+    }
+};
 
+// PATCH /api/draws/winners/:ticketId/showcase – admin uploads winner photo + sets display info
+export const updateWinnerShowcase = async (req: Request, res: Response) => {
+    try {
+        const { ticketId } = req.params;
+        const { winnerName, winnerPlace } = req.body;
+        const file = req.file;
+
+        const ticket = await prisma.luckyTicket.findUnique({ where: { id: ticketId } });
+        if (!ticket) return res.status(404).json({ error: 'Ticket not found' });
+        if (!ticket.isWinner) return res.status(400).json({ error: 'Ticket is not a winning ticket' });
+
+        let imageUrl = ticket.winnerImage;
+        if (file) {
+            imageUrl = await uploadToCloudinary(file.buffer, file.originalname);
+        }
+
+        const updated = await prisma.luckyTicket.update({
+            where: { id: ticketId },
+            data: {
+                winnerImage: imageUrl,
+                winnerName: winnerName?.trim() || ticket.winnerName,
+                winnerPlace: winnerPlace?.trim() || ticket.winnerPlace,
+            }
+        });
+
+        res.json({ success: true, data: updated });
+    } catch (error: any) {
+        console.error('❌ Update winner showcase error:', error);
+        res.status(500).json({ error: error.message || 'Failed to update winner showcase' });
+    }
+};

@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { apiFetch } from "@/lib/api-client";
+
 import { useCart } from "@/context/cartContext";
 import { authClient } from "@/lib/auth-client";
 
@@ -30,22 +30,12 @@ export const LogoutDialog = ({
 const handleLogout = async () => {
   try {
     await authClient.signOut();
-    const res = await apiFetch("/auth/logout", {
-      method: "POST",
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      toast.error(data?.error || "Logout failed");
-      return;
-    }
 
     localStorage.removeItem("user");
     localStorage.removeItem("cart");
     updateCartCount();
-    toast.success(data?.message || "Logged out successfully");
-    router.replace("/login");
+    toast.success("Logged out successfully");
+    router.replace("/dashboard-login");
   } catch (error) {
     console.error("Logout error:", error);
     toast.error("Failed to logout");

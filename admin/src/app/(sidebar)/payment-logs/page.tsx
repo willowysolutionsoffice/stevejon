@@ -33,7 +33,6 @@ import {
   Search,
   RefreshCw,
   Clock,
-  User,
   AlertCircle,
   CheckCircle2,
   HelpCircle,

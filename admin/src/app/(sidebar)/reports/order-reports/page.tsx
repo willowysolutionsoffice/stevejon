@@ -30,7 +30,7 @@ export default function OrderReportsPage() {
         if (response.ok) {
           const data = await response.json();
           // Transform string dates to Date objects
-          const transformed = data.map((d: any) => ({
+          const transformed = data.map((d: Omit<OrderSummary, "createdAt"> & { createdAt: string | Date }) => ({
             ...d,
             createdAt: new Date(d.createdAt)
           }));

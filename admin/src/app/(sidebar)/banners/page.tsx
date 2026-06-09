@@ -336,8 +336,10 @@ export default function AdminBannersPage() {
       setTitle(""); setButtonText(""); setButtonLink("");
       setFile(null); setPreview(null);
       fetchBanners();
-    } catch (err: any) { toast.error(err.message || "Failed to add banner"); }
-    finally { setUploading(false); }
+    } catch (err: unknown) {
+      const error = err as Error;
+      toast.error(error.message || "Failed to add banner");
+    } finally { setUploading(false); }
   };
 
   const handleReorder = async (id: string, direction: "up" | "down") => {

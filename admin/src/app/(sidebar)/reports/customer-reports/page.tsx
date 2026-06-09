@@ -20,7 +20,7 @@ export default function CustomerReportsPage() {
         if (response.ok) {
           const data = await response.json();
           // Transform string dates to Date objects
-          const transformed = data.topCustomers.map((d: any) => ({
+          const transformed = data.topCustomers.map((d: CustomerSummary) => ({
             ...d,
             joinedAt: new Date(d.joinedAt)
           }));

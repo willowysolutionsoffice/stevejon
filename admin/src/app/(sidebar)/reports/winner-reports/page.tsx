@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
 import { exportWinnersPDF, WinnerSummary } from "@/components/admin/analytics/analytic-pdf";
 import AdminLoader from "@/components/admin/AdminLoader";
 import { IconDownload, IconSearch } from "@tabler/icons-react";
@@ -53,8 +52,12 @@ function ShowcaseDialog({ open, setOpen, winner, onSaved }: {
         throw new Error(err.error || "Failed");
       }
       toast.success("Winner showcase updated!");
-      onSaved(); setOpen(false);
-    } catch (e: any) { toast.error(e.message || "Failed to update showcase"); }
+      onSaved();
+      setOpen(false);
+    } catch (e: unknown) {
+      const err = e instanceof Error ? e : new Error(String(e));
+      toast.error(err.message || "Failed to update showcase");
+    }
     finally { setLoading(false); }
   };
 
@@ -131,7 +134,7 @@ export default function WinnerReportsPage() {
       const response = await fetch(`${API_URL}/analytics/winners-report`);
       if (response.ok) {
         const data = await response.json();
-        const transformed = data.map((w: any) => ({ ...w, drawnAt: new Date(w.drawnAt) }));
+        const transformed = data.map((w: Omit<WinnerSummary, "drawnAt"> & { drawnAt: string | Date }) => ({ ...w, drawnAt: new Date(w.drawnAt) }));
         setWinners(transformed);
         setFilteredWinners(transformed);
       }

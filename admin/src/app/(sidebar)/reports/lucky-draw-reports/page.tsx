@@ -20,7 +20,7 @@ export default function LuckyDrawReportsPage() {
         if (response.ok) {
           const data = await response.json();
           // Transform string dates to Date objects
-          const transformed = data.campaigns.map((c: any) => ({
+          const transformed = data.campaigns.map((c: DrawCampaignSummary) => ({
             ...c,
             startDate: new Date(c.startDate),
             endDate: new Date(c.endDate)

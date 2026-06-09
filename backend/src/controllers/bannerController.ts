@@ -3,6 +3,8 @@ import { prisma } from '../lib/prisma.js';
 import { uploadToCloudinary } from '../lib/upload.js';
 import cloudinary from '../lib/cloudinary.js';
 
+const MAX_ACTIVE = 5;
+
 export const getBanners = async (req: Request, res: Response) => {
     try {
         const banners = await prisma.banner.findMany({
@@ -16,22 +18,35 @@ export const getBanners = async (req: Request, res: Response) => {
 
 export const createBanner = async (req: Request, res: Response) => {
     try {
-        const { title, order } = req.body;
+        const { title, buttonText, buttonLink } = req.body;
         const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
-        if (!files?.desktopImage?.[0] || !files?.mobileImage?.[0]) {
-            return res.status(400).json({ error: "Both desktop and mobile images are required" });
+        if (!title || !title.trim()) {
+            return res.status(400).json({ error: "Title is required" });
         }
 
-        const desktopUrl = await uploadToCloudinary(files.desktopImage[0].buffer, files.desktopImage[0].originalname);
-        const mobileUrl = await uploadToCloudinary(files.mobileImage[0].buffer, files.mobileImage[0].originalname);
+        if (!files?.image?.[0]) {
+            return res.status(400).json({ error: "Banner image is required" });
+        }
+
+        // Check active count
+        const activeCount = await prisma.banner.count({ where: { isActive: true } });
+        if (activeCount >= MAX_ACTIVE) {
+            return res.status(400).json({ error: `Maximum ${MAX_ACTIVE} active banners allowed. Hide one first.` });
+        }
+
+        const imageUrl = await uploadToCloudinary(files.image[0].buffer, files.image[0].originalname);
+
+        const lastBanner = await prisma.banner.findFirst({ orderBy: { order: 'desc' } });
+        const nextOrder = lastBanner ? lastBanner.order + 1 : 0;
 
         const banner = await prisma.banner.create({
             data: {
-                title,
-                order: order ? parseInt(order) : 0,
-                desktopImage: desktopUrl,
-                mobileImage: mobileUrl,
+                title: title.trim(),
+                image: imageUrl,
+                buttonText: buttonText?.trim() || null,
+                buttonLink: buttonLink?.trim() || null,
+                order: nextOrder,
                 isActive: true
             }
         });
@@ -46,37 +61,38 @@ export const createBanner = async (req: Request, res: Response) => {
 export const updateBanner = async (req: Request, res: Response) => {
     try {
         const id = req.params.id as string;
-        const { title, order, isActive } = req.body;
+        const { title, order, isActive, buttonText, buttonLink } = req.body;
         const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
         const existingBanner = await prisma.banner.findUnique({ where: { id } });
         if (!existingBanner) return res.status(404).json({ error: "Banner not found" });
 
-        let desktopUrl = existingBanner.desktopImage;
-        let mobileUrl = existingBanner.mobileImage;
-
-        if (files?.desktopImage?.[0]) {
-            // Delete old desktop image
-            const publicId = existingBanner.desktopImage.split("/").pop()?.split(".")[0];
-            if (publicId) await (cloudinary as any).uploader.destroy(`Deco moja/${publicId}`);
-            desktopUrl = await uploadToCloudinary(files.desktopImage[0].buffer, files.desktopImage[0].originalname);
+        // Check max active when activating
+        if (isActive === 'true' && !existingBanner.isActive) {
+            const activeCount = await prisma.banner.count({ where: { isActive: true } });
+            if (activeCount >= MAX_ACTIVE) {
+                return res.status(400).json({ error: `Maximum ${MAX_ACTIVE} active banners. Hide one first.` });
+            }
         }
 
-        if (files?.mobileImage?.[0]) {
-            // Delete old mobile image
-            const publicId = existingBanner.mobileImage.split("/").pop()?.split(".")[0];
-            if (publicId) await (cloudinary as any).uploader.destroy(`Deco moja/${publicId}`);
-            mobileUrl = await uploadToCloudinary(files.mobileImage[0].buffer, files.mobileImage[0].originalname);
+        let imageUrl = existingBanner.image;
+
+        if (files?.image?.[0]) {
+            // Delete old image from Cloudinary
+            const publicId = existingBanner.image.split("/").pop()?.split(".")[0];
+            if (publicId) await (cloudinary as any).uploader.destroy(`stevejon/${publicId}`);
+            imageUrl = await uploadToCloudinary(files.image[0].buffer, files.image[0].originalname);
         }
 
         const updatedBanner = await prisma.banner.update({
             where: { id },
             data: {
-                title: title !== undefined ? title : existingBanner.title,
+                title: title !== undefined ? title.trim() : existingBanner.title,
+                image: imageUrl,
+                buttonText: buttonText !== undefined ? (buttonText.trim() || null) : existingBanner.buttonText,
+                buttonLink: buttonLink !== undefined ? (buttonLink.trim() || null) : existingBanner.buttonLink,
                 order: order !== undefined ? parseInt(order) : existingBanner.order,
                 isActive: isActive !== undefined ? (isActive === 'true' || isActive === true) : existingBanner.isActive,
-                desktopImage: desktopUrl,
-                mobileImage: mobileUrl
             }
         });
 
@@ -93,12 +109,8 @@ export const deleteBanner = async (req: Request, res: Response) => {
         const banner = await prisma.banner.findUnique({ where: { id } });
         if (!banner) return res.status(404).json({ error: "Banner not found" });
 
-        // Delete images from Cloudinary
-        const desktopId = banner.desktopImage.split("/").pop()?.split(".")[0];
-        const mobileId = banner.mobileImage.split("/").pop()?.split(".")[0];
-
-        if (desktopId) await (cloudinary as any).uploader.destroy(`Deco moja/${desktopId}`);
-        if (mobileId) await (cloudinary as any).uploader.destroy(`Deco moja/${mobileId}`);
+        const publicId = banner.image.split("/").pop()?.split(".")[0];
+        if (publicId) await (cloudinary as any).uploader.destroy(`stevejon/${publicId}`);
 
         await prisma.banner.delete({ where: { id } });
         res.json({ message: "Banner deleted" });

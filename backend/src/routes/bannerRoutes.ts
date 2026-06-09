@@ -10,16 +10,8 @@ router.get('/', getBanners);
 
 // Admin only
 router.use(adminMiddleware);
-router.post('/', upload.fields([
-    { name: 'desktopImage', maxCount: 1 },
-    { name: 'mobileImage', maxCount: 1 }
-]), createBanner);
-
-router.patch('/:id', upload.fields([
-    { name: 'desktopImage', maxCount: 1 },
-    { name: 'mobileImage', maxCount: 1 }
-]), updateBanner);
-
+router.post('/', upload.fields([{ name: 'image', maxCount: 1 }]), createBanner);
+router.patch('/:id', upload.fields([{ name: 'image', maxCount: 1 }]), updateBanner);
 router.delete('/:id', deleteBanner);
 
 export default router;

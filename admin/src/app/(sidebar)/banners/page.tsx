@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle,
   AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction,
@@ -18,31 +19,37 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { ArrowUp, ArrowDown, MoreVertical, ImageIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ArrowUp, ArrowDown, MoreVertical, ImageIcon,
+  ChevronLeft, ChevronRight, Link as LinkIcon, Eye, EyeOff,
+} from "lucide-react";
 import { API_URL } from "@/lib/api-client";
 
-const PAGE_SIZE = 5;
-const MAX_ACTIVE = 3;
+const PAGE_SIZE = 6;
+const MIN_ACTIVE = 2;
+const MAX_ACTIVE = 5;
 
 type Banner = {
   id: string;
-  title: string | null;
-  desktopImage: string;
-  mobileImage: string;
+  title: string;
+  image: string;
+  buttonText: string | null;
+  buttonLink: string | null;
   order: number;
   isActive: boolean;
 };
 
 const validateImageSize = (file: File): boolean => {
-  if (file.size > 5 * 1024 * 1024) {
-    toast.error("Image must be under 5 MB");
+  if (file.size > 8 * 1024 * 1024) {
+    toast.error("Image must be under 8 MB");
     return false;
   }
   return true;
 };
 
-// ─── Delete Dialog ─────────────────────────────────────────────────────────
+// ─── Delete Dialog ──────────────────────────────────────────────────────────
 function DeleteBannerDialog({ open, setOpen, banner, onDeleted }: {
   open: boolean; setOpen: (v: boolean) => void; banner: Banner; onDeleted: () => void;
 }) {
@@ -52,7 +59,7 @@ function DeleteBannerDialog({ open, setOpen, banner, onDeleted }: {
     try {
       const res = await fetch(`${API_URL}/banners/${banner.id}`, { method: "DELETE" });
       if (!res.ok) throw new Error();
-      toast.success("Banner deleted successfully");
+      toast.success("Banner deleted");
       onDeleted();
     } catch { toast.error("Failed to delete banner"); }
     finally { setLoading(false); setOpen(false); }
@@ -63,7 +70,7 @@ function DeleteBannerDialog({ open, setOpen, banner, onDeleted }: {
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Banner</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to permanently delete <strong>{banner.title || "this banner"}</strong>? This action cannot be undone.
+            Permanently delete <strong>&ldquo;{banner.title}&rdquo;</strong>? This cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -79,50 +86,51 @@ function DeleteBannerDialog({ open, setOpen, banner, onDeleted }: {
   );
 }
 
-// ─── Toggle Dialog ─────────────────────────────────────────────────────────
+// ─── Toggle Dialog ──────────────────────────────────────────────────────────
 function ToggleActiveDialog({ open, setOpen, banner, activeCount, onToggled }: {
   open: boolean; setOpen: (v: boolean) => void;
   banner: Banner; activeCount: number; onToggled: () => void;
 }) {
   const [loading, setLoading] = useState(false);
   const nextState = !banner.isActive;
-
-  // Block activation if already at max
-  const isBlocked = nextState && activeCount >= MAX_ACTIVE;
+  const isBlockedActivate = nextState && activeCount >= MAX_ACTIVE;
+  const isBlockedHide = !nextState && activeCount <= MIN_ACTIVE;
 
   const handleToggle = async () => {
-    if (isBlocked) {
-      toast.error(`Maximum ${MAX_ACTIVE} banners can be active at a time. Hide one first.`);
-      setOpen(false);
-      return;
+    if (isBlockedActivate) {
+      toast.error(`Maximum ${MAX_ACTIVE} banners can be active. Hide one first.`);
+      setOpen(false); return;
+    }
+    if (isBlockedHide) {
+      toast.error(`At least ${MIN_ACTIVE} banners must remain active.`);
+      setOpen(false); return;
     }
     setLoading(true);
     try {
       const formData = new FormData();
       formData.append("isActive", String(nextState));
-      
-      const res = await fetch(`${API_URL}/banners/${banner.id}`, {
-        method: "PATCH",
-        body: formData,
-      });
+      const res = await fetch(`${API_URL}/banners/${banner.id}`, { method: "PATCH", body: formData });
       if (!res.ok) throw new Error();
-      toast.success(`Banner marked as ${nextState ? "Active" : "Hidden"}`);
+      toast.success(`Banner ${nextState ? "activated" : "hidden"}`);
       onToggled();
     } catch { toast.error("Failed to update banner"); }
     finally { setLoading(false); setOpen(false); }
   };
 
+  const isBlocked = isBlockedActivate || isBlockedHide;
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{nextState ? "Activate Banner" : "Hide Banner"}</AlertDialogTitle>
           <AlertDialogDescription>
-            {isBlocked
-              ? `You already have ${MAX_ACTIVE} active banners. Please hide one before activating another.`
-              : nextState
-                ? `This will make "${banner.title || "this banner"}" visible on the homepage.`
-                : `This will hide "${banner.title || "this banner"}" from the homepage.`}
+            {isBlockedActivate
+              ? `You already have ${MAX_ACTIVE} active banners. Hide one before activating another.`
+              : isBlockedHide
+                ? `You need at least ${MIN_ACTIVE} active banners. Add or activate another before hiding this one.`
+                : nextState
+                  ? `Make "${banner.title}" visible on the homepage?`
+                  : `Hide "${banner.title}" from the homepage?`}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -130,7 +138,7 @@ function ToggleActiveDialog({ open, setOpen, banner, activeCount, onToggled }: {
           {!isBlocked && (
             <AlertDialogAction asChild>
               <Button variant={nextState ? "default" : "outline"} disabled={loading} onClick={handleToggle}>
-                {loading ? "Updating..." : nextState ? "Yes, Activate" : "Yes, Hide"}
+                {loading ? "Updating..." : nextState ? "Activate" : "Hide"}
               </Button>
             </AlertDialogAction>
           )}
@@ -140,42 +148,37 @@ function ToggleActiveDialog({ open, setOpen, banner, activeCount, onToggled }: {
   );
 }
 
-// ─── Edit Dialog ──────────────────────────────────────────────────────────
+// ─── Edit Dialog ─────────────────────────────────────────────────────────────
 function EditBannerDialog({ open, setOpen, banner, onUpdated }: {
   open: boolean; setOpen: (v: boolean) => void; banner: Banner; onUpdated: () => void;
 }) {
-  const [title, setTitle] = useState(banner.title || "");
-  const [desktopPreview, setDesktopPreview] = useState<string>(banner.desktopImage);
-  const [mobilePreview, setMobilePreview] = useState<string>(banner.mobileImage);
-  const [desktopFile, setDesktopFile] = useState<File | null>(null);
-  const [mobileFile, setMobileFile] = useState<File | null>(null);
+  const [title, setTitle] = useState(banner.title);
+  const [buttonText, setButtonText] = useState(banner.buttonText || "");
+  const [buttonLink, setButtonLink] = useState(banner.buttonLink || "");
+  const [preview, setPreview] = useState<string>(banner.image);
+  const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const desktopRef = useRef<HTMLInputElement>(null);
-  const mobileRef = useRef<HTMLInputElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
-  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>, type: "desktop" | "mobile") => {
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
-    if (!f) return;
-    if (!validateImageSize(f)) return;
-    const preview = URL.createObjectURL(f);
-    if (type === "desktop") { setDesktopFile(f); setDesktopPreview(preview); }
-    else { setMobileFile(f); setMobilePreview(preview); }
+    if (!f || !validateImageSize(f)) return;
+    setFile(f);
+    setPreview(URL.createObjectURL(f));
   };
 
   const handleSave = async () => {
+    if (!title.trim()) { toast.error("Title is required"); return; }
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append("title", title);
-      if (desktopFile) formData.append("desktopImage", desktopFile);
-      if (mobileFile) formData.append("mobileImage", mobileFile);
-      
-      const res = await fetch(`${API_URL}/banners/${banner.id}`, {
-        method: "PATCH",
-        body: formData,
-      });
+      formData.append("title", title.trim());
+      formData.append("buttonText", buttonText.trim());
+      formData.append("buttonLink", buttonLink.trim());
+      if (file) formData.append("image", file);
+      const res = await fetch(`${API_URL}/banners/${banner.id}`, { method: "PATCH", body: formData });
       if (!res.ok) throw new Error();
-      toast.success("Banner updated successfully");
+      toast.success("Banner updated");
       onUpdated(); setOpen(false);
     } catch { toast.error("Failed to update banner"); }
     finally { setLoading(false); }
@@ -183,50 +186,58 @@ function EditBannerDialog({ open, setOpen, banner, onUpdated }: {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[480px]">
+      <DialogContent className="sm:max-w-[520px]">
         <DialogHeader><DialogTitle>Edit Banner</DialogTitle></DialogHeader>
         <div className="space-y-4 py-2">
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Title (optional)</label>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Summer Sale" />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Desktop Image</label>
-              <input ref={desktopRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleFile(e, "desktop")} />
-              <div onClick={() => desktopRef.current?.click()}
-                className="relative border-2 border-dashed border-border rounded-lg cursor-pointer overflow-hidden hover:border-primary transition-colors"
-                style={{ height: 100 }}>
-                <Image src={desktopPreview} alt="Desktop" fill className="object-cover" />
-                <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                  <span className="text-white text-xs font-medium">Change</span>
-                </div>
+
+          {/* Image Upload */}
+          <div className="space-y-1.5">
+            <Label>Banner Image <span className="text-destructive">*</span></Label>
+            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+            <div
+              onClick={() => fileRef.current?.click()}
+              className="relative border-2 border-dashed border-border rounded-xl cursor-pointer overflow-hidden hover:border-primary transition-colors"
+              style={{ height: 160 }}
+            >
+              <Image src={preview} alt="Preview" fill className="object-cover" />
+              <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity gap-1">
+                <ImageIcon className="w-6 h-6 text-white" />
+                <span className="text-white text-xs font-medium">Click to change image</span>
               </div>
             </div>
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Mobile Image</label>
-              <input ref={mobileRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleFile(e, "mobile")} />
-              <div onClick={() => mobileRef.current?.click()}
-                className="relative border-2 border-dashed border-border rounded-lg cursor-pointer overflow-hidden hover:border-primary transition-colors"
-                style={{ height: 100 }}>
-                <Image src={mobilePreview} alt="Mobile" fill className="object-cover" />
-                <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                  <span className="text-white text-xs font-medium">Change</span>
-                </div>
+          </div>
+
+          {/* Title */}
+          <div className="space-y-1.5">
+            <Label>Title <span className="text-destructive">*</span></Label>
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Summer Collection 2025" />
+          </div>
+
+          {/* Optional Button */}
+          <div className="rounded-lg border border-border p-4 space-y-3 bg-muted/30">
+            <p className="text-sm font-medium text-muted-foreground">CTA Button <span className="font-normal">(optional)</span></p>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-xs">Button Text</Label>
+                <Input value={buttonText} onChange={(e) => setButtonText(e.target.value)} placeholder="e.g. EXPLORE NOW" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Button Link</Label>
+                <Input value={buttonLink} onChange={(e) => setButtonLink(e.target.value)} placeholder="e.g. /products" />
               </div>
             </div>
           </div>
         </div>
         <DialogFooter>
           <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
-          <Button onClick={handleSave} disabled={loading}>{loading ? "Saving..." : "Save"}</Button>
+          <Button onClick={handleSave} disabled={loading}>{loading ? "Saving..." : "Save Changes"}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
 
-// ─── Row Actions ──────────────────────────────────────────────────────────
+// ─── Row Actions ──────────────────────────────────────────────────────────────
 function BannerActions({ banner, activeCount, onRefresh }: {
   banner: Banner; activeCount: number; onRefresh: () => void;
 }) {
@@ -255,15 +266,14 @@ function BannerActions({ banner, activeCount, onRefresh }: {
           onUpdated={() => { setOpenEdit(false); onRefresh(); }} />
       )}
       <ToggleActiveDialog open={openToggle} setOpen={setOpenToggle} banner={banner}
-        activeCount={activeCount}
-        onToggled={() => { setOpenToggle(false); onRefresh(); }} />
+        activeCount={activeCount} onToggled={() => { setOpenToggle(false); onRefresh(); }} />
       <DeleteBannerDialog open={openDelete} setOpen={setOpenDelete} banner={banner}
         onDeleted={() => { setOpenDelete(false); onRefresh(); }} />
     </div>
   );
 }
 
-// ─── Main Page ─────────────────────────────────────────────────────────────
+// ─── Main Page ────────────────────────────────────────────────────────────────
 export default function AdminBannersPage() {
   const [banners, setBanners] = useState<Banner[]>([]);
   const [loading, setLoading] = useState(true);
@@ -271,13 +281,12 @@ export default function AdminBannersPage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [title, setTitle] = useState("");
-  const [desktopPreview, setDesktopPreview] = useState<string | null>(null);
-  const [mobilePreview, setMobilePreview] = useState<string | null>(null);
-  const [desktopFile, setDesktopFile] = useState<File | null>(null);
-  const [mobileFile, setMobileFile] = useState<File | null>(null);
+  const [buttonText, setButtonText] = useState("");
+  const [buttonLink, setButtonLink] = useState("");
+  const [preview, setPreview] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
-  const desktopRef = useRef<HTMLInputElement>(null);
-  const mobileRef = useRef<HTMLInputElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const totalPages = Math.ceil(banners.length / PAGE_SIZE);
   const paginatedBanners = banners.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -294,43 +303,40 @@ export default function AdminBannersPage() {
   };
 
   useEffect(() => { fetchBanners(); }, []);
-
   useEffect(() => {
     if (currentPage > totalPages && totalPages > 0) setCurrentPage(totalPages);
   }, [banners.length, totalPages, currentPage]);
 
-  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>, type: "desktop" | "mobile") => {
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
-    if (!f) return;
-    if (!validateImageSize(f)) return;
-    const preview = URL.createObjectURL(f);
-    if (type === "desktop") { setDesktopFile(f); setDesktopPreview(preview); }
-    else { setMobileFile(f); setMobilePreview(preview); }
+    if (!f || !validateImageSize(f)) return;
+    setFile(f);
+    setPreview(URL.createObjectURL(f));
   };
 
   const handleAdd = async () => {
-    if (!desktopFile || !mobileFile) { toast.error("Please select both desktop and mobile images"); return; }
+    if (!title.trim()) { toast.error("Title is required"); return; }
+    if (!file) { toast.error("Please select a banner image"); return; }
     if (activeCount >= MAX_ACTIVE) {
-      toast.error(`Maximum ${MAX_ACTIVE} banners can be active at a time. Hide one before adding more.`);
-      return;
+      toast.error(`Maximum ${MAX_ACTIVE} banners active. Hide one first.`); return;
     }
     setUploading(true);
     try {
       const formData = new FormData();
-      formData.append("title", title);
-      formData.append("desktopImage", desktopFile);
-      formData.append("mobileImage", mobileFile);
-      
-      const res = await fetch(`${API_URL}/banners`, {
-        method: "POST",
-        body: formData,
-      });
-      if (!res.ok) throw new Error();
+      formData.append("title", title.trim());
+      formData.append("buttonText", buttonText.trim());
+      formData.append("buttonLink", buttonLink.trim());
+      formData.append("image", file);
+      const res = await fetch(`${API_URL}/banners`, { method: "POST", body: formData });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed");
+      }
       toast.success("Banner added successfully");
-      setTitle(""); setDesktopFile(null); setMobileFile(null);
-      setDesktopPreview(null); setMobilePreview(null);
+      setTitle(""); setButtonText(""); setButtonLink("");
+      setFile(null); setPreview(null);
       fetchBanners();
-    } catch { toast.error("Failed to add banner"); }
+    } catch (err: any) { toast.error(err.message || "Failed to add banner"); }
     finally { setUploading(false); }
   };
 
@@ -339,21 +345,15 @@ export default function AdminBannersPage() {
     if (direction === "up" && idx === 0) return;
     if (direction === "down" && idx === banners.length - 1) return;
     const swapIdx = direction === "up" ? idx - 1 : idx + 1;
-    
     try {
-        const formData1 = new FormData();
-        formData1.append("order", String(swapIdx));
-        const formData2 = new FormData();
-        formData2.append("order", String(idx));
-        
-        await Promise.all([
-          fetch(`${API_URL}/banners/${banners[idx].id}`, { method: "PATCH", body: formData1 }),
-          fetch(`${API_URL}/banners/${banners[swapIdx].id}`, { method: "PATCH", body: formData2 }),
-        ]);
-        fetchBanners();
-    } catch {
-        toast.error("Failed to reorder");
-    }
+      const fd1 = new FormData(); fd1.append("order", String(banners[swapIdx].order));
+      const fd2 = new FormData(); fd2.append("order", String(banners[idx].order));
+      await Promise.all([
+        fetch(`${API_URL}/banners/${banners[idx].id}`, { method: "PATCH", body: fd1 }),
+        fetch(`${API_URL}/banners/${banners[swapIdx].id}`, { method: "PATCH", body: fd2 }),
+      ]);
+      fetchBanners();
+    } catch { toast.error("Failed to reorder"); }
   };
 
   return (
@@ -361,73 +361,116 @@ export default function AdminBannersPage() {
       <div className="container flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
 
+          {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight">Banners</h1>
-              <p className="text-muted-foreground">Manage homepage banner slides</p>
+              <h1 className="text-2xl font-bold tracking-tight">Hero Banners</h1>
+              <p className="text-muted-foreground text-sm">
+                Manage homepage hero slides. Min {MIN_ACTIVE}, Max {MAX_ACTIVE} active at a time.
+              </p>
             </div>
-            {/* Active count indicator */}
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-sm border border-border rounded-lg px-3 py-1.5">
               <span className="text-muted-foreground">Active:</span>
-              <span className={`font-semibold ${activeCount >= MAX_ACTIVE ? "text-destructive" : "text-foreground"}`}>
+              <span className={`font-bold tabular-nums ${activeCount >= MAX_ACTIVE ? "text-destructive" : activeCount < MIN_ACTIVE ? "text-amber-600" : "text-green-600"}`}>
                 {activeCount} / {MAX_ACTIVE}
               </span>
             </div>
           </div>
+
+          {/* Min warning */}
+          {activeCount < MIN_ACTIVE && (
+            <div className="flex items-center gap-2 px-4 py-3 rounded-lg border border-amber-200 bg-amber-50 text-amber-700 text-sm font-medium">
+              ⚠ At least {MIN_ACTIVE} banners must be active. Please activate more banners.
+            </div>
+          )}
 
           {/* Add Banner */}
           <Card>
             <CardHeader>
               <CardTitle>Add New Banner</CardTitle>
               <CardDescription>
-                Upload desktop and mobile images for a new slide
+                Upload a single responsive image with a title and optional call-to-action button
                 {activeCount >= MAX_ACTIVE && (
-                  <span className="ml-2 text-destructive font-medium">
-                    — Active limit reached. Hide a banner first.
-                  </span>
+                  <span className="ml-2 text-destructive font-medium">— Active limit reached ({MAX_ACTIVE}). Hide one first.</span>
                 )}
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-1">
-                <label className="text-sm font-medium">Title (optional)</label>
-                <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Summer Sale" className="max-w-sm" />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-sm font-medium">Desktop Image <span className="text-muted-foreground font-normal">(1920×800)</span></label>
-                  <input ref={desktopRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleFile(e, "desktop")} />
-                  <div onClick={() => desktopRef.current?.click()}
-                    className="border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-primary transition-colors overflow-hidden"
-                    style={{ height: 140 }}>
-                    {desktopPreview ? (
-                      <div className="relative w-full h-full"><Image src={desktopPreview} alt="Desktop preview" fill className="object-cover" /></div>
-                    ) : (
-                      <div className="flex flex-col items-center justify-center h-full gap-2 text-muted-foreground">
-                        <ImageIcon className="w-8 h-8" />
-                        <span className="text-xs">Click to upload desktop image</span>
+            <CardContent className="space-y-5">
+
+              {/* Image Upload */}
+              <div className="space-y-2">
+                <Label>Banner Image <span className="text-destructive">*</span></Label>
+                <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+                <div
+                  onClick={() => fileRef.current?.click()}
+                  className="relative border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary transition-colors overflow-hidden bg-muted/20"
+                  style={{ height: 200 }}
+                >
+                  {preview ? (
+                    <div className="relative w-full h-full">
+                      <Image src={preview} alt="Preview" fill className="object-cover" />
+                      <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity gap-2">
+                        <ImageIcon className="w-6 h-6 text-white" />
+                        <span className="text-white text-xs font-semibold">Click to change image</span>
                       </div>
-                    )}
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <label className="text-sm font-medium">Mobile Image <span className="text-muted-foreground font-normal">(750×1000)</span></label>
-                  <input ref={mobileRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleFile(e, "mobile")} />
-                  <div onClick={() => mobileRef.current?.click()}
-                    className="border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-primary transition-colors overflow-hidden"
-                    style={{ height: 140 }}>
-                    {mobilePreview ? (
-                      <div className="relative w-full h-full"><Image src={mobilePreview} alt="Mobile preview" fill className="object-cover" /></div>
-                    ) : (
-                      <div className="flex flex-col items-center justify-center h-full gap-2 text-muted-foreground">
-                        <ImageIcon className="w-8 h-8" />
-                        <span className="text-xs">Click to upload mobile image</span>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-full gap-3 text-muted-foreground">
+                      <ImageIcon className="w-10 h-10" />
+                      <div className="text-center">
+                        <p className="text-sm font-medium">Click to upload banner image</p>
+                        <p className="text-xs">Recommended: 1920×800px or wider. Max 8 MB.</p>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
-              <Button onClick={handleAdd} disabled={uploading || !desktopFile || !mobileFile || activeCount >= MAX_ACTIVE}>
+
+              {/* Title */}
+              <div className="space-y-1.5">
+                <Label>Title <span className="text-destructive">*</span></Label>
+                <Input
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g. Summer Collection 2025"
+                  className="max-w-lg"
+                />
+              </div>
+
+              {/* Optional CTA */}
+              <div className="rounded-xl border border-border p-4 space-y-3 bg-muted/20">
+                <div className="flex items-center gap-2 text-sm font-medium">
+                  <LinkIcon className="w-4 h-4 text-muted-foreground" />
+                  CTA Button <span className="text-muted-foreground font-normal">(optional)</span>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Button Text</Label>
+                    <Input
+                      value={buttonText}
+                      onChange={(e) => setButtonText(e.target.value)}
+                      placeholder="e.g. EXPLORE NOW"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Button Link</Label>
+                    <Input
+                      value={buttonLink}
+                      onChange={(e) => setButtonLink(e.target.value)}
+                      placeholder="e.g. /products or https://..."
+                    />
+                  </div>
+                </div>
+                {buttonText && !buttonLink && (
+                  <p className="text-xs text-amber-600">⚠ Button text is set but link is empty. Please add a link.</p>
+                )}
+              </div>
+
+              <Button
+                onClick={handleAdd}
+                disabled={uploading || !file || !title.trim() || activeCount >= MAX_ACTIVE}
+                className="min-w-[140px]"
+              >
                 {uploading ? "Uploading..." : "Add Banner"}
               </Button>
             </CardContent>
@@ -467,11 +510,13 @@ export default function AdminBannersPage() {
             <CardContent>
               {loading ? (
                 <div className="space-y-3">
-                  {[1, 2, 3].map((i) => <div key={i} className="h-20 bg-muted rounded-lg animate-pulse" />)}
+                  {[1, 2, 3].map((i) => <div key={i} className="h-24 bg-muted rounded-lg animate-pulse" />)}
                 </div>
               ) : banners.length === 0 ? (
-                <div className="text-center py-12 text-muted-foreground border-2 border-dashed border-border rounded-lg">
-                  No banners yet. Add your first banner above.
+                <div className="text-center py-14 text-muted-foreground border-2 border-dashed border-border rounded-xl">
+                  <ImageIcon className="w-10 h-10 mx-auto mb-3 opacity-40" />
+                  <p className="font-medium">No banners yet</p>
+                  <p className="text-sm">Add your first hero banner above.</p>
                 </div>
               ) : (
                 <>
@@ -479,29 +524,37 @@ export default function AdminBannersPage() {
                     {paginatedBanners.map((banner, pageIdx) => {
                       const globalIdx = (currentPage - 1) * PAGE_SIZE + pageIdx;
                       return (
-                        <div key={banner.id} className="flex items-center gap-3 border border-border rounded-lg p-3 bg-card">
-                          <div className="relative rounded-md overflow-hidden flex-shrink-0 bg-muted border border-border" style={{ width: 110, height: 56 }}>
-                            <Image src={banner.desktopImage} alt="Desktop" fill className="object-cover" />
-                            <span className="absolute bottom-0 left-0 bg-black/50 text-white text-[9px] px-1">Desktop</span>
+                        <div key={banner.id} className="flex items-center gap-4 border border-border rounded-xl p-3 bg-card hover:bg-muted/30 transition-colors">
+                          {/* Thumbnail */}
+                          <div className="relative rounded-lg overflow-hidden flex-shrink-0 bg-muted border border-border" style={{ width: 120, height: 64 }}>
+                            <Image src={banner.image} alt={banner.title} fill className="object-cover" />
                           </div>
-                          <div className="relative rounded-md overflow-hidden flex-shrink-0 bg-muted border border-border" style={{ width: 38, height: 56 }}>
-                            <Image src={banner.mobileImage} alt="Mobile" fill className="object-cover" />
-                            <span className="absolute bottom-0 left-0 bg-black/50 text-white text-[9px] px-0.5">Mob</span>
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium truncate">
-                              {banner.title || <span className="text-muted-foreground italic">No title</span>}
-                            </p>
+
+                          {/* Info */}
+                          <div className="flex-1 min-w-0 space-y-0.5">
+                            <p className="text-sm font-semibold truncate">{banner.title}</p>
+                            {banner.buttonText ? (
+                              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                                <LinkIcon className="w-3 h-3 shrink-0" />
+                                <span className="truncate">{banner.buttonText} → {banner.buttonLink || "no link"}</span>
+                              </div>
+                            ) : (
+                              <p className="text-xs text-muted-foreground italic">No CTA button</p>
+                            )}
                             <p className="text-xs text-muted-foreground">Slide #{globalIdx + 1}</p>
                           </div>
-                          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                            banner.isActive
-                              ? "bg-black text-white dark:bg-white dark:text-black"
-                              : "bg-muted text-muted-foreground"
-                          }`}>
+
+                          {/* Status badge */}
+                          <Badge
+                            variant={banner.isActive ? "default" : "secondary"}
+                            className="flex items-center gap-1 shrink-0"
+                          >
+                            {banner.isActive ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
                             {banner.isActive ? "Active" : "Hidden"}
-                          </span>
-                          <div className="flex flex-col gap-0.5">
+                          </Badge>
+
+                          {/* Reorder */}
+                          <div className="flex flex-col gap-0.5 shrink-0">
                             <Button variant="ghost" size="icon" className="h-6 w-6"
                               disabled={globalIdx === 0} onClick={() => handleReorder(banner.id, "up")}>
                               <ArrowUp className="h-3 w-3" />
@@ -511,12 +564,12 @@ export default function AdminBannersPage() {
                               <ArrowDown className="h-3 w-3" />
                             </Button>
                           </div>
+
                           <BannerActions banner={banner} activeCount={activeCount} onRefresh={fetchBanners} />
                         </div>
                       );
                     })}
                   </div>
-
                   {totalPages > 1 && (
                     <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
                       <p className="text-sm text-muted-foreground">
@@ -544,6 +597,7 @@ export default function AdminBannersPage() {
               )}
             </CardContent>
           </Card>
+
         </div>
       </div>
     </div>

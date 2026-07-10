@@ -262,21 +262,89 @@ export const getOrderById = async (req: Request, res: Response) => {
 export const createOrder = async (req: Request, res: Response) => {
     try {
         const userId = (req as any).user.id;
-        const { shippingDetails, paymentMethod, items, couponCode } = req.body;
+        const {
+            shippingDetails,
+            paymentMethod,
+            items,
+            couponCode,
+            razorpayOrderId,
+            razorpayPaymentId,
+            razorpaySignature,
+        } = req.body;
 
         if (!shippingDetails || !items || !Array.isArray(items) || items.length === 0) {
             return res.status(400).json({ error: "Missing shipping details or items" });
         }
 
-        const subtotal = items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
+        const normalizedPaymentMethod = paymentMethod === "Cash on Delivery" ? "COD" : paymentMethod;
 
-        // Run order creation and stock decrement in a transaction
+        if (!normalizedPaymentMethod || !["COD", "RAZORPAY"].includes(normalizedPaymentMethod)) {
+            return res.status(400).json({ error: "Invalid payment method" });
+        }
+
+        let verifiedPayment: any = null;
+
+        // IMPORTANT: Never mark a Razorpay order as PAID unless the payment log was verified first.
+        if (normalizedPaymentMethod === "RAZORPAY") {
+            if (!razorpayOrderId || !razorpayPaymentId || !razorpaySignature) {
+                return res.status(400).json({ error: "Missing Razorpay payment details" });
+            }
+
+            verifiedPayment = await prisma.paymentLog.findFirst({
+                where: {
+                    gatewayOrderId: razorpayOrderId,
+                    gatewayPaymentId: razorpayPaymentId,
+                    gatewaySignature: razorpaySignature,
+                    status: "SUCCESS",
+                    paymentMethod: "RAZORPAY",
+                },
+            });
+
+            if (!verifiedPayment) {
+                return res.status(400).json({ error: "Payment not verified" });
+            }
+
+            if (verifiedPayment.orderId) {
+                return res.status(400).json({ error: "Payment already used for another order" });
+            }
+        }
+
+        // Run order creation, coupon usage, stock decrement, and payment log linking in one transaction.
         let order;
         let attempts = 0;
         const maxAttempts = 5;
         while (attempts < maxAttempts) {
             try {
                 order = await prisma.$transaction(async (tx: any) => {
+                    const dbItems: { variantId: string; quantity: number; price: number }[] = [];
+                    let subtotal = 0;
+
+                    // Always calculate amount from DB price, never frontend price.
+                    for (const item of items) {
+                        if (!item.variantId || !item.quantity || item.quantity <= 0) {
+                            throw new Error("Invalid order item");
+                        }
+
+                        const variant = await tx.productVariant.findUnique({
+                            where: { id: item.variantId }
+                        });
+
+                        if (!variant) {
+                            throw new Error("Product variant not found");
+                        }
+
+                        if (variant.qty < item.quantity) {
+                            throw new Error(`Insufficient stock for item: ${item.title || item.variantId}`);
+                        }
+
+                        subtotal += variant.price * item.quantity;
+                        dbItems.push({
+                            variantId: item.variantId,
+                            quantity: item.quantity,
+                            price: variant.price,
+                        });
+                    }
+
                     let discountAmount = 0;
                     let finalAmount = subtotal;
 
@@ -295,12 +363,15 @@ export const createOrder = async (req: Request, res: Response) => {
                         } catch (err: any) {
                             throw new Error(`Coupon error: ${err.message}`);
                         }
+                    }
 
-                        // Increment coupon usage count
-                        await tx.coupon.update({
-                            where: { id: coupon.id },
-                            data: { usedCount: { increment: 1 } }
-                        });
+                    if (normalizedPaymentMethod === "RAZORPAY") {
+                        const paidAmountPaise = Math.round(Number(verifiedPayment.amount) * 100);
+                        const finalAmountPaise = Math.round(Number(finalAmount) * 100);
+
+                        if (paidAmountPaise !== finalAmountPaise) {
+                            throw new Error("Paid amount does not match order amount");
+                        }
                     }
 
                     // 1. Create the Order
@@ -310,19 +381,20 @@ export const createOrder = async (req: Request, res: Response) => {
                             totalAmount: finalAmount,
                             discountAmount,
                             couponCode: couponCode || null,
-                            status: "PROCESSING",
-                            paymentMethod,
+status: "PROCESSING",
+                            paymentMethod: normalizedPaymentMethod,
+
+                            razorpayOrderId: razorpayOrderId || null,
+                            razorpayPaymentId: razorpayPaymentId || null,
+                            razorpaySignature: razorpaySignature || null,
+
                             phoneNumber: shippingDetails.phone,
                             street: shippingDetails.street,
                             city: shippingDetails.city,
                             state: shippingDetails.state,
                             pincode: shippingDetails.pincode,
                             items: {
-                                create: items.map((item: any) => ({
-                                    variantId: item.variantId,
-                                    quantity: item.quantity,
-                                    price: item.price
-                                }))
+                                create: dbItems,
                             }
                         },
                         include: {
@@ -330,16 +402,22 @@ export const createOrder = async (req: Request, res: Response) => {
                         }
                     });
 
-                    // 2. Decrement quantities of the variants in stock
-                    for (const item of items) {
-                        const variant = await tx.productVariant.findUnique({
-                            where: { id: item.variantId }
+                    // 2. Increment coupon usage only after order creation succeeds.
+                    if (couponCode) {
+                        const coupon = await tx.coupon.findUnique({
+                            where: { code: couponCode }
                         });
 
-                        if (!variant || variant.qty < item.quantity) {
-                            throw new Error(`Insufficient stock for item: ${item.title || item.variantId}`);
+                        if (coupon) {
+                            await tx.coupon.update({
+                                where: { id: coupon.id },
+                                data: { usedCount: { increment: 1 } }
+                            });
                         }
+                    }
 
+                    // 3. Decrement quantities of the variants in stock
+                    for (const item of dbItems) {
                         await tx.productVariant.update({
                             where: { id: item.variantId },
                             data: {
@@ -350,7 +428,7 @@ export const createOrder = async (req: Request, res: Response) => {
                         });
                     }
 
-                    // 3. Clear user's Cart in MongoDB
+                    // 4. Clear user's Cart in MongoDB
                     const userCart = await tx.cart.findUnique({
                         where: { userId }
                     });
@@ -361,24 +439,39 @@ export const createOrder = async (req: Request, res: Response) => {
                         });
                     }
 
-                    // 4. Generate lucky tickets if active draw campaigns exist
-                    await generateTicketsForOrder(tx, newOrder.id, userId);
+                    // 5. Generate lucky tickets only for paid online orders.
+                    // COD tickets can be generated later when admin changes order status to PAID.
+                    if (normalizedPaymentMethod === "RAZORPAY") {
+                        await generateTicketsForOrder(tx, newOrder.id, userId);
+                    }
 
-                    // 5. Create real payment log entry
+                    // 6. Create/link payment log entry
                     const userObj = await tx.user.findUnique({
                         where: { id: userId }
                     });
-                    await tx.paymentLog.create({
-                        data: {
-                            orderId: newOrder.id,
-                            amount: finalAmount,
-                            currency: "INR",
-                            status: paymentMethod === "COD" ? "PENDING" : "SUCCESS",
-                            paymentMethod,
-                            buyerName: userObj?.name || "Customer",
-                            buyerEmail: userObj?.email || "",
-                        }
-                    });
+
+                    if (normalizedPaymentMethod === "RAZORPAY") {
+                        await tx.paymentLog.update({
+                            where: { id: verifiedPayment.id },
+                            data: {
+                                orderId: newOrder.id,
+                                buyerName: userObj?.name || "Customer",
+                                buyerEmail: userObj?.email || "",
+                            },
+                        });
+                    } else {
+                        await tx.paymentLog.create({
+                            data: {
+                                orderId: newOrder.id,
+                                amount: finalAmount,
+                                currency: "INR",
+                                status: "PENDING",
+                                paymentMethod: "COD",
+                                buyerName: userObj?.name || "Customer",
+                                buyerEmail: userObj?.email || "",
+                            }
+                        });
+                    }
 
                     return newOrder;
                 });

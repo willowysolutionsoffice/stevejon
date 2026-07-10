@@ -308,10 +308,10 @@ export default function ProfilePage() {
 
   if (isPending || (loadingProfile && !profileData.email)) {
     return (
-      <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans flex flex-col justify-between">
+      <div className="min-h-screen bg-[#F5FAFF] text-[#061B3A] font-sans flex flex-col justify-between">
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
-          <div className="w-8 h-8 border-4 border-[#DF9F28] border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-[#0077FF] border-t-transparent rounded-full animate-spin"></div>
         </div>
         <Footer />
       </div>
@@ -319,7 +319,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans flex flex-col justify-between">
+    <div className="min-h-screen bg-[#F5FAFF] text-[#061B3A] font-sans flex flex-col justify-between">
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 pt-40 pb-24 flex-1 w-full">
@@ -350,7 +350,7 @@ export default function ProfilePage() {
             <div className="w-[1px] bg-gray-100"></div>
             <div className="text-left">
               <span className="text-[0.6rem] font-bold text-gray-400 uppercase tracking-widest block">Role</span>
-              <span className="text-xs font-bold text-[#DF9F28] uppercase tracking-widest block mt-1">{(session?.user as any)?.role || 'User'}</span>
+              <span className="text-xs font-bold text-[#0077FF] uppercase tracking-widest block mt-1">{(session?.user as any)?.role || 'User'}</span>
             </div>
           </div>
         </div>
@@ -361,33 +361,33 @@ export default function ProfilePage() {
             onClick={() => setActiveTab('profile')}
             className={`py-4 px-6 text-xs font-bold tracking-[0.2em] uppercase border-b-2 transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'profile'
-                ? 'border-[#DF9F28] text-black font-extrabold bg-[#DF9F28]/5 rounded-t-2xl'
+                ? 'border-[#0077FF] text-black font-extrabold bg-[#0077FF]/5 rounded-t-2xl'
                 : 'border-transparent text-gray-400 hover:text-gray-600'
             }`}
           >
-            <User className="w-4 h-4 text-[#DF9F28]" />
+            <User className="w-4 h-4 text-[#0077FF]" />
             Personal Details
           </button>
           <button
             onClick={() => setActiveTab('addresses')}
             className={`py-4 px-6 text-xs font-bold tracking-[0.2em] uppercase border-b-2 transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'addresses'
-                ? 'border-[#DF9F28] text-black font-extrabold bg-[#DF9F28]/5 rounded-t-2xl'
+                ? 'border-[#0077FF] text-black font-extrabold bg-[#0077FF]/5 rounded-t-2xl'
                 : 'border-transparent text-gray-400 hover:text-gray-600'
             }`}
           >
-            <MapPin className="w-4 h-4 text-[#DF9F28]" />
+            <MapPin className="w-4 h-4 text-[#0077FF]" />
             Address Book ({addresses.length})
           </button>
           <button
             onClick={() => setActiveTab('tickets')}
             className={`py-4 px-6 text-xs font-bold tracking-[0.2em] uppercase border-b-2 transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'tickets'
-                ? 'border-[#DF9F28] text-black font-extrabold bg-[#DF9F28]/5 rounded-t-2xl'
+                ? 'border-[#0077FF] text-black font-extrabold bg-[#0077FF]/5 rounded-t-2xl'
                 : 'border-transparent text-gray-400 hover:text-gray-600'
             }`}
           >
-            <Ticket className="w-4 h-4 text-[#DF9F28]" />
+            <Ticket className="w-4 h-4 text-[#0077FF]" />
             Lucky Tickets ({tickets.length})
           </button>
         </div>
@@ -420,7 +420,7 @@ export default function ProfilePage() {
                       onChange={e => setProfileData(prev => ({ ...prev, name: e.target.value }))}
                       required
                       placeholder="Jane Doe"
-                      className="border border-gray-200 rounded-full px-5 py-3.5 text-xs font-semibold tracking-wider bg-[#FDFCF8] focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28]"
+                      className="border border-gray-200 rounded-full px-5 py-3.5 text-xs font-semibold tracking-wider bg-[#F5FAFF] focus:outline-none focus:border-[#0077FF] focus:ring-1 focus:ring-[#0077FF]"
                     />
                   </div>
 
@@ -445,7 +445,7 @@ export default function ProfilePage() {
                       value={profileData.phone}
                       onChange={e => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
                       placeholder="+91 98765 43210"
-                      className="border border-gray-200 rounded-full px-5 py-3.5 text-xs font-semibold tracking-wider bg-[#FDFCF8] focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28]"
+                      className="border border-gray-200 rounded-full px-5 py-3.5 text-xs font-semibold tracking-wider bg-[#F5FAFF] focus:outline-none focus:border-[#0077FF] focus:ring-1 focus:ring-[#0077FF]"
                     />
                   </div>
                 </div>
@@ -454,7 +454,7 @@ export default function ProfilePage() {
                   <button
                     type="submit"
                     disabled={savingProfile}
-                    className="bg-[#DF9F28] hover:bg-[#c58b20] disabled:bg-gray-200 disabled:cursor-not-allowed text-white px-10 py-4 rounded-full text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-xl shadow-[#DF9F28]/20 hover:shadow-2xl hover:shadow-[#DF9F28]/30 cursor-pointer"
+                    className="bg-[#0077FF] hover:bg-[#005ED1] disabled:bg-gray-200 disabled:cursor-not-allowed text-white px-10 py-4 rounded-full text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-xl shadow-[#0077FF]/20 hover:shadow-2xl hover:shadow-[#0077FF]/30 cursor-pointer"
                   >
                     {savingProfile ? 'Saving Details...' : 'Save Profile'}
                   </button>
@@ -474,7 +474,7 @@ export default function ProfilePage() {
               </h2>
               <button
                 onClick={handleAddAddressClick}
-                className="bg-[#DF9F28] hover:bg-[#c58b20] text-white px-6 py-3 rounded-full text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-md inline-flex items-center gap-2 cursor-pointer"
+                className="bg-[#0077FF] hover:bg-[#005ED1] text-white px-6 py-3 rounded-full text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-md inline-flex items-center gap-2 cursor-pointer"
               >
                 <Plus className="w-4 h-4 stroke-[2.5]" />
                 Add Address
@@ -491,7 +491,7 @@ export default function ProfilePage() {
             ) : addresses.length === 0 ? (
               /* Empty Address State */
               <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm flex flex-col items-center justify-center my-4">
-                <div className="w-16 h-16 bg-[#F3F2EE] text-gray-400 rounded-full flex items-center justify-center mb-4">
+                <div className="w-16 h-16 bg-[#E7F2FF] text-gray-400 rounded-full flex items-center justify-center mb-4">
                   <MapPin className="w-6 h-6 stroke-[1.5]" />
                 </div>
                 <h3 className="text-lg font-serif tracking-wide text-black mb-1">No Saved Addresses</h3>
@@ -511,7 +511,7 @@ export default function ProfilePage() {
                   <div 
                     key={addr.id}
                     className={`bg-white border rounded-[2rem] p-6 shadow-sm flex flex-col justify-between text-left transition-all hover:shadow-md relative ${
-                      addr.isDefault ? 'border-[#DF9F28]/50 ring-1 ring-[#DF9F28]/20 bg-[#DF9F28]/2' : 'border-gray-100 hover:border-gray-300'
+                      addr.isDefault ? 'border-[#0077FF]/50 ring-1 ring-[#0077FF]/20 bg-[#0077FF]/2' : 'border-gray-100 hover:border-gray-300'
                     }`}
                   >
                     {/* Header: Name and Default Badge */}
@@ -521,7 +521,7 @@ export default function ProfilePage() {
                         <span className="text-[0.65rem] text-gray-400 font-semibold tracking-wide font-sans">{addr.phone}</span>
                       </div>
                       {addr.isDefault && (
-                        <span className="bg-[#DF9F28]/10 text-[#DF9F28] text-[0.6rem] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border border-[#DF9F28]/10">
+                        <span className="bg-[#0077FF]/10 text-[#0077FF] text-[0.6rem] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border border-[#0077FF]/10">
                           Default
                         </span>
                       )}
@@ -554,7 +554,7 @@ export default function ProfilePage() {
                       {!addr.isDefault && (
                         <button
                           onClick={() => handleSetDefaultAddress(addr.id)}
-                          className="text-[0.65rem] tracking-wider uppercase font-bold text-[#DF9F28] hover:text-[#c58b20] transition-colors cursor-pointer"
+                          className="text-[0.65rem] tracking-wider uppercase font-bold text-[#0077FF] hover:text-[#005ED1] transition-colors cursor-pointer"
                         >
                           Set Default
                         </button>
@@ -589,7 +589,7 @@ export default function ProfilePage() {
               </div>
             ) : tickets.length === 0 ? (
               <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm flex flex-col items-center justify-center my-4 select-none">
-                <div className="w-16 h-16 bg-[#F3F2EE] text-gray-400 rounded-full flex items-center justify-center mb-4">
+                <div className="w-16 h-16 bg-[#E7F2FF] text-gray-400 rounded-full flex items-center justify-center mb-4">
                   <Ticket className="w-6 h-6 stroke-[1.5]" />
                 </div>
                 <h3 className="text-lg font-serif tracking-wide text-black mb-1">No Lucky Tickets</h3>
@@ -613,13 +613,13 @@ export default function ProfilePage() {
                       className={`relative bg-white border border-gray-200 rounded-[2rem] shadow-sm hover:shadow-md transition-all flex flex-row overflow-hidden border-dashed ${isInvalid ? 'opacity-60 saturate-50' : ''}`}
                     >
                       {/* Punch Holes Decorators */}
-                      <div className="absolute top-1/2 -translate-y-1/2 -left-3 w-6 h-6 rounded-full bg-[#FDFCF8] border border-gray-200 z-10"></div>
-                      <div className="absolute top-1/2 -translate-y-1/2 -right-3 w-6 h-6 rounded-full bg-[#FDFCF8] border border-gray-200 z-10"></div>
+                      <div className="absolute top-1/2 -translate-y-1/2 -left-3 w-6 h-6 rounded-full bg-[#F5FAFF] border border-gray-200 z-10"></div>
+                      <div className="absolute top-1/2 -translate-y-1/2 -right-3 w-6 h-6 rounded-full bg-[#F5FAFF] border border-gray-200 z-10"></div>
 
                       {/* Left side: Ticket Details */}
                       <div className="flex-1 p-6 flex flex-col justify-between pl-8">
                         <div>
-                          <span className="inline-flex items-center gap-1 bg-[#DF9F28]/10 text-[#DF9F28] border border-[#DF9F28]/10 px-2 py-0.5 rounded-full text-[0.55rem] font-bold uppercase tracking-widest mb-3 select-none">
+                          <span className="inline-flex items-center gap-1 bg-[#0077FF]/10 text-[#0077FF] border border-[#0077FF]/10 px-2 py-0.5 rounded-full text-[0.55rem] font-bold uppercase tracking-widest mb-3 select-none">
                             Lucky Ticket
                           </span>
                           <h4 className="text-base font-serif font-extrabold text-black uppercase tracking-wide leading-tight">
@@ -696,7 +696,7 @@ export default function ProfilePage() {
       {/* ADDRESS ADD / EDIT POPUP MODAL */}
       {isAddressModalOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-[#FDFCF8] w-full max-w-lg rounded-[2.5rem] shadow-2xl border border-gray-100 animate-scaleUp overflow-hidden max-h-[90vh] flex flex-col">
+          <div className="bg-[#F5FAFF] w-full max-w-lg rounded-[2.5rem] shadow-2xl border border-gray-100 animate-scaleUp overflow-hidden max-h-[90vh] flex flex-col">
             {/* Modal Header */}
             <div className="p-6 md:p-8 bg-white border-b border-gray-50 flex items-center justify-between">
               <h3 className="text-lg font-serif tracking-wider uppercase text-black font-semibold">
@@ -731,7 +731,7 @@ export default function ProfilePage() {
                     onChange={e => setAddressForm(prev => ({ ...prev, name: e.target.value }))}
                     required
                     placeholder="Jane Doe"
-                    className="border border-gray-200 rounded-full px-5 py-3 text-xs font-semibold tracking-wider bg-white focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28]"
+                    className="border border-gray-200 rounded-full px-5 py-3 text-xs font-semibold tracking-wider bg-white focus:outline-none focus:border-[#0077FF] focus:ring-1 focus:ring-[#0077FF]"
                   />
                 </div>
 
@@ -745,7 +745,7 @@ export default function ProfilePage() {
                     onChange={e => setAddressForm(prev => ({ ...prev, phone: e.target.value }))}
                     required
                     placeholder="+91 98765 43210"
-                    className="border border-gray-200 rounded-full px-5 py-3 text-xs font-semibold tracking-wider bg-white focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28]"
+                    className="border border-gray-200 rounded-full px-5 py-3 text-xs font-semibold tracking-wider bg-white focus:outline-none focus:border-[#0077FF] focus:ring-1 focus:ring-[#0077FF]"
                   />
                 </div>
               </div>
@@ -760,7 +760,7 @@ export default function ProfilePage() {
                   onChange={e => setAddressForm(prev => ({ ...prev, street: e.target.value }))}
                   required
                   placeholder="Flat No, Wing, Apartment/Building, Street Name"
-                  className="border border-gray-200 rounded-full px-5 py-3 text-xs font-semibold tracking-wider bg-white focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28]"
+                  className="border border-gray-200 rounded-full px-5 py-3 text-xs font-semibold tracking-wider bg-white focus:outline-none focus:border-[#0077FF] focus:ring-1 focus:ring-[#0077FF]"
                 />
               </div>
 
@@ -775,7 +775,7 @@ export default function ProfilePage() {
                     onChange={e => setAddressForm(prev => ({ ...prev, city: e.target.value }))}
                     required
                     placeholder="Mumbai"
-                    className="border border-gray-200 rounded-full px-5 py-3 text-xs font-semibold tracking-wider bg-white focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28]"
+                    className="border border-gray-200 rounded-full px-5 py-3 text-xs font-semibold tracking-wider bg-white focus:outline-none focus:border-[#0077FF] focus:ring-1 focus:ring-[#0077FF]"
                   />
                 </div>
 
@@ -789,7 +789,7 @@ export default function ProfilePage() {
                     onChange={e => setAddressForm(prev => ({ ...prev, state: e.target.value }))}
                     required
                     placeholder="Maharashtra"
-                    className="border border-gray-200 rounded-full px-5 py-3 text-xs font-semibold tracking-wider bg-white focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28]"
+                    className="border border-gray-200 rounded-full px-5 py-3 text-xs font-semibold tracking-wider bg-white focus:outline-none focus:border-[#0077FF] focus:ring-1 focus:ring-[#0077FF]"
                   />
                 </div>
 
@@ -803,7 +803,7 @@ export default function ProfilePage() {
                     onChange={e => setAddressForm(prev => ({ ...prev, pincode: e.target.value }))}
                     required
                     placeholder="400052"
-                    className="border border-gray-200 rounded-full px-5 py-3 text-xs font-semibold tracking-wider bg-white focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28]"
+                    className="border border-gray-200 rounded-full px-5 py-3 text-xs font-semibold tracking-wider bg-white focus:outline-none focus:border-[#0077FF] focus:ring-1 focus:ring-[#0077FF]"
                   />
                 </div>
               </div>
@@ -815,7 +815,7 @@ export default function ProfilePage() {
                     type="checkbox"
                     checked={addressForm.isDefault}
                     onChange={e => setAddressForm(prev => ({ ...prev, isDefault: e.target.checked }))}
-                    className="w-4 h-4 rounded border-gray-200 text-[#DF9F28] focus:ring-[#DF9F28] accent-[#DF9F28]"
+                    className="w-4 h-4 rounded border-gray-200 text-[#0077FF] focus:ring-[#0077FF] accent-[#0077FF]"
                   />
                   <span className="group-hover:text-black transition-colors">Set as my default shipping address</span>
                 </label>
@@ -833,7 +833,7 @@ export default function ProfilePage() {
                 <button
                   type="submit"
                   disabled={savingAddress}
-                  className="flex-1 bg-[#DF9F28] hover:bg-[#c58b20] disabled:bg-gray-200 disabled:cursor-not-allowed text-white py-3.5 rounded-full text-xs font-bold tracking-wider uppercase transition-all shadow-md hover:shadow-lg cursor-pointer"
+                  className="flex-1 bg-[#0077FF] hover:bg-[#005ED1] disabled:bg-gray-200 disabled:cursor-not-allowed text-white py-3.5 rounded-full text-xs font-bold tracking-wider uppercase transition-all shadow-md hover:shadow-lg cursor-pointer"
                 >
                   {savingAddress ? 'Saving...' : 'Save Address'}
                 </button>

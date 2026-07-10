@@ -1,52 +1,44 @@
-// src/middleware.ts
 import { NextRequest, NextResponse } from "next/server";
 import { betterFetch } from "@better-fetch/fetch";
 import { SessionResponse } from "@/types/auth";
 
 export async function middleware(request: NextRequest) {
   const baseURL =
-    process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") || "http://localhost:5000";
+    process.env.NEXT_PUBLIC_AUTH_URL ||
+    process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ||
+    "http://localhost:5000";
 
   const { data: session } = await betterFetch<SessionResponse>(
-    "/api/auth/get-session",
+    "/api/auth-admin/get-session",
     {
       baseURL,
       headers: {
-        cookie: request.headers.get("cookie") || "", // Forward cookies
+        cookie: request.headers.get("cookie") || "",
       },
-    },
+    }
   );
 
   const pathname = request.nextUrl.pathname;
 
-  // Public routes (no session required)
   const publicRoutes = [
     "/login",
     "/sign-up",
     "/dashboard-login",
   ];
 
-  const isPublic = publicRoutes.some((route) =>
-    pathname === route || pathname.startsWith(route + "/")
+  const isPublic = publicRoutes.some(
+    (route) => pathname === route || pathname.startsWith(route + "/")
   );
 
   if (isPublic) {
     return NextResponse.next();
   }
 
-  // If no session, redirect to login for protected routes
-  if (!session) {
+  if (!session?.user) {
     return NextResponse.redirect(new URL("/dashboard-login", request.url));
   }
 
-  // ✅ Safe to destructure now
-  const { user } = session;
-
-  // All routes are now "admin" routes since we removed the user side
-  if (user.role !== "admin" && pathname !== "/dashboard-login") {
-    // For now, if not admin, we might want to redirect somewhere else, 
-    // but since there's no user side, maybe just a simple message or logout.
-    // For now, let's keep it restricted to admins.
+  if ((session.user as any).role !== "admin") {
     return NextResponse.redirect(new URL("/dashboard-login", request.url));
   }
 

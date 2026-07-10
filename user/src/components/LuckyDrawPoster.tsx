@@ -96,7 +96,7 @@ export default function LuckyDrawPoster() {
 
   return (
     <section className="py-8 px-4 md:px-8 max-w-7xl mx-auto">
-      <div className="relative rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-[#DF9F28] via-[#B87A15] to-[#8C5D0D] shadow-[0_20px_50px_rgba(223,159,40,0.3)] border border-[#DF9F28]/30">
+      <div className="relative rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-[#0077FF] via-[#004EA8] to-[#002B66] shadow-[0_20px_50px_rgba(0,119,255,0.30)] border border-[#0077FF]/30">
 
         {/* Grid overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff15_1px,transparent_1px),linear-gradient(to_bottom,#ffffff15_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
@@ -174,7 +174,7 @@ export default function LuckyDrawPoster() {
               {/* CTA */}
               <Link
                 href={`/lucky-draw`}
-                className="inline-flex items-center justify-center gap-2 bg-white text-[#8C5D0D] px-8 py-4 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-gray-50 transition-all duration-300 shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:shadow-[0_15px_30px_rgba(0,0,0,0.15)] group hover:-translate-y-1"
+                className="inline-flex items-center justify-center gap-2 bg-white text-[#002B66] px-8 py-4 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-gray-50 transition-all duration-300 shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:shadow-[0_15px_30px_rgba(0,0,0,0.15)] group hover:-translate-y-1"
               >
                 Enter Now
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />

@@ -146,7 +146,7 @@ export default function NewArrivals() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
         {products.map((prod) => (
           <div key={prod.id} className="group flex flex-col">
-            <div className="relative aspect-[3/4] bg-[#F3F2EE] mb-4 overflow-hidden rounded-xl group/image">
+            <div className="relative aspect-[3/4] bg-[#E7F2FF] mb-4 overflow-hidden rounded-xl group/image">
               <Link href={`/product?id=${prod.id}`} className="block w-full h-full">
                 <div className="absolute top-3 left-3 bg-white px-2 py-1 text-[0.6rem] font-bold tracking-widest z-10 shadow-sm">NEW</div>
                 <Image 
@@ -159,14 +159,14 @@ export default function NewArrivals() {
               <div className="absolute bottom-3 right-3 flex flex-row gap-2 z-20">
                 <button 
                   onClick={(e) => handleAddToWishlist(e, prod)}
-                  className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#DF9F28] hover:text-white transition-colors text-gray-800"
+                  className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#0077FF] hover:text-white transition-colors text-gray-800"
                   aria-label="Add to wishlist"
                 >
                   <Heart className="w-4 h-4" />
                 </button>
                 <button 
                   onClick={(e) => handleAddToCart(e, prod)}
-                  className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#DF9F28] hover:text-white transition-colors text-gray-800"
+                  className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#0077FF] hover:text-white transition-colors text-gray-800"
                   aria-label="Add to cart"
                 >
                   <ShoppingBag className="w-4 h-4" />
@@ -175,12 +175,12 @@ export default function NewArrivals() {
             </div>
             <div className="flex flex-col gap-3 flex-1">
               <Link href={`/product?id=${prod.id}`} className="block">
-                <h4 className="text-sm text-gray-900 group-hover:text-[#DF9F28] transition-colors">{prod.name}</h4>
+                <h4 className="text-sm text-gray-900 group-hover:text-[#0077FF] transition-colors">{prod.name}</h4>
                 <p className="text-sm font-semibold text-gray-900 mt-1">₹ {prod.price.toLocaleString()}</p>
               </Link>
               <button 
                 onClick={(e) => handleBuyNow(e, prod)}
-                className="mt-auto flex items-center justify-center gap-2 w-full py-2.5 text-[0.65rem] font-bold tracking-[0.2em] uppercase border border-gray-200 text-gray-800 rounded-full hover:bg-[#DF9F28] hover:text-white hover:border-[#DF9F28] transition-all cursor-pointer shadow-sm hover:shadow-md"
+                className="mt-auto flex items-center justify-center gap-2 w-full py-2.5 text-[0.65rem] font-bold tracking-[0.2em] uppercase border border-gray-200 text-gray-800 rounded-full hover:bg-[#0077FF] hover:text-white hover:border-[#0077FF] transition-all cursor-pointer shadow-sm hover:shadow-md"
               >
                 Buy Now
               </button>

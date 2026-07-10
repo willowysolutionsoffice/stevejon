@@ -29,7 +29,7 @@ export default function WishlistPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans flex flex-col justify-between animate-fadeIn">
+    <div className="min-h-screen bg-[#F5FAFF] text-[#061B3A] font-sans flex flex-col justify-between animate-fadeIn">
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 pt-40 pb-24 flex-1 w-full">
@@ -53,7 +53,7 @@ export default function WishlistPage() {
         {wishlistItems.length === 0 ? (
           /* Empty State */
           <div className="text-center py-28 bg-white rounded-[8px] border border-gray-100 shadow-sm flex flex-col items-center justify-center my-8">
-            <div className="w-20 h-20 bg-[#F3F2EE] text-gray-400 rounded-full flex items-center justify-center mb-6">
+            <div className="w-20 h-20 bg-[#E7F2FF] text-gray-400 rounded-full flex items-center justify-center mb-6">
               <Heart className="w-8 h-8 stroke-[1.5]" />
             </div>
             <h2 className="text-2xl font-serif tracking-wide text-black mb-3">Your wishlist is currently empty</h2>
@@ -62,7 +62,7 @@ export default function WishlistPage() {
             </p>
             <Link
               href="/product"
-              className="bg-[#DF9F28] hover:bg-[#c58b20] text-white px-10 py-4 rounded-full text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-xl shadow-[#DF9F28]/20 hover:shadow-2xl hover:shadow-[#DF9F28]/30 cursor-pointer"
+              className="bg-[#0077FF] hover:bg-[#005ED1] text-white px-10 py-4 rounded-full text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-xl shadow-[#0077FF]/20 hover:shadow-2xl hover:shadow-[#0077FF]/30 cursor-pointer"
             >
               Discover Products
             </Link>
@@ -71,7 +71,7 @@ export default function WishlistPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {wishlistItems.map((item) => (
               <div key={item.id} className="group flex flex-col">
-                <div className="relative aspect-[3/4] bg-[#F3F2EE] mb-4 overflow-hidden rounded-[8px] group/image">
+                <div className="relative aspect-[3/4] bg-[#E7F2FF] mb-4 overflow-hidden rounded-[8px] group/image">
                   <Link href={`/product?id=${item.productId}`} className="block w-full h-full">
                     <Image 
                       src={item.image} 
@@ -92,12 +92,12 @@ export default function WishlistPage() {
                 </div>
                 <div className="flex flex-col gap-3 flex-1">
                   <Link href={`/product?id=${item.productId}`} className="block">
-                    <h4 className="text-sm text-gray-900 group-hover:text-[#DF9F28] transition-colors">{item.title}</h4>
+                    <h4 className="text-sm text-gray-900 group-hover:text-[#0077FF] transition-colors">{item.title}</h4>
                     <p className="text-sm font-semibold text-gray-900 mt-1">₹ {item.price}</p>
                   </Link>
                   <button 
                     onClick={() => handleMoveToCart(item)}
-                    className="mt-auto flex items-center justify-center gap-2 w-full py-2.5 text-[0.65rem] font-bold tracking-[0.2em] uppercase border border-gray-200 text-gray-800 rounded-full hover:bg-[#DF9F28] hover:text-white hover:border-[#DF9F28] transition-all cursor-pointer shadow-sm hover:shadow-md"
+                    className="mt-auto flex items-center justify-center gap-2 w-full py-2.5 text-[0.65rem] font-bold tracking-[0.2em] uppercase border border-gray-200 text-gray-800 rounded-full hover:bg-[#0077FF] hover:text-white hover:border-[#0077FF] transition-all cursor-pointer shadow-sm hover:shadow-md"
                   >
                     <ShoppingBag className="w-3.5 h-3.5" />
                     Move to Cart

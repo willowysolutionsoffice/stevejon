@@ -96,9 +96,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9F8F4] flex flex-col md:flex-row font-sans">
+    <div className="min-h-screen bg-[#F1F7FF] flex flex-col md:flex-row font-sans">
       {/* Left side - Image */}
-      <div className="hidden md:block md:w-1/2 relative bg-[#1A1A1A]">
+      <div className="hidden md:block md:w-1/2 relative bg-[#061B3A]">
         {/* Placeholder for a nice image */}
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-70 mix-blend-luminosity"></div>
         <div className="absolute inset-0 flex items-center justify-center">
@@ -112,17 +112,17 @@ export default function LoginPage() {
       <div className="w-full md:w-1/2 min-h-screen flex items-center justify-center p-8 md:p-24 relative">
         <Link
           href="/"
-          className="absolute top-8 right-8 text-xs font-bold tracking-[0.2em] text-[#666] hover:text-black transition-colors uppercase"
+          className="absolute top-8 right-8 text-xs font-bold tracking-[0.2em] text-[#607A9D] hover:text-black transition-colors uppercase"
         >
           Back to Home
         </Link>
 
         <div className="w-full max-w-md">
           <div className="mb-12">
-            <h2 className="text-3xl font-serif mb-4 text-[#1A1A1A]">
+            <h2 className="text-3xl font-serif mb-4 text-[#061B3A]">
               {isChangePassword ? "Change Password" : isForgotPassword ? "Reset Password" : isLogin ? "Welcome Back" : "Create Account"}
             </h2>
-            <p className="text-[#666] text-sm">
+            <p className="text-[#607A9D] text-sm">
               {isChangePassword
                 ? "Enter your email, old password and a new password to update your credentials."
                 : isForgotPassword
@@ -137,28 +137,28 @@ export default function LoginPage() {
             {!isLogin && !isForgotPassword && !isChangePassword && (
               <>
                 <div>
-                  <label className="block text-xs font-bold tracking-widest text-[#1A1A1A] mb-2 uppercase">
+                  <label className="block text-xs font-bold tracking-widest text-[#061B3A] mb-2 uppercase">
                     Full Name
                   </label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full border-b border-[#ccc] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
+                    className="w-full border-b border-[#BBD0EA] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
                     placeholder="John Doe"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold tracking-widest text-[#1A1A1A] mb-2 uppercase">
+                  <label className="block text-xs font-bold tracking-widest text-[#061B3A] mb-2 uppercase">
                     Phone Number
                   </label>
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full border-b border-[#ccc] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
+                    className="w-full border-b border-[#BBD0EA] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
                     placeholder="+1 (555) 000-0000"
                     required
                   />
@@ -167,14 +167,14 @@ export default function LoginPage() {
             )}
 
             <div>
-              <label className="block text-xs font-bold tracking-widest text-[#1A1A1A] mb-2 uppercase">
+              <label className="block text-xs font-bold tracking-widest text-[#061B3A] mb-2 uppercase">
                 Email Address
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full border-b border-[#ccc] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
+                className="w-full border-b border-[#BBD0EA] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
                 placeholder="you@example.com"
                 required
               />
@@ -182,14 +182,14 @@ export default function LoginPage() {
 
             {isChangePassword && (
               <div>
-                <label className="block text-xs font-bold tracking-widest text-[#1A1A1A] mb-2 uppercase">
+                <label className="block text-xs font-bold tracking-widest text-[#061B3A] mb-2 uppercase">
                   Old Password
                 </label>
                 <input
                   type="password"
                   value={oldPassword}
                   onChange={(e) => setOldPassword(e.target.value)}
-                  className="w-full border-b border-[#ccc] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
+                  className="w-full border-b border-[#BBD0EA] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
                   placeholder="••••••••"
                   required
                 />
@@ -198,7 +198,7 @@ export default function LoginPage() {
 
             <div>
               <div className="flex justify-between items-center mb-2">
-                <label className="block text-xs font-bold tracking-widest text-[#1A1A1A] uppercase">
+                <label className="block text-xs font-bold tracking-widest text-[#061B3A] uppercase">
                   {isForgotPassword || isChangePassword ? "New Password" : "Password"}
                 </label>
                 {isLogin && !isForgotPassword && !isChangePassword && (
@@ -206,14 +206,14 @@ export default function LoginPage() {
                     <button
                       type="button"
                       onClick={() => setIsChangePassword(true)}
-                      className="text-xs text-[#DF9F28] hover:text-black transition-colors"
+                      className="text-xs text-[#0077FF] hover:text-black transition-colors"
                     >
                       Change password?
                     </button>
                     <button
                       type="button"
                       onClick={() => setIsForgotPassword(true)}
-                      className="text-xs text-[#DF9F28] hover:text-black transition-colors"
+                      className="text-xs text-[#0077FF] hover:text-black transition-colors"
                     >
                       Forgot password?
                     </button>
@@ -224,7 +224,7 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full border-b border-[#ccc] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
+                className="w-full border-b border-[#BBD0EA] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
                 placeholder="••••••••"
                 required
               />
@@ -233,7 +233,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isExecuting}
-              className="w-full bg-[#1A1A1A] hover:bg-black text-white py-4 rounded-none text-xs font-bold tracking-[0.2em] uppercase transition-colors mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[#061B3A] hover:bg-black text-white py-4 rounded-none text-xs font-bold tracking-[0.2em] uppercase transition-colors mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isExecuting
                 ? "Processing..."
@@ -248,14 +248,14 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-12 text-center">
-            <p className="text-[#666] text-sm">
+            <p className="text-[#607A9D] text-sm">
               {isChangePassword || isForgotPassword ? (
                 <>
                   Remember your password?
                   <button
                     type="button"
                     onClick={() => { setIsForgotPassword(false); setIsChangePassword(false); setIsLogin(true); }}
-                    className="ml-2 font-bold text-[#1A1A1A] hover:text-[#DF9F28] transition-colors border-b border-[#1A1A1A] pb-0.5"
+                    className="ml-2 font-bold text-[#061B3A] hover:text-[#0077FF] transition-colors border-b border-[#061B3A] pb-0.5"
                   >
                     Sign In
                   </button>
@@ -266,7 +266,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setIsLogin(!isLogin)}
-                    className="ml-2 font-bold text-[#1A1A1A] hover:text-[#DF9F28] transition-colors border-b border-[#1A1A1A] pb-0.5"
+                    className="ml-2 font-bold text-[#061B3A] hover:text-[#0077FF] transition-colors border-b border-[#061B3A] pb-0.5"
                   >
                     {isLogin ? "Sign Up" : "Sign In"}
                   </button>

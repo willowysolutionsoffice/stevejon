@@ -4,18 +4,57 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Trash2, ArrowRight, ArrowLeft, ShoppingBag, ShieldCheck, Truck, RefreshCw, CheckCircle2, X, CreditCard, Smartphone, Check, AlertCircle } from 'lucide-react';
+import { Trash2, ArrowRight, ArrowLeft, ShoppingBag, ShieldCheck, Truck, RefreshCw, CheckCircle2, X, CreditCard, Check, AlertCircle } from 'lucide-react';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useCart } from '@/context/CartContext';
-import { useOrders } from '@/context/OrderContext';
 import { authClient } from '@/lib/auth-client';
 import { getApiUrl } from '@/lib/api';
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
+
+type PaymentMethod = 'COD' | 'RAZORPAY';
+
+type RazorpayPaymentResponse = {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+};
+
+type RazorpayPaymentDetails = {
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
+  razorpaySignature?: string;
+};
+
+const loadRazorpayScript = () => {
+  return new Promise<boolean>((resolve) => {
+    if (typeof window === 'undefined') {
+      resolve(false);
+      return;
+    }
+
+    if (window.Razorpay) {
+      resolve(true);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
 
 export default function CartPage() {
   const router = useRouter();
   const { items, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
-  const { createOrder } = useOrders();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [placedOrder, setPlacedOrder] = useState<any>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -127,10 +166,187 @@ export default function CartPage() {
     }
   }, [isCheckoutOpen, session, apiUrl]);
 
-  const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('COD');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+
+  const finalTotal = Math.max(totalPrice - (appliedCoupon?.discountAmount || 0), 0);
+
+  const getOrderItems = () =>
+    items.map(item => ({
+      id: item.id,
+      productId: item.productId,
+      variantId: item.variantId,
+      title: item.title,
+      category: item.category,
+      price: item.price,
+      image: item.image,
+      size: item.size,
+      color: item.color,
+      quantity: item.quantity,
+    }));
+
+  const createFinalOrder = async (
+    selectedPaymentMethod: PaymentMethod,
+    paymentDetails?: RazorpayPaymentDetails
+  ) => {
+    const response = await fetch(`${apiUrl}/orders`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        items: getOrderItems(),
+        shippingDetails: shippingForm,
+        paymentMethod: selectedPaymentMethod,
+        couponCode: appliedCoupon?.code,
+        ...paymentDetails,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'Failed to place order. Please try again.');
+    }
+
+    return result.data;
+  };
+
+  const placeCodOrder = async () => {
+    const newOrder = await createFinalOrder('COD');
+    setPlacedOrder(newOrder);
+    setIsCheckoutOpen(false);
+    clearCart();
+  };
+
+  const placeRazorpayOrder = async () => {
+    const scriptLoaded = await loadRazorpayScript();
+
+    if (!scriptLoaded) {
+      throw new Error('Razorpay SDK failed to load. Please check your internet connection.');
+    }
+
+    const orderItems = getOrderItems();
+
+    const createOrderResponse = await fetch(`${apiUrl}/payments/razorpay/create-order`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        // Keep amount for older backend route versions.
+        // Secure backend implementations should still recalculate from items.
+        amount: finalTotal,
+        couponCode: appliedCoupon?.code,
+        items: orderItems.map(item => ({
+          variantId: item.variantId,
+          quantity: item.quantity,
+        })),
+      }),
+    });
+
+    const createOrderText = await createOrderResponse.text();
+    let createOrderResult: any = {};
+
+    try {
+      createOrderResult = createOrderText ? JSON.parse(createOrderText) : {};
+    } catch {
+      createOrderResult = { error: createOrderText };
+    }
+
+    if (!createOrderResponse.ok || !createOrderResult.success) {
+      console.error('Razorpay create-order failed:', {
+        status: createOrderResponse.status,
+        response: createOrderResult,
+      });
+
+      throw new Error(
+        createOrderResult.error ||
+        createOrderResult.message ||
+        `Failed to create Razorpay order. Status: ${createOrderResponse.status}`
+      );
+    }
+
+    const razorpayOrder = createOrderResult.order;
+
+    return new Promise<void>((resolve, reject) => {
+      const razorpay = new window.Razorpay({
+        key: createOrderResult.keyId,
+        amount: razorpayOrder.amount,
+        currency: razorpayOrder.currency,
+        name: 'Stevejon',
+        description: 'Stevejon Order Payment',
+        order_id: razorpayOrder.id,
+        prefill: {
+          name: shippingForm.name,
+          contact: shippingForm.phone.replace(/\s/g, ''),
+          email: session?.user?.email || '',
+        },
+        notes: {
+          couponCode: appliedCoupon?.code || '',
+        },
+        theme: {
+          color: '#0077FF',
+        },
+        handler: async function (response: RazorpayPaymentResponse) {
+          try {
+            const verifyResponse = await fetch(`${apiUrl}/payments/razorpay/verify`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              credentials: 'include',
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+
+            const verifyResult = await verifyResponse.json();
+
+            if (!verifyResponse.ok || !verifyResult.success) {
+              throw new Error(verifyResult.error || 'Payment verification failed.');
+            }
+
+            const newOrder = await createFinalOrder('RAZORPAY', {
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+            });
+
+            setPlacedOrder(newOrder);
+            setIsCheckoutOpen(false);
+            clearCart();
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            resolve();
+          },
+        },
+      });
+
+      razorpay.on('payment.failed', function (response: any) {
+        reject(
+          new Error(
+            response?.error?.description ||
+            response?.error?.reason ||
+            'Payment failed. Please try again.'
+          )
+        );
+      });
+
+      razorpay.open();
+    });
+  };
 
   const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -138,26 +354,14 @@ export default function CartPage() {
     setCheckoutError(null);
 
     try {
-      const orderItems = items.map(item => ({
-        id: item.id,
-        productId: item.productId,
-        variantId: item.variantId,
-        title: item.title,
-        category: item.category,
-        price: item.price,
-        image: item.image,
-        size: item.size,
-        color: item.color,
-        quantity: item.quantity,
-      }));
-
-      const newOrder = await createOrder(orderItems, shippingForm, paymentMethod, appliedCoupon?.code);
-      setPlacedOrder(newOrder);
-      setIsCheckoutOpen(false);
-      clearCart();
+      if (paymentMethod === 'RAZORPAY') {
+        await placeRazorpayOrder();
+      } else {
+        await placeCodOrder();
+      }
     } catch (err: any) {
-      console.error("Failed to place order:", err);
-      setCheckoutError(err.message || "Failed to place order. Please try again.");
+      console.error('Failed to place order:', err);
+      setCheckoutError(err.message || 'Failed to place order. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -165,7 +369,7 @@ export default function CartPage() {
 
   if (placedOrder) {
     return (
-      <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans flex flex-col justify-between animate-fadeIn">
+      <div className="min-h-screen bg-[#F5FAFF] text-[#061B3A] font-sans flex flex-col justify-between animate-fadeIn">
         <Navbar />
         <div className="max-w-3xl mx-auto px-4 py-40 text-center flex-1 flex flex-col items-center justify-center animate-fadeIn">
           <div className="w-20 h-20 bg-green-50 text-green-600 rounded-full flex items-center justify-center mb-6 shadow-sm ring-8 ring-green-50/50">
@@ -189,7 +393,7 @@ export default function CartPage() {
             </Link>
             <Link
               href="/product"
-              className="bg-[#DF9F28] hover:bg-[#c58b20] text-white px-8 py-4 rounded-full text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-xl shadow-[#DF9F28]/20 hover:shadow-2xl hover:shadow-[#DF9F28]/30 cursor-pointer text-center flex-1 w-full"
+              className="bg-[#0077FF] hover:bg-[#005ED1] text-white px-8 py-4 rounded-full text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-xl shadow-[#0077FF]/20 hover:shadow-2xl hover:shadow-[#0077FF]/30 cursor-pointer text-center flex-1 w-full"
             >
               Continue Shopping
             </Link>
@@ -201,7 +405,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans flex flex-col justify-between animate-fadeIn">
+    <div className="min-h-screen bg-[#F5FAFF] text-[#061B3A] font-sans flex flex-col justify-between animate-fadeIn">
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 pt-40 pb-24 flex-1 w-full">
@@ -225,7 +429,7 @@ export default function CartPage() {
         {items.length === 0 ? (
           /* Empty State */
           <div className="text-center py-28 bg-white rounded-[8px] border border-gray-100 shadow-sm flex flex-col items-center justify-center my-8">
-            <div className="w-20 h-20 bg-[#F3F2EE] text-gray-400 rounded-full flex items-center justify-center mb-6">
+            <div className="w-20 h-20 bg-[#E7F2FF] text-gray-400 rounded-full flex items-center justify-center mb-6">
               <ShoppingBag className="w-8 h-8 stroke-[1.5]" />
             </div>
             <h2 className="text-2xl font-serif tracking-wide text-black mb-3">Your cart is currently empty</h2>
@@ -234,7 +438,7 @@ export default function CartPage() {
             </p>
             <Link
               href="/product"
-              className="bg-[#DF9F28] hover:bg-[#c58b20] text-white px-10 py-4 rounded-full text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-xl shadow-[#DF9F28]/20 hover:shadow-2xl hover:shadow-[#DF9F28]/30 cursor-pointer"
+              className="bg-[#0077FF] hover:bg-[#005ED1] text-white px-10 py-4 rounded-full text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-xl shadow-[#0077FF]/20 hover:shadow-2xl hover:shadow-[#0077FF]/30 cursor-pointer"
             >
               Explore Catalog
             </Link>
@@ -251,7 +455,7 @@ export default function CartPage() {
                   className="flex flex-col sm:flex-row items-center gap-6 bg-white p-6 rounded-[8px] border border-gray-100 shadow-sm relative group transition-all hover:shadow-md"
                 >
                   {/* Image */}
-                  <div className="relative aspect-[3/4] w-28 sm:w-32 rounded-[8px] overflow-hidden bg-[#F3F2EE] flex-shrink-0 border border-gray-100/50">
+                  <div className="relative aspect-[3/4] w-28 sm:w-32 rounded-[8px] overflow-hidden bg-[#E7F2FF] flex-shrink-0 border border-gray-100/50">
                     <Image
                       src={item.image}
                       alt={item.title}
@@ -265,7 +469,7 @@ export default function CartPage() {
                   <div className="flex-1 flex flex-col w-full text-left">
                     <div className="flex items-start justify-between gap-4 mb-1">
                       <div>
-                        <span className="text-[0.65rem] font-bold tracking-[0.2em] uppercase text-[#DF9F28]">
+                        <span className="text-[0.65rem] font-bold tracking-[0.2em] uppercase text-[#0077FF]">
                           {item.category}
                         </span>
                         <h3 className="text-lg font-serif tracking-wide text-black mt-0.5">
@@ -370,7 +574,7 @@ export default function CartPage() {
                       setIsCheckoutOpen(true);
                     }
                   }}
-                  className="w-full bg-[#DF9F28] hover:bg-[#c58b20] text-white py-5 rounded-full flex items-center justify-center gap-3 transition-all text-xs font-bold tracking-[0.2em] uppercase shadow-xl shadow-[#DF9F28]/20 hover:shadow-2xl hover:shadow-[#DF9F28]/30 cursor-pointer group mb-6"
+                  className="w-full bg-[#0077FF] hover:bg-[#005ED1] text-white py-5 rounded-full flex items-center justify-center gap-3 transition-all text-xs font-bold tracking-[0.2em] uppercase shadow-xl shadow-[#0077FF]/20 hover:shadow-2xl hover:shadow-[#0077FF]/30 cursor-pointer group mb-6"
                 >
                   Proceed to Checkout
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -382,17 +586,17 @@ export default function CartPage() {
               </div>
 
               {/* Guarantees */}
-              <div className="bg-[#F9F8F4] rounded-[8px] border border-gray-100 p-6 grid grid-cols-3 gap-4 text-center">
+              <div className="bg-[#F1F7FF] rounded-[8px] border border-gray-100 p-6 grid grid-cols-3 gap-4 text-center">
                 <div className="flex flex-col items-center gap-1.5">
-                  <Truck className="w-5 h-5 text-[#DF9F28]" />
+                  <Truck className="w-5 h-5 text-[#0077FF]" />
                   <span className="text-[0.65rem] font-bold tracking-wider uppercase text-black">Express</span>
                 </div>
                 <div className="flex flex-col items-center gap-1.5">
-                  <ShieldCheck className="w-5 h-5 text-[#DF9F28]" />
+                  <ShieldCheck className="w-5 h-5 text-[#0077FF]" />
                   <span className="text-[0.65rem] font-bold tracking-wider uppercase text-black">2-Yr Warranty</span>
                 </div>
                 <div className="flex flex-col items-center gap-1.5">
-                  <RefreshCw className="w-5 h-5 text-[#DF9F28]" />
+                  <RefreshCw className="w-5 h-5 text-[#0077FF]" />
                   <span className="text-[0.65rem] font-bold tracking-wider uppercase text-black">Easy Returns</span>
                 </div>
               </div>
@@ -406,7 +610,7 @@ export default function CartPage() {
       {/* Checkout Modal */}
       {isCheckoutOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-[#FDFCF8] w-full max-w-lg rounded-[8px] shadow-2xl overflow-hidden animate-scaleUp max-h-[90vh] flex flex-col border border-gray-100">
+          <div className="bg-[#F5FAFF] w-full max-w-lg rounded-[8px] shadow-2xl overflow-hidden animate-scaleUp max-h-[90vh] flex flex-col border border-gray-100">
             {/* Modal Header */}
             <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between bg-white">
               <div>
@@ -426,7 +630,7 @@ export default function CartPage() {
               {/* Saved Address Selector */}
               {session?.user && savedAddresses.length > 0 && (
                 <div className="bg-gray-50/50 p-5 rounded-3xl border border-gray-100 mb-2">
-                  <label className="block text-[0.65rem] font-bold tracking-widest uppercase text-[#DF9F28] mb-2 font-sans">Select Saved Address</label>
+                  <label className="block text-[0.65rem] font-bold tracking-widest uppercase text-[#0077FF] mb-2 font-sans">Select Saved Address</label>
                   <select
                     onChange={(e) => {
                       const selected = savedAddresses.find(a => a.id === e.target.value);
@@ -441,7 +645,7 @@ export default function CartPage() {
                         });
                       }
                     }}
-                    className="w-full bg-white border border-gray-200 rounded-full px-4 py-2.5 text-xs font-bold tracking-wider text-gray-700 focus:outline-none focus:border-[#DF9F28] cursor-pointer"
+                    className="w-full bg-white border border-gray-200 rounded-full px-4 py-2.5 text-xs font-bold tracking-wider text-gray-700 focus:outline-none focus:border-[#0077FF] cursor-pointer"
                   >
                     {savedAddresses.map(addr => (
                       <option key={addr.id} value={addr.id}>
@@ -453,8 +657,8 @@ export default function CartPage() {
               )}
 
               {/* Checkout Order Summary */}
-              <div className="bg-[#F9F8F4] p-5 rounded-[8px] border border-gray-100 space-y-4">
-                <label className="block text-[0.65rem] font-bold tracking-widest uppercase text-[#DF9F28] font-sans">
+              <div className="bg-[#F1F7FF] p-5 rounded-[8px] border border-gray-100 space-y-4">
+                <label className="block text-[0.65rem] font-bold tracking-widest uppercase text-[#0077FF] font-sans">
                   Order Summary
                 </label>
                 <div className="max-h-[160px] overflow-y-auto pr-1 space-y-3 scrollbar-thin">
@@ -490,7 +694,7 @@ export default function CartPage() {
                   )}
                   <div className="flex justify-between text-xs font-bold text-black uppercase tracking-wider mt-1 pt-2 border-t border-gray-100">
                     <span>Grand Total</span>
-                    <span className="font-sans">₹ {(totalPrice - (appliedCoupon?.discountAmount || 0)).toLocaleString()}</span>
+                    <span className="font-sans">₹ {finalTotal.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
@@ -507,7 +711,7 @@ export default function CartPage() {
                     value={couponInput}
                     onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
                     disabled={appliedCoupon !== null}
-                    className="flex-1 border border-gray-200 rounded-[8px] px-4 py-2.5 text-xs font-semibold tracking-wider bg-white focus:outline-none focus:border-[#DF9F28]"
+                    className="flex-1 border border-gray-200 rounded-[8px] px-4 py-2.5 text-xs font-semibold tracking-wider bg-white focus:outline-none focus:border-[#0077FF]"
                   />
                   {appliedCoupon ? (
                     <button
@@ -549,7 +753,7 @@ export default function CartPage() {
                     required
                     value={shippingForm.name}
                     onChange={(e) => setShippingForm({ ...shippingForm, name: e.target.value })}
-                    className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
+                    className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#0077FF] focus:ring-1 focus:ring-[#0077FF] transition-all bg-white"
                   />
                 </div>
                 <div>
@@ -559,7 +763,7 @@ export default function CartPage() {
                     required
                     value={shippingForm.phone}
                     onChange={(e) => setShippingForm({ ...shippingForm, phone: e.target.value })}
-                    className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
+                    className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#0077FF] focus:ring-1 focus:ring-[#0077FF] transition-all bg-white"
                   />
                 </div>
               </div>
@@ -573,7 +777,7 @@ export default function CartPage() {
                     required
                     value={shippingForm.street}
                     onChange={(e) => setShippingForm({ ...shippingForm, street: e.target.value })}
-                    className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
+                    className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#0077FF] focus:ring-1 focus:ring-[#0077FF] transition-all bg-white"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
@@ -584,7 +788,7 @@ export default function CartPage() {
                       required
                       value={shippingForm.city}
                       onChange={(e) => setShippingForm({ ...shippingForm, city: e.target.value })}
-                      className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
+                      className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#0077FF] focus:ring-1 focus:ring-[#0077FF] transition-all bg-white"
                     />
                   </div>
                   <div>
@@ -594,7 +798,7 @@ export default function CartPage() {
                       required
                       value={shippingForm.pincode}
                       onChange={(e) => setShippingForm({ ...shippingForm, pincode: e.target.value })}
-                      className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
+                      className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#0077FF] focus:ring-1 focus:ring-[#0077FF] transition-all bg-white"
                     />
                   </div>
                 </div>
@@ -605,22 +809,67 @@ export default function CartPage() {
                     required
                     value={shippingForm.state}
                     onChange={(e) => setShippingForm({ ...shippingForm, state: e.target.value })}
-                    className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-white"
+                    className="w-full border border-gray-200 rounded-[8px] px-4 py-3 text-sm focus:outline-none focus:border-[#0077FF] focus:ring-1 focus:ring-[#0077FF] transition-all bg-white"
                   />
                 </div>
               </div>
 
               {/* Payment Method */}
               <div>
-                <label className="block text-[0.65rem] font-bold tracking-widest uppercase text-gray-500 mb-2.5">Payment Method</label>
-                <div className="bg-[#FDF8EE] border border-[#DF9F28]/30 rounded-[8px] p-4 flex items-center gap-4">
-                  <div className="w-10 h-10 bg-[#DF9F28]/10 rounded-full flex items-center justify-center text-[#DF9F28] flex-shrink-0">
-                    <Truck className="w-5 h-5" />
-                  </div>
-                  <div className="text-left">
-                    <span className="text-xs font-bold text-black uppercase tracking-wider block">Cash on Delivery (COD)</span>
-                    <span className="text-[0.65rem] text-gray-400 uppercase tracking-widest font-semibold block mt-0.5">Pay in cash or UPI QR code upon delivery</span>
-                  </div>
+                <label className="block text-[0.65rem] font-bold tracking-widest uppercase text-gray-500 mb-2.5">
+                  Payment Method
+                </label>
+
+                <div className="grid grid-cols-1 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod('RAZORPAY')}
+                    className={`w-full border rounded-[8px] p-4 flex items-center gap-4 text-left transition-all cursor-pointer ${
+                      paymentMethod === 'RAZORPAY'
+                        ? 'bg-[#EAF4FF] border-[#0077FF]/60 ring-1 ring-[#0077FF]/30'
+                        : 'bg-white border-gray-200 hover:border-[#0077FF]/40'
+                    }`}
+                  >
+                    <div className="w-10 h-10 bg-[#0077FF]/10 rounded-full flex items-center justify-center text-[#0077FF] flex-shrink-0">
+                      <CreditCard className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <span className="text-xs font-bold text-black uppercase tracking-wider block">
+                        Online Payment
+                      </span>
+                      <span className="text-[0.65rem] text-gray-400 uppercase tracking-widest font-semibold block mt-0.5">
+                        Pay using UPI, card, netbanking or wallet
+                      </span>
+                    </div>
+                    {paymentMethod === 'RAZORPAY' && (
+                      <CheckCircle2 className="w-5 h-5 text-[#0077FF] flex-shrink-0" />
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod('COD')}
+                    className={`w-full border rounded-[8px] p-4 flex items-center gap-4 text-left transition-all cursor-pointer ${
+                      paymentMethod === 'COD'
+                        ? 'bg-[#EAF4FF] border-[#0077FF]/60 ring-1 ring-[#0077FF]/30'
+                        : 'bg-white border-gray-200 hover:border-[#0077FF]/40'
+                    }`}
+                  >
+                    <div className="w-10 h-10 bg-[#0077FF]/10 rounded-full flex items-center justify-center text-[#0077FF] flex-shrink-0">
+                      <Truck className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <span className="text-xs font-bold text-black uppercase tracking-wider block">
+                        Cash on Delivery (COD)
+                      </span>
+                      <span className="text-[0.65rem] text-gray-400 uppercase tracking-widest font-semibold block mt-0.5">
+                        Pay in cash or UPI QR code upon delivery
+                      </span>
+                    </div>
+                    {paymentMethod === 'COD' && (
+                      <CheckCircle2 className="w-5 h-5 text-[#0077FF] flex-shrink-0" />
+                    )}
+                  </button>
                 </div>
               </div>
 
@@ -636,9 +885,15 @@ export default function CartPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-[#DF9F28] hover:bg-[#c58b20] disabled:bg-gray-200 disabled:cursor-not-allowed text-white py-4 rounded-full flex items-center justify-center gap-3 transition-all text-xs font-bold tracking-[0.2em] uppercase shadow-xl shadow-[#DF9F28]/20 hover:shadow-2xl hover:shadow-[#DF9F28]/30 cursor-pointer"
+                  className="w-full bg-[#0077FF] hover:bg-[#005ED1] disabled:bg-gray-200 disabled:cursor-not-allowed text-white py-4 rounded-full flex items-center justify-center gap-3 transition-all text-xs font-bold tracking-[0.2em] uppercase shadow-xl shadow-[#0077FF]/20 hover:shadow-2xl hover:shadow-[#0077FF]/30 cursor-pointer"
                 >
-                  {isSubmitting ? 'Placing Order...' : `Place Order (₹ ${(totalPrice - (appliedCoupon?.discountAmount || 0)).toLocaleString()})`}
+                  {isSubmitting
+                    ? paymentMethod === 'RAZORPAY'
+                      ? 'Opening Payment...'
+                      : 'Placing Order...'
+                    : paymentMethod === 'RAZORPAY'
+                      ? `Pay Now (₹ ${finalTotal.toLocaleString()})`
+                      : `Place Order (₹ ${finalTotal.toLocaleString()})`}
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
@@ -650,7 +905,7 @@ export default function CartPage() {
       {/* Floating Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-black text-white px-6 py-4 rounded-full shadow-2xl z-[100] flex items-center gap-3 animate-fadeIn">
-          <div className="bg-[#DF9F28] rounded-full p-1">
+          <div className="bg-[#0077FF] rounded-full p-1">
             <Check className="w-3 h-3 text-white" />
           </div>
           <span className="text-xs font-semibold tracking-widest uppercase">

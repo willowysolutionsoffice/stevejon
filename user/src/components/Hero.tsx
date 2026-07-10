@@ -65,7 +65,7 @@ export default function Hero() {
   // Loading skeleton
   if (!loaded) {
     return (
-      <section className="relative h-[95vh] w-full bg-[#111] flex items-center justify-center">
+      <section className="relative h-[95vh] w-full bg-[#021631] flex items-center justify-center">
         <div className="w-12 h-12 border-2 border-white/20 border-t-white/80 rounded-full animate-spin" />
       </section>
     );
@@ -74,7 +74,7 @@ export default function Hero() {
   // Fallback — no banners configured
   if (slides.length === 0) {
     return (
-      <section className="relative h-[95vh] w-full overflow-hidden flex flex-col items-center justify-center text-white bg-[#111]">
+      <section className="relative h-[95vh] w-full overflow-hidden flex flex-col items-center justify-center text-white bg-[#021631]">
         <div className="text-center px-6">
           <h1 className="text-4xl md:text-6xl font-serif tracking-widest mb-4">STEVEJON</h1>
           <p className="text-white/60 text-sm tracking-widest uppercase">The New Standard of Refinement</p>
@@ -84,7 +84,7 @@ export default function Hero() {
   }
 
   return (
-    <section className="relative h-[95vh] w-full overflow-hidden flex flex-col items-center justify-center text-white bg-[#111]">
+    <section className="relative h-[95vh] w-full overflow-hidden flex flex-col items-center justify-center text-white bg-[#021631]">
 
       {/* ── Background slides – cross-fade + Ken Burns ── */}
       <div className="absolute inset-0 z-0">
@@ -183,7 +183,7 @@ export default function Hero() {
               onClick={() => goToSlide(idx)}
               className={`transition-all duration-500 rounded-full focus:outline-none cursor-pointer ${
                 idx === current
-                  ? 'w-8 h-1 bg-[#DF9F28]'
+                  ? 'w-8 h-1 bg-[#0077FF]'
                   : 'w-2 h-2 bg-white/30 hover:bg-white/60'
               }`}
               aria-label={`Go to slide ${idx + 1}`}
@@ -193,7 +193,7 @@ export default function Hero() {
       )}
 
       {/* ── Ambient bottom fade ── */}
-      <div className="absolute bottom-0 w-full h-24 bg-gradient-to-t from-[#FDFCF8] to-transparent z-20 pointer-events-none" />
+      <div className="absolute bottom-0 w-full h-24 bg-gradient-to-t from-[#F5FAFF] to-transparent z-20 pointer-events-none" />
     </section>
   );
 }

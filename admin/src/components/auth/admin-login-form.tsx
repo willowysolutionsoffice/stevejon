@@ -59,8 +59,21 @@ export function AdminLoginForm({
         setErrorMessage(error.message || "Login failed");
         toast.error(error.message || "Login failed");
       } else {
-        toast.success("Login successful");
-        router.replace("/");
+        const sessionResult = await authClient.getSession();
+const loggedInUser = sessionResult.data?.user as any;
+
+if (loggedInUser?.role !== "admin") {
+  await authClient.signOut();
+
+  setErrorMessage("Only admin users can access the admin panel");
+  toast.error("Only admin users can access the admin panel");
+  return;
+}
+
+toast.success("Login successful");
+
+router.replace("/dashboard"); // change to your admin dashboard route
+router.refresh();
       }
     } catch (error) {
       console.error("Login error:", error);

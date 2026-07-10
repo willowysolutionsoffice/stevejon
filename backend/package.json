@@ -23,6 +23,7 @@
     "morgan": "^1.10.1",
     "multer": "^2.1.1",
     "nodemailer": "^8.0.10",
+    "razorpay": "^2.9.6",
     "zod": "^4.4.3",
     "zod-form-data": "^3.0.1"
   },

@@ -80,18 +80,18 @@ export default function FAQPage() {
   }, [searchQuery, selectedCategory]);
 
   return (
-    <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans">
+    <div className="min-h-screen bg-[#F5FAFF] text-[#061B3A] font-sans">
       <Navbar />
 
       {/* Hero Header Section */}
-      <div className="relative pt-36 pb-20 bg-[#161616] text-white overflow-hidden">
+      <div className="relative pt-36 pb-20 bg-[#031B3F] text-white overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/85 z-10" />
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-luminosity scale-105" 
           style={{ backgroundImage: `url('/cat_leather_1778670351299.png')` }}
         />
         <div className="relative z-20 max-w-4xl mx-auto text-center px-6">
-          <span className="text-[10px] uppercase tracking-[0.3em] text-[#DF9F28] font-bold mb-4 block">
+          <span className="text-[10px] uppercase tracking-[0.3em] text-[#0077FF] font-bold mb-4 block">
             ASSISTANCE & INFORMATION
           </span>
           <h1 className="text-4xl md:text-6xl font-serif tracking-[0.1em] text-white mb-6">
@@ -114,7 +114,7 @@ export default function FAQPage() {
               placeholder="Search inquiries..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#F3F2EE] border-0 rounded-full pl-11 pr-5 py-3 text-sm focus:ring-1 focus:ring-[#DF9F28] focus:bg-white outline-none transition-all placeholder-gray-400"
+              className="w-full bg-[#E7F2FF] border-0 rounded-full pl-11 pr-5 py-3 text-sm focus:ring-1 focus:ring-[#0077FF] focus:bg-white outline-none transition-all placeholder-gray-400"
             />
           </div>
 
@@ -129,7 +129,7 @@ export default function FAQPage() {
                 }}
                 className={`whitespace-nowrap px-5 py-2 rounded-full text-xs font-semibold tracking-wider uppercase transition-all border ${
                   selectedCategory === category
-                    ? "bg-[#1A1A1A] border-[#1A1A1A] text-white"
+                    ? "bg-[#061B3A] border-[#061B3A] text-white"
                     : "bg-transparent border-gray-200 text-gray-500 hover:border-gray-900 hover:text-gray-900"
                 }`}
               >
@@ -143,7 +143,7 @@ export default function FAQPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Left: Quick Links & Help Desk */}
           <div className="space-y-6 lg:col-span-1">
-            <div className="bg-[#F3F2EE] rounded-2xl p-8 space-y-6">
+            <div className="bg-[#E7F2FF] rounded-2xl p-8 space-y-6">
               <h3 className="text-sm font-bold tracking-widest uppercase text-gray-900">
                 Atelier Assistance
               </h3>
@@ -153,7 +153,7 @@ export default function FAQPage() {
               
               <div className="space-y-4 pt-4 border-t border-gray-300/40">
                 <div className="flex items-center gap-3 text-xs text-gray-700">
-                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#DF9F28]">
+                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#0077FF]">
                     <Mail className="w-4 h-4" />
                   </div>
                   <div>
@@ -163,7 +163,7 @@ export default function FAQPage() {
                 </div>
 
                 <div className="flex items-center gap-3 text-xs text-gray-700">
-                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#DF9F28]">
+                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#0077FF]">
                     <Phone className="w-4 h-4" />
                   </div>
                   <div>
@@ -173,7 +173,7 @@ export default function FAQPage() {
                 </div>
 
                 <div className="flex items-center gap-3 text-xs text-gray-700">
-                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#DF9F28]">
+                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#0077FF]">
                     <MapPin className="w-4 h-4" />
                   </div>
                   <div>
@@ -185,12 +185,12 @@ export default function FAQPage() {
             </div>
 
             <div className="border border-gray-200/80 rounded-2xl p-8 text-center space-y-4">
-              <HelpCircle className="w-8 h-8 text-[#DF9F28] mx-auto" />
+              <HelpCircle className="w-8 h-8 text-[#0077FF] mx-auto" />
               <h4 className="text-xs font-bold tracking-widest uppercase">Need Fitting?</h4>
               <p className="text-xs text-gray-500 leading-relaxed font-light">
                 Schedule a personal digital custom fitting session with one of our stylists.
               </p>
-              <button className="w-full bg-[#1A1A1A] text-white hover:bg-[#333] transition-colors py-3 rounded-full text-[10px] font-bold tracking-widest uppercase">
+              <button className="w-full bg-[#061B3A] text-white hover:bg-[#0B2A55] transition-colors py-3 rounded-full text-[10px] font-bold tracking-widest uppercase">
                 Book Consultation
               </button>
             </div>
@@ -214,14 +214,14 @@ export default function FAQPage() {
                     >
                       <button
                         onClick={() => toggleAccordion(index)}
-                        className="w-full flex justify-between items-center text-left py-4 text-gray-900 hover:text-[#DF9F28] transition-colors focus:outline-none"
+                        className="w-full flex justify-between items-center text-left py-4 text-gray-900 hover:text-[#0077FF] transition-colors focus:outline-none"
                       >
                         <span className="text-sm font-semibold tracking-wide pr-6">
                           {faq.question}
                         </span>
                         <ChevronDown 
                           className={`w-4 h-4 text-gray-400 shrink-0 transition-transform duration-300 ${
-                            isOpen ? "rotate-180 text-[#DF9F28]" : ""
+                            isOpen ? "rotate-180 text-[#0077FF]" : ""
                           }`} 
                         />
                       </button>
@@ -247,7 +247,7 @@ export default function FAQPage() {
                   <p className="text-sm text-gray-400 font-light">No FAQs match your search query.</p>
                   <button 
                     onClick={() => { setSearchQuery(""); setSelectedCategory("All"); }}
-                    className="text-xs font-semibold text-[#DF9F28] underline underline-offset-4"
+                    className="text-xs font-semibold text-[#0077FF] underline underline-offset-4"
                   >
                     Clear Filters
                   </button>

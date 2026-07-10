@@ -3,7 +3,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { toNodeHandler } from 'better-auth/node';
-import { auth } from './lib/auth.js';
+import { webAuth, adminAuth } from "./lib/auth.js";
 import orderRoutes from './routes/orderRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import offerSlideRoutes from './routes/offerSlideRoutes.js';
@@ -23,6 +23,7 @@ import profileRoutes from './routes/profileRoutes.js';
 import couponRoutes from './routes/couponRoutes.js';
 import drawCampaignRoutes from './routes/drawCampaignRoutes.js';
 import logRoutes from './routes/logRoutes.js';
+import razorpayRoutes from "./routes/razorpayRoutes.js";
 
 dotenv.config();
 
@@ -53,11 +54,14 @@ app.use(cors({
     credentials: true
 }));
 app.use(morgan('dev'));
+
+
+// Better Auth handlers must be mounted before express.json()
+app.all("/api/auth-web/*splat", toNodeHandler(webAuth));
+app.all("/api/auth-admin/*splat", toNodeHandler(adminAuth));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Better-Auth handler
-app.use('/api/auth', toNodeHandler(auth));
 
 app.get('/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
@@ -83,7 +87,7 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/coupons', couponRoutes);
 app.use('/api/draws', drawCampaignRoutes);
 app.use('/api/logs', logRoutes);
-
+app.use("/api/payments/razorpay", razorpayRoutes);
 app.listen(PORT, () => {
     console.log(`🚀 Backend server running on http://localhost:${PORT}`);
 });

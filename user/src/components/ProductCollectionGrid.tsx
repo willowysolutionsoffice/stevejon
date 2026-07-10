@@ -67,7 +67,7 @@ export default function ProductCollectionGrid() {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-16">
         {products.map((prod) => (
           <Link href={`/product?id=${prod.id}`} key={prod.id} className="group cursor-pointer block">
-            <div className="relative aspect-square bg-[#F3F2EE] mb-4 overflow-hidden rounded-xl">
+            <div className="relative aspect-square bg-[#E7F2FF] mb-4 overflow-hidden rounded-xl">
               <Image 
                 src={prod.image} 
                 alt={prod.name} 
@@ -76,7 +76,7 @@ export default function ProductCollectionGrid() {
               />
             </div>
             <div className="flex flex-col gap-1 text-left pl-2">
-              <h4 className="text-sm text-gray-900 group-hover:text-[#DF9F28] transition-colors">{prod.name}</h4>
+              <h4 className="text-sm text-gray-900 group-hover:text-[#0077FF] transition-colors">{prod.name}</h4>
               <p className="text-sm font-semibold text-gray-950">₹ {prod.price.toLocaleString()}</p>
             </div>
           </Link>

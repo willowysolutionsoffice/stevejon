@@ -211,7 +211,7 @@ export default function Navbar() {
             aria-label="Wishlist"
           >
             <Heart className="w-5 h-5 stroke-[1.5]" />
-            <span className="absolute -top-1 -right-2 bg-[#DF9F28] text-white text-[0.55rem] font-bold w-4 h-4 rounded-full flex items-center justify-center font-sans shadow-sm">
+            <span className="absolute -top-1 -right-2 bg-[#0077FF] text-white text-[0.55rem] font-bold w-4 h-4 rounded-full flex items-center justify-center font-sans shadow-sm">
               {totalWishlistItems}
             </span>
           </Link>
@@ -221,7 +221,7 @@ export default function Navbar() {
             aria-label="Cart"
           >
             <ShoppingBag className="w-5 h-5 stroke-[1.5]" />
-            <span className="absolute -top-1 -right-2 bg-[#DF9F28] text-white text-[0.55rem] font-bold w-4 h-4 rounded-full flex items-center justify-center font-sans shadow-sm">
+            <span className="absolute -top-1 -right-2 bg-[#0077FF] text-white text-[0.55rem] font-bold w-4 h-4 rounded-full flex items-center justify-center font-sans shadow-sm">
               {totalItems}
             </span>
           </Link>
@@ -250,7 +250,7 @@ export default function Navbar() {
             aria-label="Wishlist"
           >
             <Heart className="w-4 h-4 stroke-[1.5]" />
-            <span className="absolute -top-1 -right-1.5 bg-[#DF9F28] text-white text-[0.55rem] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center font-sans">
+            <span className="absolute -top-1 -right-1.5 bg-[#0077FF] text-white text-[0.55rem] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center font-sans">
               {totalWishlistItems}
             </span>
           </Link>
@@ -260,7 +260,7 @@ export default function Navbar() {
             aria-label="Cart"
           >
             <ShoppingBag className="w-4 h-4 stroke-[1.5]" />
-            <span className="absolute -top-1 -right-1.5 bg-[#DF9F28] text-white text-[0.55rem] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center font-sans">
+            <span className="absolute -top-1 -right-1.5 bg-[#0077FF] text-white text-[0.55rem] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center font-sans">
               {totalItems}
             </span>
           </Link>
@@ -269,7 +269,7 @@ export default function Navbar() {
 
       {/* Mobile Drawer Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 bg-[#1A1A1A]/98 backdrop-blur-md z-[100] flex flex-col justify-center items-center gap-8 text-white select-none transition-all duration-350 ease-in-out">
+        <div className="fixed inset-0 bg-[#061B3A]/98 backdrop-blur-md z-[100] flex flex-col justify-center items-center gap-8 text-white select-none transition-all duration-350 ease-in-out">
           {/* Close Button */}
           <button
             onClick={toggleMenu}
@@ -288,28 +288,28 @@ export default function Navbar() {
           <Link
             href="/"
             onClick={toggleMenu}
-            className="text-lg tracking-[0.2em] font-light hover:text-[#DF9F28] transition-colors"
+            className="text-lg tracking-[0.2em] font-light hover:text-[#0077FF] transition-colors"
           >
             HOME
           </Link>
           <Link
             href="/product"
             onClick={toggleMenu}
-            className="text-lg tracking-[0.2em] font-light hover:text-[#DF9F28] transition-colors"
+            className="text-lg tracking-[0.2em] font-light hover:text-[#0077FF] transition-colors"
           >
             PRODUCT
           </Link>
           <Link
             href="/collections"
             onClick={toggleMenu}
-            className="text-lg tracking-[0.2em] font-light hover:text-[#DF9F28] transition-colors"
+            className="text-lg tracking-[0.2em] font-light hover:text-[#0077FF] transition-colors"
           >
             COLLECTIONS
           </Link>
           <Link
             href="/about"
             onClick={toggleMenu}
-            className="text-lg tracking-[0.2em] font-light hover:text-[#DF9F28] transition-colors"
+            className="text-lg tracking-[0.2em] font-light hover:text-[#0077FF] transition-colors"
           >
             ABOUT
           </Link>
@@ -364,7 +364,7 @@ export default function Navbar() {
           <Link
             href="/cart"
             onClick={toggleMenu}
-            className="text-xs tracking-[0.15em] font-medium text-[#DF9F28] hover:text-[#DF9F28]/80 transition-colors"
+            className="text-xs tracking-[0.15em] font-medium text-[#0077FF] hover:text-[#0077FF]/80 transition-colors"
           >
             CART ({totalItems})
           </Link>
@@ -394,12 +394,12 @@ export default function Navbar() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="What are you looking for?"
-                className="w-full border-b-2 border-black bg-transparent text-2xl md:text-5xl font-light text-black placeholder-gray-400 py-4 md:py-6 pr-16 focus:outline-none focus:border-[#DF9F28] transition-colors"
+                className="w-full border-b-2 border-black bg-transparent text-2xl md:text-5xl font-light text-black placeholder-gray-400 py-4 md:py-6 pr-16 focus:outline-none focus:border-[#0077FF] transition-colors"
                 autoFocus
               />
               <button
                 type="submit"
-                className="absolute right-0 bottom-6 md:bottom-8 text-black hover:text-[#DF9F28] transition-colors"
+                className="absolute right-0 bottom-6 md:bottom-8 text-black hover:text-[#0077FF] transition-colors"
               >
                 <Search className="w-8 h-8 md:w-10 md:h-10 stroke-[1]" />
               </button>

@@ -9,7 +9,7 @@ export default function PromoSection() {
   return (
     <section className="py-12 px-4 md:px-8 max-w-7xl mx-auto">
       {/* Upper Banner: Shop and Win */}
-      <div className="relative rounded-[2.5rem] overflow-hidden bg-gradient-to-r from-[#1A1A1A] via-[#2D2D2D] to-[#FDFCF8] p-8 md:p-14 min-h-[460px] flex flex-col md:flex-row items-center border border-gray-100/50 shadow-[0_20px_50px_rgba(0,0,0,0.02)]">
+      <div className="relative rounded-[2.5rem] overflow-hidden bg-gradient-to-r from-[#061B3A] via-[#2D2D2D] to-[#F5FAFF] p-8 md:p-14 min-h-[460px] flex flex-col md:flex-row items-center border border-gray-100/50 shadow-[0_20px_50px_rgba(0,0,0,0.02)]">
         
         {/* Decorative background grid pattern for luxury feel */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
@@ -19,7 +19,7 @@ export default function PromoSection() {
           <span className="text-[0.65rem] tracking-[0.25em] text-white/50 uppercase font-sans mb-1">
             Section
           </span>
-          <span className="text-xs tracking-[0.2em] font-serif text-[#DF9F28] uppercase mb-6">
+          <span className="text-xs tracking-[0.2em] font-serif text-[#0077FF] uppercase mb-6">
             About Us
           </span>
           <h2 className="text-4xl md:text-[3.2rem] font-serif uppercase tracking-[0.05em] leading-[1.1] mb-6">
@@ -50,7 +50,7 @@ export default function PromoSection() {
           </div>
 
           {/* Floating Item 1: Duffle Bag (Center floating, high shadow) */}
-          <div className="absolute left-[10%] sm:left-[15%] top-[10%] w-[120px] h-[120px] sm:w-[160px] sm:h-[160px] rounded-2xl overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.15)] border border-white/5 bg-[#F3F2EE] z-20 transition-transform duration-500 hover:scale-105">
+          <div className="absolute left-[10%] sm:left-[15%] top-[10%] w-[120px] h-[120px] sm:w-[160px] sm:h-[160px] rounded-2xl overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.15)] border border-white/5 bg-[#E7F2FF] z-20 transition-transform duration-500 hover:scale-105">
             <Image
               src="/cat_leather_1778670351299.png"
               alt="Stevejon Duffle Bag"
@@ -60,7 +60,7 @@ export default function PromoSection() {
           </div>
 
           {/* Floating Item 2: Overshirt (Layered behind Duffle) */}
-          <div className="absolute left-[34%] sm:left-[38%] bottom-[5%] w-[100px] h-[120px] sm:w-[130px] sm:h-[160px] rounded-2xl overflow-hidden shadow-[0_15px_30px_rgba(0,0,0,0.12)] border border-white/5 bg-[#F3F2EE] z-10 transition-transform duration-500 hover:scale-105">
+          <div className="absolute left-[34%] sm:left-[38%] bottom-[5%] w-[100px] h-[120px] sm:w-[130px] sm:h-[160px] rounded-2xl overflow-hidden shadow-[0_15px_30px_rgba(0,0,0,0.12)] border border-white/5 bg-[#E7F2FF] z-10 transition-transform duration-500 hover:scale-105">
             <Image
               src="/prod_overshirt_1778670536589.png"
               alt="Stevejon Overshirt"
@@ -70,7 +70,7 @@ export default function PromoSection() {
           </div>
 
           {/* Floating Item 3: Accessories (At the bottom, high shadow) */}
-          <div className="absolute left-[0%] sm:left-[5%] bottom-[12%] w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] rounded-2xl overflow-hidden shadow-[0_15px_25px_rgba(0,0,0,0.15)] border border-white/5 bg-[#F3F2EE] z-30 transition-transform duration-500 hover:scale-105">
+          <div className="absolute left-[0%] sm:left-[5%] bottom-[12%] w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] rounded-2xl overflow-hidden shadow-[0_15px_25px_rgba(0,0,0,0.15)] border border-white/5 bg-[#E7F2FF] z-30 transition-transform duration-500 hover:scale-105">
             <Image
               src="/cat_accessories_1778670517925.png"
               alt="Stevejon Fragrance & Accessories"
@@ -85,7 +85,7 @@ export default function PromoSection() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-10 border-b border-gray-100 mt-12">
         {/* Feature 1: Free Shipping */}
         <div className="flex items-center gap-4 justify-center md:justify-start">
-          <div className="p-3.5 bg-[#F3F2EE] rounded-full text-black shadow-sm">
+          <div className="p-3.5 bg-[#E7F2FF] rounded-full text-black shadow-sm">
             <Truck className="w-5 h-5 stroke-[1.5]" />
           </div>
           <div>
@@ -100,7 +100,7 @@ export default function PromoSection() {
 
         {/* Feature 2: 24x7 Support */}
         <div className="flex items-center gap-4 justify-center">
-          <div className="p-3.5 bg-[#F3F2EE] rounded-full text-black shadow-sm">
+          <div className="p-3.5 bg-[#E7F2FF] rounded-full text-black shadow-sm">
             <Headphones className="w-5 h-5 stroke-[1.5]" />
           </div>
           <div>
@@ -115,7 +115,7 @@ export default function PromoSection() {
 
         {/* Feature 3: COD Available */}
         <div className="flex items-center gap-4 justify-center md:justify-end">
-          <div className="p-3.5 bg-[#F3F2EE] rounded-full text-black shadow-sm">
+          <div className="p-3.5 bg-[#E7F2FF] rounded-full text-black shadow-sm">
             <CreditCard className="w-5 h-5 stroke-[1.5]" />
           </div>
           <div>

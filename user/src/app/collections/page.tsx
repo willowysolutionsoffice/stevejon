@@ -39,7 +39,7 @@ export default function CollectionsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans">
+    <div className="min-h-screen bg-[#F5FAFF] text-[#061B3A] font-sans">
       <Navbar />
       
       <div className="max-w-7xl mx-auto px-4 md:px-8 pt-40 pb-20">
@@ -61,7 +61,7 @@ export default function CollectionsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-16">
             {categories.map((cat) => (
               <Link href={`/product?category=${encodeURIComponent(cat.name)}`} key={cat.id} className="group cursor-pointer block">
-                <div className="relative aspect-[3/4] bg-[#F3F2EE] mb-4 overflow-hidden rounded-2xl">
+                <div className="relative aspect-[3/4] bg-[#E7F2FF] mb-4 overflow-hidden rounded-2xl">
                   <Image 
                     src={cat.image} 
                     alt={cat.name} 

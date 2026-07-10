@@ -13,12 +13,12 @@ export default function MovingNewsBar() {
     " STEVEJON ATELIER: BESPOKE PERSONALIZED TAILORING AVAILABLE NOW",
   ];
   return (
-    <div className="w-full bg-[#111] text-white/90 py-3.5 text-[9px] md:text-[10px] tracking-[0.2em] font-sans font-medium uppercase overflow-hidden border-y border-white/10 flex select-none relative z-30">
+    <div className="w-full bg-[#021631] text-white/90 py-3.5 text-[9px] md:text-[10px] tracking-[0.2em] font-sans font-medium uppercase overflow-hidden border-y border-white/10 flex select-none relative z-30">
       <div className="flex min-w-full shrink-0 items-center justify-around gap-16 animate-marquee">
         {offers.map((offer, i) => (
           <React.Fragment key={`orig-${i}`}>
             <span>{offer}</span>
-            <span className="text-[#DF9F28]">·</span>
+            <span className="text-[#0077FF]">·</span>
           </React.Fragment>
         ))}
       </div>
@@ -29,7 +29,7 @@ export default function MovingNewsBar() {
         {offers.map((offer, i) => (
           <React.Fragment key={`dup-${i}`}>
             <span>{offer}</span>
-            <span className="text-[#DF9F28]">·</span>
+            <span className="text-[#0077FF]">·</span>
           </React.Fragment>
         ))}
       </div>

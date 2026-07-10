@@ -1,11 +1,38 @@
 @import "tailwindcss";
 
+:root {
+  /* Steve Jon Solutions LLP blue technology theme, extracted from launch poster */
+  --sj-bg: #F5FAFF;
+  --sj-bg-alt: #F1F7FF;
+  --sj-surface: #FFFFFF;
+  --sj-surface-blue: #E7F2FF;
+  --sj-ink: #061B3A;
+  --sj-muted: #607A9D;
+  --sj-navy: #002B66;
+  --sj-deep: #021631;
+  --sj-primary: #0077FF;
+  --sj-primary-dark: #005ED1;
+  --sj-cyan: #35D8FF;
+  --sj-line: #D7E6F8;
+}
+
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-serif: var(--font-playfair);
-  
+
+  --color-sj-bg: var(--sj-bg);
+  --color-sj-bg-alt: var(--sj-bg-alt);
+  --color-sj-surface-blue: var(--sj-surface-blue);
+  --color-sj-ink: var(--sj-ink);
+  --color-sj-muted: var(--sj-muted);
+  --color-sj-navy: var(--sj-navy);
+  --color-sj-deep: var(--sj-deep);
+  --color-sj-primary: var(--sj-primary);
+  --color-sj-primary-dark: var(--sj-primary-dark);
+  --color-sj-cyan: var(--sj-cyan);
+
   --animate-marquee: marquee 25s linear infinite;
-  
+
   @keyframes marquee {
     from {
       transform: translateX(0%);
@@ -16,6 +43,29 @@
   }
 }
 
+html {
+  background: var(--sj-bg);
+}
+
 body {
   font-family: var(--font-sans);
+  color: var(--sj-ink);
+  background:
+    radial-gradient(circle at top right, rgba(53, 216, 255, 0.14), transparent 32rem),
+    radial-gradient(circle at top left, rgba(0, 119, 255, 0.10), transparent 28rem),
+    linear-gradient(180deg, #ffffff 0%, var(--sj-bg) 42%, #EAF4FF 100%);
+}
+
+::selection {
+  background: var(--sj-primary);
+  color: #fff;
+}
+
+/* Reusable poster-inspired blue glow accents */
+.sj-blue-glow {
+  box-shadow: 0 18px 50px rgba(0, 119, 255, 0.18), 0 0 30px rgba(53, 216, 255, 0.12);
+}
+
+.sj-tech-gradient {
+  background: linear-gradient(135deg, var(--sj-deep), var(--sj-navy) 42%, var(--sj-primary));
 }

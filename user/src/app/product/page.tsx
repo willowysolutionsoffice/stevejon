@@ -612,7 +612,7 @@ function ProductPageContent() {
     };
 
     return (
-      <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans animate-fadeIn">
+      <div className="min-h-screen bg-[#F5FAFF] text-[#061B3A] font-sans animate-fadeIn">
         <Navbar />
 
         <div className="max-w-7xl mx-auto px-4 md:px-8 pt-40 pb-24">
@@ -630,7 +630,7 @@ function ProductPageContent() {
             
             {/* Left: Image Gallery (6 cols) */}
             <div className="lg:col-span-6 flex flex-col gap-6 lg:sticky lg:top-32">
-              <div className="relative aspect-[4/5] rounded-[2.5rem] bg-[#F3F2EE] border border-gray-100 overflow-hidden shadow-sm group">
+              <div className="relative aspect-[4/5] rounded-[2.5rem] bg-[#E7F2FF] border border-gray-100 overflow-hidden shadow-sm group">
                 <Image
                   src={displayImage}
                   alt={selectedProduct.title}
@@ -639,7 +639,7 @@ function ProductPageContent() {
                   className="object-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-105 p-8 md:p-12"
                   priority
                 />
-                <div className="absolute top-6 left-6 bg-[#DF9F28] text-white text-[0.65rem] font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full shadow-md">
+                <div className="absolute top-6 left-6 bg-[#0077FF] text-white text-[0.65rem] font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full shadow-md">
                   Stevejon Exclusive
                 </div>
               </div>
@@ -652,7 +652,7 @@ function ProductPageContent() {
                     <div 
                       key={idx} 
                       onClick={() => setActiveImage(img)}
-                      className={`relative aspect-square rounded-2xl bg-[#F3F2EE] border-2 overflow-hidden cursor-pointer transition-all hover:opacity-100 ${isSelected ? 'border-[#DF9F28] opacity-100 shadow-sm' : 'border-transparent opacity-60'}`}
+                      className={`relative aspect-square rounded-2xl bg-[#E7F2FF] border-2 overflow-hidden cursor-pointer transition-all hover:opacity-100 ${isSelected ? 'border-[#0077FF] opacity-100 shadow-sm' : 'border-transparent opacity-60'}`}
                     >
                       <Image src={img} alt="" fill className="object-cover mix-blend-multiply p-4" />
                     </div>
@@ -666,7 +666,7 @@ function ProductPageContent() {
               
               {/* Category & Rating */}
               <div className="flex items-center justify-between gap-4 mb-3">
-                <span className="text-xs font-bold tracking-[0.25em] uppercase text-[#DF9F28]">
+                <span className="text-xs font-bold tracking-[0.25em] uppercase text-[#0077FF]">
                   {selectedProduct.category}
                 </span>
                 <div className="flex items-center gap-1.5 bg-gray-100/80 px-3 py-1 rounded-full">
@@ -729,7 +729,7 @@ function ProductPageContent() {
                       <button
                         key={colorName}
                         onClick={() => setSelectedColor(colorName)}
-                        className={`w-9 h-9 rounded-full ${getColorBg(colorName)} border-2 transition-all cursor-pointer flex items-center justify-center ${selectedColor === colorName ? 'border-[#DF9F28] scale-110 shadow-md ring-2 ring-[#DF9F28]/20' : 'border-gray-200 hover:scale-105'}`}
+                        className={`w-9 h-9 rounded-full ${getColorBg(colorName)} border-2 transition-all cursor-pointer flex items-center justify-center ${selectedColor === colorName ? 'border-[#0077FF] scale-110 shadow-md ring-2 ring-[#0077FF]/20' : 'border-gray-200 hover:scale-105'}`}
                         title={colorName}
                       >
                         {selectedColor === colorName && <Check className={`w-4 h-4 ${colorName.toLowerCase() === 'white' ? 'text-black' : 'text-white'}`} />}
@@ -751,7 +751,7 @@ function ProductPageContent() {
                       <button 
                         key={size}
                         onClick={() => setSelectedSize(size)}
-                        className={`w-12 h-12 rounded-xl border text-xs font-bold tracking-wider transition-all cursor-pointer flex items-center justify-center ${selectedSize === size ? 'border-[#DF9F28] bg-[#DF9F28] text-white shadow-lg shadow-[#DF9F28]/20' : 'border-gray-200 bg-white text-gray-800 hover:border-gray-400'}`}
+                        className={`w-12 h-12 rounded-xl border text-xs font-bold tracking-wider transition-all cursor-pointer flex items-center justify-center ${selectedSize === size ? 'border-[#0077FF] bg-[#0077FF] text-white shadow-lg shadow-[#0077FF]/20' : 'border-gray-200 bg-white text-gray-800 hover:border-gray-400'}`}
                       >
                         {size}
                       </button>
@@ -790,7 +790,7 @@ function ProductPageContent() {
                 <button 
                   onClick={handleAddToCart} 
                   disabled={currentVariant && currentVariant.qty === 0}
-                  className="flex-1 bg-[#DF9F28] hover:bg-[#c58b20] disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none text-white px-8 py-4 rounded-full flex items-center justify-center gap-3 transition-all text-xs font-bold tracking-[0.2em] uppercase shadow-xl shadow-[#DF9F28]/20 hover:shadow-2xl hover:shadow-[#DF9F28]/30 cursor-pointer group"
+                  className="flex-1 bg-[#0077FF] hover:bg-[#005ED1] disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none text-white px-8 py-4 rounded-full flex items-center justify-center gap-3 transition-all text-xs font-bold tracking-[0.2em] uppercase shadow-xl shadow-[#0077FF]/20 hover:shadow-2xl hover:shadow-[#0077FF]/30 cursor-pointer group"
                 >
                   <ShoppingBag className="w-4 h-4 transition-transform group-hover:scale-110" />
                   {currentVariant && currentVariant.qty === 0 ? 'Out of Stock' : 'Add To Cart'}
@@ -809,17 +809,17 @@ function ProductPageContent() {
               {/* Premium Guarantees Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 py-8 border-t border-b border-gray-100 mb-12 bg-gray-50/50 rounded-3xl p-6">
                 <div className="flex flex-col items-center text-center gap-2">
-                  <Truck className="w-6 h-6 text-[#DF9F28]" />
+                  <Truck className="w-6 h-6 text-[#0077FF]" />
                   <h4 className="text-xs font-bold tracking-wider uppercase text-black">Express Delivery</h4>
                   <p className="text-[0.7rem] text-gray-500 leading-relaxed">Complimentary insured shipping worldwide.</p>
                 </div>
                 <div className="flex flex-col items-center text-center gap-2">
-                  <ShieldCheck className="w-6 h-6 text-[#DF9F28]" />
+                  <ShieldCheck className="w-6 h-6 text-[#0077FF]" />
                   <h4 className="text-xs font-bold tracking-wider uppercase text-black">2-Year Warranty</h4>
                   <p className="text-[0.7rem] text-gray-500 leading-relaxed">Official Stevejon atelier guarantee.</p>
                 </div>
                 <div className="flex flex-col items-center text-center gap-2">
-                  <RefreshCw className="w-6 h-6 text-[#DF9F28]" />
+                  <RefreshCw className="w-6 h-6 text-[#0077FF]" />
                   <h4 className="text-xs font-bold tracking-wider uppercase text-black">Easy Exchanges</h4>
                   <p className="text-[0.7rem] text-gray-500 leading-relaxed">30-day seamless return policy.</p>
                 </div>
@@ -836,7 +836,7 @@ function ProductPageContent() {
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`flex-1 py-4 text-xs font-bold tracking-[0.15em] uppercase transition-colors cursor-pointer border-b-2 ${activeTab === tab.id ? 'border-[#DF9F28] text-black bg-white' : 'border-transparent text-gray-400 hover:text-gray-600'}`}
+                      className={`flex-1 py-4 text-xs font-bold tracking-[0.15em] uppercase transition-colors cursor-pointer border-b-2 ${activeTab === tab.id ? 'border-[#0077FF] text-black bg-white' : 'border-transparent text-gray-400 hover:text-gray-600'}`}
                     >
                       {tab.label}
                     </button>
@@ -984,7 +984,7 @@ function ProductPageContent() {
           <div className="mt-32 pt-16 border-t border-gray-100">
             <div className="text-center mb-16">
               <h2 className="text-2xl md:text-3xl font-serif tracking-widest uppercase text-black mb-4">You May Also Like</h2>
-              <div className="w-16 h-[1px] bg-[#DF9F28] mx-auto"></div>
+              <div className="w-16 h-[1px] bg-[#0077FF] mx-auto"></div>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -997,7 +997,7 @@ function ProductPageContent() {
                   }}
                   className="group cursor-pointer bg-white rounded-2xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition-all"
                 >
-                  <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-[#F3F2EE] mb-4">
+                  <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-[#E7F2FF] mb-4">
                     <Image
                       src={prod.image}
                       alt={prod.title}
@@ -1007,8 +1007,8 @@ function ProductPageContent() {
                     />
                   </div>
                   <div className="text-center">
-                    <span className="text-[0.6rem] tracking-[0.2em] uppercase font-bold text-[#DF9F28]">{prod.category}</span>
-                    <h3 className="text-sm font-semibold tracking-wide text-gray-900 mt-1 group-hover:text-[#DF9F28] transition-colors">{prod.title}</h3>
+                    <span className="text-[0.6rem] tracking-[0.2em] uppercase font-bold text-[#0077FF]">{prod.category}</span>
+                    <h3 className="text-sm font-semibold tracking-wide text-gray-900 mt-1 group-hover:text-[#0077FF] transition-colors">{prod.title}</h3>
                     <div className="flex items-center justify-center gap-2 mt-2">
                       <span className="text-sm font-bold text-black">₹ {prod.price}</span>
                       <span className="text-[0.7rem] line-through text-gray-400">₹ {prod.originalPrice}</span>
@@ -1027,7 +1027,7 @@ function ProductPageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans">
+    <div className="min-h-screen bg-[#F5FAFF] text-[#061B3A] font-sans">
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 pt-40 pb-24">
@@ -1056,7 +1056,7 @@ function ProductPageContent() {
                         onChange={() => {
                           setSelectedCategoryId(prev => prev === cat.id ? null : cat.id);
                         }}
-                        className="w-4 h-4 rounded border-gray-200 text-[#DF9F28] focus:ring-[#DF9F28] accent-[#DF9F28]"
+                        className="w-4 h-4 rounded border-gray-200 text-[#0077FF] focus:ring-[#0077FF] accent-[#0077FF]"
                       />
                       <span className="group-hover:text-black transition-colors">{cat.name}</span>
                     </label>
@@ -1086,7 +1086,7 @@ function ProductPageContent() {
                               : [...prev, priceRange.key]
                           );
                         }}
-                        className="w-4 h-4 rounded border-gray-200 text-[#DF9F28] focus:ring-[#DF9F28] accent-[#DF9F28]"
+                        className="w-4 h-4 rounded border-gray-200 text-[#0077FF] focus:ring-[#0077FF] accent-[#0077FF]"
                       />
                       <span className="group-hover:text-black transition-colors">{priceRange.label}</span>
                     </label>
@@ -1096,14 +1096,14 @@ function ProductPageContent() {
             </div>
 
             {/* Flash Sales Gold Widget */}
-            <div className="relative rounded-[2.2rem] p-8 text-center bg-gradient-to-br from-[#FDF8EE] to-[#F5EAD4] border border-[#DF9F28]/15 shadow-sm overflow-hidden flex flex-col items-center">
+            <div className="relative rounded-[2.2rem] p-8 text-center bg-gradient-to-br from-[#EAF4FF] to-[#DCEEFF] border border-[#0077FF]/15 shadow-sm overflow-hidden flex flex-col items-center">
               
               {/* Floating gold lightning icon in corner */}
-              <div className="absolute -top-3 -left-3 text-[#DF9F28]/20 z-0">
+              <div className="absolute -top-3 -left-3 text-[#0077FF]/20 z-0">
                 <Zap className="w-20 h-20 fill-current" />
               </div>
 
-              <div className="bg-[#DF9F28]/10 text-[#DF9F28] p-3 rounded-full mb-6 z-10">
+              <div className="bg-[#0077FF]/10 text-[#0077FF] p-3 rounded-full mb-6 z-10">
                 <Zap className="w-6 h-6 fill-current" />
               </div>
 
@@ -1115,7 +1115,7 @@ function ProductPageContent() {
                 Check out the latest offer products and win attractive prizes!
               </p>
 
-              <button className="bg-[#DF9F28] hover:bg-[#c58b20] text-white px-8 py-3 rounded-full inline-flex items-center gap-1.5 transition-all text-xs font-semibold tracking-[0.15em] uppercase hover:shadow-lg hover:shadow-yellow-600/10 group cursor-pointer z-10">
+              <button className="bg-[#0077FF] hover:bg-[#005ED1] text-white px-8 py-3 rounded-full inline-flex items-center gap-1.5 transition-all text-xs font-semibold tracking-[0.15em] uppercase hover:shadow-lg hover:shadow-yellow-600/10 group cursor-pointer z-10">
                 Shop Now
                 <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
               </button>
@@ -1123,8 +1123,8 @@ function ProductPageContent() {
 
             {/* Win Weekly Badge */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.01)] p-4 flex items-center justify-center gap-3 group cursor-pointer hover:shadow-md transition-shadow">
-              <div className="bg-[#DF9F28]/10 p-2 rounded-full">
-                <Trophy className="w-4 h-4 text-[#DF9F28]" />
+              <div className="bg-[#0077FF]/10 p-2 rounded-full">
+                <Trophy className="w-4 h-4 text-[#0077FF]" />
               </div>
               <span className="text-xs font-semibold tracking-[0.15em] uppercase text-black font-sans">
                 Win Weekly
@@ -1159,14 +1159,14 @@ function ProductPageContent() {
                       setActiveSearchType(searchType);
                     }
                   }}
-                  className="w-full pl-11 pr-4 py-3 rounded-full text-xs font-semibold tracking-wider border border-gray-200 focus:outline-none focus:border-[#DF9F28] focus:ring-1 focus:ring-[#DF9F28] transition-all bg-gray-50/50"
+                  className="w-full pl-11 pr-4 py-3 rounded-full text-xs font-semibold tracking-wider border border-gray-200 focus:outline-none focus:border-[#0077FF] focus:ring-1 focus:ring-[#0077FF] transition-all bg-gray-50/50"
                 />
               </div>
               <div className="flex gap-3 w-full sm:w-auto items-center">
                 <select
                   value={searchType}
                   onChange={(e) => setSearchType(e.target.value)}
-                  className="bg-white border border-gray-200 rounded-full px-4 py-3 text-xs font-bold tracking-wider text-gray-700 focus:outline-none focus:border-[#DF9F28] cursor-pointer"
+                  className="bg-white border border-gray-200 rounded-full px-4 py-3 text-xs font-bold tracking-wider text-gray-700 focus:outline-none focus:border-[#0077FF] cursor-pointer"
                 >
                   <option value="name">Search by Name</option>
                   <option value="sku">Search by SKU</option>
@@ -1196,7 +1196,7 @@ function ProductPageContent() {
                     setSearchQuery('');
                     setActiveSearchQuery('');
                   }}
-                  className="inline-flex items-center gap-1.5 bg-[#F3F2EE] hover:bg-[#E5E4E0] text-black text-[0.65rem] tracking-wider uppercase font-semibold px-3 py-1.5 rounded-full transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 bg-[#E7F2FF] hover:bg-[#E5E4E0] text-black text-[0.65rem] tracking-wider uppercase font-semibold px-3 py-1.5 rounded-full transition-colors cursor-pointer"
                 >
                   {activeSearchType === 'sku' ? 'SKU: ' : activeSearchType === 'category' ? 'Category: ' : ''}
                   "{activeSearchQuery}"
@@ -1207,7 +1207,7 @@ function ProductPageContent() {
               {selectedCategoryId && (
                 <button
                   onClick={() => setSelectedCategoryId(null)}
-                  className="inline-flex items-center gap-1.5 bg-[#F3F2EE] hover:bg-[#E5E4E0] text-black text-[0.65rem] tracking-wider uppercase font-semibold px-3 py-1.5 rounded-full transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 bg-[#E7F2FF] hover:bg-[#E5E4E0] text-black text-[0.65rem] tracking-wider uppercase font-semibold px-3 py-1.5 rounded-full transition-colors cursor-pointer"
                 >
                   {categoriesList.find(c => c.id === selectedCategoryId)?.name || 'Category'}
                   <X className="w-3 h-3 text-gray-400 hover:text-black transition-colors" />
@@ -1218,7 +1218,7 @@ function ProductPageContent() {
                 <button
                   key={range}
                   onClick={() => setSelectedPriceRanges(prev => prev.filter(r => r !== range))}
-                  className="inline-flex items-center gap-1.5 bg-[#F3F2EE] hover:bg-[#E5E4E0] text-black text-[0.65rem] tracking-wider uppercase font-semibold px-3 py-1.5 rounded-full transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 bg-[#E7F2FF] hover:bg-[#E5E4E0] text-black text-[0.65rem] tracking-wider uppercase font-semibold px-3 py-1.5 rounded-full transition-colors cursor-pointer"
                 >
                   {range === 'under_5000' ? 'Under ₹5000' : range === '5000_10000' ? '₹5000 - ₹10000' : 'Over ₹10000'}
                   <X className="w-3 h-3 text-gray-400 hover:text-black transition-colors" />
@@ -1228,7 +1228,7 @@ function ProductPageContent() {
               {(selectedCategoryId || selectedPriceRanges.length > 0) && (
                 <button
                   onClick={handleClearAll}
-                  className="text-[0.65rem] tracking-[0.2em] uppercase font-bold text-[#DF9F28] hover:text-[#c58b20] transition-colors cursor-pointer ml-2 border-b border-[#DF9F28]/35 hover:border-[#c58b20]"
+                  className="text-[0.65rem] tracking-[0.2em] uppercase font-bold text-[#0077FF] hover:text-[#005ED1] transition-colors cursor-pointer ml-2 border-b border-[#0077FF]/35 hover:border-[#005ED1]"
                 >
                   Clear all
                 </button>
@@ -1260,7 +1260,7 @@ function ProductPageContent() {
                   >
                     
                     {/* Image Card */}
-                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 bg-[#F3F2EE] border border-gray-100/50">
+                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 bg-[#E7F2FF] border border-gray-100/50">
                       <Image
                         src={prod.image}
                         alt={prod.title}
@@ -1277,14 +1277,14 @@ function ProductPageContent() {
                       <div className="absolute bottom-3 right-3 flex flex-row gap-2 z-20">
                         <button 
                           onClick={(e) => handleQuickAddToWishlist(e, prod)}
-                          className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#DF9F28] hover:text-white transition-colors text-gray-800"
+                          className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#0077FF] hover:text-white transition-colors text-gray-800"
                           aria-label="Add to wishlist"
                         >
                           <Heart className="w-4 h-4" />
                         </button>
                         <button 
                           onClick={(e) => handleQuickAddToCart(e, prod)}
-                          className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#DF9F28] hover:text-white transition-colors text-gray-800"
+                          className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#0077FF] hover:text-white transition-colors text-gray-800"
                           aria-label="Add to cart"
                         >
                           <ShoppingBag className="w-4 h-4" />
@@ -1330,7 +1330,7 @@ function ProductPageContent() {
 
             {/* Empty State */}
             {filteredProducts.length === 0 && (
-              <div className="text-center py-20 bg-[#F9F8F4] rounded-[2rem] border border-dashed border-gray-200">
+              <div className="text-center py-20 bg-[#F1F7FF] rounded-[2rem] border border-dashed border-gray-200">
                 <p className="text-sm text-gray-500 tracking-wider">No products found matching the selected filters.</p>
                 <button
                   onClick={handleClearAll}
@@ -1365,7 +1365,7 @@ function ProductPageContent() {
 
 export default function ProductPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#FDFCF8]"></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#F5FAFF]"></div>}>
       <ProductPageContent />
     </Suspense>
   );

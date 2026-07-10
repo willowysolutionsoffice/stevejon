@@ -13,8 +13,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "STEVEJON",
-  description: "The New Standard of Refinement",
+  title: "STEVE JON SOLUTIONS LLP",
+  description: "New Beginning. Smarter Solutions. Stronger Future.",
   icons: {
     icon: "/favicon.svg",
   },
@@ -34,7 +34,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${playfair.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans bg-[#FDFCF8] text-[#1A1A1A] selection:bg-[#1A1A1A] selection:text-white">
+      <body className="min-h-full flex flex-col font-sans bg-[#F5FAFF] text-[#061B3A] selection:bg-[#0077FF] selection:text-white">
         <CartProvider>
           <WishlistProvider>
             <OrderProvider>

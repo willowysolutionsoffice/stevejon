@@ -199,7 +199,7 @@ function OrdersPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans flex flex-col justify-between animate-fadeIn">
+    <div className="min-h-screen bg-[#F5FAFF] text-[#061B3A] font-sans flex flex-col justify-between animate-fadeIn">
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 pt-40 pb-24 flex-1 w-full">
@@ -234,7 +234,7 @@ function OrdersPageContent() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`py-3 md:py-2 px-4 text-xs font-bold tracking-[0.15em] uppercase transition-colors cursor-pointer border-b-2 whitespace-nowrap ${
                   activeTab === tab.id
-                    ? 'border-[#DF9F28] text-black bg-white/40'
+                    ? 'border-[#0077FF] text-black bg-white/40'
                     : 'border-transparent text-gray-400 hover:text-gray-600'
                 }`}
               >
@@ -253,7 +253,7 @@ function OrdersPageContent() {
               placeholder="Search by Order ID or item..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-10 py-3 rounded-full text-xs font-medium tracking-wide border border-gray-200 focus:outline-none focus:border-[#DF9F28] transition-colors bg-white shadow-sm"
+              className="w-full pl-11 pr-10 py-3 rounded-full text-xs font-medium tracking-wide border border-gray-200 focus:outline-none focus:border-[#0077FF] transition-colors bg-white shadow-sm"
             />
             {searchQuery && (
               <button
@@ -270,7 +270,7 @@ function OrdersPageContent() {
         {filteredOrders.length === 0 ? (
           /* Empty State */
           <div className="text-center py-20 bg-white rounded-[2.5rem] border border-gray-100 shadow-sm flex flex-col items-center justify-center my-6">
-            <div className="w-16 h-16 bg-[#F3F2EE] text-gray-400 rounded-full flex items-center justify-center mb-6">
+            <div className="w-16 h-16 bg-[#E7F2FF] text-gray-400 rounded-full flex items-center justify-center mb-6">
               <ShoppingBag className="w-6 h-6 stroke-[1.5]" />
             </div>
             <h2 className="text-xl font-serif tracking-wide text-black mb-2">No orders found</h2>
@@ -282,7 +282,7 @@ function OrdersPageContent() {
             {!searchQuery && (
               <Link
                 href="/product"
-                className="bg-[#DF9F28] hover:bg-[#c58b20] text-white px-8 py-3.5 rounded-full text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-md cursor-pointer"
+                className="bg-[#0077FF] hover:bg-[#005ED1] text-white px-8 py-3.5 rounded-full text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-md cursor-pointer"
               >
                 Explore Catalog
               </Link>
@@ -310,7 +310,7 @@ function OrdersPageContent() {
                     {/* ID & Date */}
                     <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
                       <div>
-                        <span className="text-[0.65rem] font-bold tracking-widest text-[#DF9F28] uppercase">Order ID</span>
+                        <span className="text-[0.65rem] font-bold tracking-widest text-[#0077FF] uppercase">Order ID</span>
                         <h3 className="text-base font-bold text-black font-sans mt-0.5">{order.id}</h3>
                       </div>
                       <div className="h-[1px] w-8 bg-gray-100 hidden md:block"></div>
@@ -346,7 +346,7 @@ function OrdersPageContent() {
 
                   {/* Card Expanded Content */}
                   {isExpanded && (
-                    <div className="border-t border-gray-100 p-6 md:p-8 bg-[#FDFCF8]/40 space-y-8 animate-fadeIn">
+                    <div className="border-t border-gray-100 p-6 md:p-8 bg-[#F5FAFF]/40 space-y-8 animate-fadeIn">
                       
                       {/* Timeline Stepper or Cancelled Banner */}
                       {isCancelled ? (
@@ -370,7 +370,7 @@ function OrdersPageContent() {
                             
                             {/* Horizontal Line Active */}
                             <div 
-                              className="absolute top-[21px] left-8 h-[2px] bg-[#DF9F28] transition-all duration-500 -z-10 hidden sm:block"
+                              className="absolute top-[21px] left-8 h-[2px] bg-[#0077FF] transition-all duration-500 -z-10 hidden sm:block"
                               style={{
                                 width: 
                                   order.status === 'PENDING' ? '0%' :
@@ -391,7 +391,7 @@ function OrdersPageContent() {
                                   <div 
                                     className={`w-6 h-6 rounded-full flex items-center justify-center border-2 transition-all ${
                                       step.isCompleted
-                                        ? 'border-[#DF9F28] bg-[#DF9F28] text-white shadow-md shadow-[#DF9F28]/25 scale-105'
+                                        ? 'border-[#0077FF] bg-[#0077FF] text-white shadow-md shadow-[#0077FF]/25 scale-105'
                                         : 'border-gray-200 bg-white text-gray-300'
                                     } ${step.isCurrent ? 'ring-4 ring-yellow-600/10' : ''}`}
                                   >
@@ -409,8 +409,8 @@ function OrdersPageContent() {
                                       {step.label}
                                     </h5>
                                     {step.isCurrent && (
-                                      <span className="text-[0.55rem] text-[#DF9F28] font-bold tracking-widest uppercase sm:block mt-0.5">
-                                        Current Step
+                                      <span className="text-[0.55rem] text-[#0077FF] font-bold tracking-widest uppercase sm:block mt-0.5">
+                                        _
                                       </span>
                                     )}
                                   </div>
@@ -425,7 +425,7 @@ function OrdersPageContent() {
                       {order.tickets && order.tickets.length > 0 && (
                         <div className="bg-white p-6 rounded-3xl border border-gray-100/50 shadow-sm space-y-4">
                           <h4 className="text-xs font-bold tracking-[0.15em] uppercase text-black border-b border-gray-50 pb-3 flex items-center gap-2">
-                            <Ticket className="w-4 h-4 text-[#DF9F28]" />
+                            <Ticket className="w-4 h-4 text-[#0077FF]" />
                             Linked Lucky Tickets
                           </h4>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -434,7 +434,7 @@ function OrdersPageContent() {
                               return (
                                 <div 
                                   key={ticket.id}
-                                  className={`relative bg-[#FDFCF8] border border-gray-200 rounded-[1.5rem] shadow-sm hover:shadow-md transition-all flex flex-row overflow-hidden border-dashed p-4 ${isInvalid ? 'opacity-60 saturate-50' : ''}`}
+                                  className={`relative bg-[#F5FAFF] border border-gray-200 rounded-[1.5rem] shadow-sm hover:shadow-md transition-all flex flex-row overflow-hidden border-dashed p-4 ${isInvalid ? 'opacity-60 saturate-50' : ''}`}
                                 >
                                   {/* Punch Holes Decorators */}
                                   <div className="absolute top-1/2 -translate-y-1/2 -left-2 w-4 h-4 rounded-full bg-white border border-gray-200 z-10"></div>
@@ -462,7 +462,7 @@ function OrdersPageContent() {
                                     <span className="font-mono text-xs font-extrabold text-black tracking-wide block mt-1">
                                       {ticket.ticketNumber}
                                     </span>
-                                    <span className="text-[0.55rem] text-[#DF9F28] font-bold uppercase tracking-wide block mt-1">
+                                    <span className="text-[0.55rem] text-[#0077FF] font-bold uppercase tracking-wide block mt-1">
                                       {ticket.drawCampaign?.name || "Lucky Draw"}
                                     </span>
                                   </div>
@@ -490,7 +490,7 @@ function OrdersPageContent() {
                               className="flex flex-col sm:flex-row items-center gap-6 bg-white p-4 rounded-3xl border border-gray-50 shadow-sm relative group"
                             >
                               {/* Item image */}
-                              <div className="relative aspect-[3/4] w-20 rounded-2xl overflow-hidden bg-[#F3F2EE] flex-shrink-0 border border-gray-100/50 p-2">
+                              <div className="relative aspect-[3/4] w-20 rounded-2xl overflow-hidden bg-[#E7F2FF] flex-shrink-0 border border-gray-100/50 p-2">
                                 <Image
                                   src={item.image}
                                   alt={item.title}
@@ -503,7 +503,7 @@ function OrdersPageContent() {
                               {/* Item details */}
                               <div className="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
                                 <div className="text-center sm:text-left">
-                                  <span className="text-[0.6rem] font-bold tracking-[0.2em] uppercase text-[#DF9F28]">
+                                  <span className="text-[0.6rem] font-bold tracking-[0.2em] uppercase text-[#0077FF]">
                                     {item.category}
                                   </span>
                                   <h5 className="text-sm font-serif tracking-wide text-black mt-0.5">
@@ -553,7 +553,7 @@ function OrdersPageContent() {
                         {/* Shipping Details */}
                         <div className="bg-white p-6 rounded-3xl border border-gray-100/50 shadow-sm text-xs">
                           <h4 className="text-[0.65rem] font-bold tracking-[0.25em] uppercase text-gray-400 mb-3 flex items-center gap-1.5">
-                            <MapPin className="w-3.5 h-3.5 text-[#DF9F28]" />
+                            <MapPin className="w-3.5 h-3.5 text-[#0077FF]" />
                             Delivery Address
                           </h4>
                           <p className="font-bold text-black text-sm mb-1">{order.shippingDetails.name}</p>
@@ -567,7 +567,7 @@ function OrdersPageContent() {
                         {/* Payment Method */}
                         <div className="bg-white p-6 rounded-3xl border border-gray-100/50 shadow-sm text-xs">
                           <h4 className="text-[0.65rem] font-bold tracking-[0.25em] uppercase text-gray-400 mb-3 flex items-center gap-1.5">
-                            <CreditCard className="w-3.5 h-3.5 text-[#DF9F28]" />
+                            <CreditCard className="w-3.5 h-3.5 text-[#0077FF]" />
                             Payment Method
                           </h4>
                           <p className="font-bold text-black text-sm mb-1">{order.paymentMethod}</p>
@@ -580,7 +580,7 @@ function OrdersPageContent() {
                         </div>
 
                         {/* Order Invoice Summary */}
-                        <div className="bg-[#F9F8F4] p-6 rounded-3xl border border-gray-100 shadow-sm text-xs space-y-2.5">
+                        <div className="bg-[#F1F7FF] p-6 rounded-3xl border border-gray-100 shadow-sm text-xs space-y-2.5">
                           <h4 className="text-[0.65rem] font-bold tracking-[0.25em] uppercase text-gray-400 mb-3 block">Invoice Summary</h4>
                           <div className="flex justify-between text-gray-600">
                             <span>Subtotal</span>
@@ -623,7 +623,7 @@ function OrdersPageContent() {
       {/* Cancellation Confirmation Modal */}
       {orderToCancel && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-[#FDFCF8] w-full max-w-sm rounded-[2rem] shadow-2xl p-8 border border-gray-100 animate-scaleUp text-center">
+          <div className="bg-[#F5FAFF] w-full max-w-sm rounded-[2rem] shadow-2xl p-8 border border-gray-100 animate-scaleUp text-center">
             <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
             <h3 className="text-lg font-serif tracking-wider uppercase text-black mb-2">Cancel Order</h3>
             <p className="text-gray-500 text-xs leading-relaxed mb-6 font-sans">
@@ -650,7 +650,7 @@ function OrdersPageContent() {
       {/* Floating Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-black text-white px-6 py-4 rounded-full shadow-2xl z-[100] flex items-center gap-3 animate-fadeIn">
-          <div className="bg-[#DF9F28] rounded-full p-1">
+          <div className="bg-[#0077FF] rounded-full p-1">
             <Check className="w-3 h-3 text-white" />
           </div>
           <span className="text-xs font-semibold tracking-widest uppercase">
@@ -667,10 +667,10 @@ function OrdersPageContent() {
 export default function OrdersPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans flex flex-col justify-between">
+      <div className="min-h-screen bg-[#F5FAFF] text-[#061B3A] font-sans flex flex-col justify-between">
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
-          <div className="w-8 h-8 border-4 border-[#DF9F28] border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-[#0077FF] border-t-transparent rounded-full animate-spin"></div>
         </div>
         <Footer />
       </div>

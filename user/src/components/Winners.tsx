@@ -35,15 +35,15 @@ export default function Winners() {
   if (!loaded || winners.length === 0) return null;
 
   return (
-    <section className="py-24 px-4 md:px-8 bg-[#FDFCF8] border-t border-gray-100/50">
+    <section className="py-24 px-4 md:px-8 bg-[#F5FAFF] border-t border-gray-100/50">
       <div className="max-w-7xl mx-auto">
 
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-serif tracking-[0.1em] uppercase text-[#1A1A1A] mb-3">
+          <h2 className="text-3xl md:text-4xl font-serif tracking-[0.1em] uppercase text-[#061B3A] mb-3">
             Our Winners
           </h2>
-          <div className="h-[1px] w-12 bg-[#DF9F28] mx-auto mb-4" />
+          <div className="h-[1px] w-12 bg-[#0077FF] mx-auto mb-4" />
           <p className="text-xs md:text-sm tracking-[0.2em] uppercase text-gray-500">
             Celebrated champions of our lucky draw
           </p>
@@ -58,7 +58,7 @@ export default function Winners() {
               style={{ animationDelay: `${idx * 100}ms` }}
             >
               {/* Portrait */}
-              <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 bg-[#F3F2EE] border border-gray-100/50">
+              <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 bg-[#E7F2FF] border border-gray-100/50">
                 <Image
                   src={winner.winnerImage}
                   alt={winner.winnerName}
@@ -73,10 +73,10 @@ export default function Winners() {
 
               {/* Name & details – centred */}
               <div className="text-center mt-4 space-y-1">
-                <h4 className="text-xs md:text-sm font-semibold tracking-[0.12em] uppercase text-[#1A1A1A]">
+                <h4 className="text-xs md:text-sm font-semibold tracking-[0.12em] uppercase text-[#061B3A]">
                   {winner.winnerName}
                 </h4>
-                <p className="text-[0.65rem] md:text-xs tracking-[0.18em] font-medium text-[#DF9F28] uppercase">
+                <p className="text-[0.65rem] md:text-xs tracking-[0.18em] font-medium text-[#0077FF] uppercase">
                   {winner.winnerPlace}
                 </p>
                 <p className="text-[0.6rem] text-gray-400 tracking-wide">

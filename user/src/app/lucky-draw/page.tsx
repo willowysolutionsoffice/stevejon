@@ -235,7 +235,7 @@ export default function LuckyDrawPage() {
         setDrawIndex(finalWinnerIndex);
         
         // Generate confetti particles
-        const colors = ['#DF9F28', '#FFD700', '#FFFFFF', '#8C5D0D', '#EEF2F6', '#DF9F28'];
+        const colors = ['#0077FF', '#35D8FF', '#FFFFFF', '#002B66', '#EAF4FF', '#0077FF'];
         const list: any[] = [];
         for (let i = 0; i < 120; i++) {
           list.push({
@@ -267,8 +267,8 @@ export default function LuckyDrawPage() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-[#FDFCF8] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-[#DF9F28]"></div>
+      <div className="min-h-screen bg-[#F5FAFF] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-[#0077FF]"></div>
       </div>
     );
   }
@@ -278,7 +278,7 @@ export default function LuckyDrawPage() {
   const userEnteredOrders = orders.filter(o => o.status !== 'CANCELLED');
 
   return (
-    <div className="min-h-screen bg-[#FDFCF8] text-[#1A1A1A] font-sans flex flex-col justify-between animate-fadeIn pb-0">
+    <div className="min-h-screen bg-[#F5FAFF] text-[#061B3A] font-sans flex flex-col justify-between animate-fadeIn pb-0">
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 pt-40 pb-24 flex-1 w-full">
@@ -320,7 +320,7 @@ export default function LuckyDrawPage() {
           <div className="lg:col-span-7 flex flex-col gap-8">
             
             {/* Live Timer Container (Themed like LuckyDrawPoster banner) */}
-            <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#DF9F28] via-[#B87A15] to-[#8C5D0D] p-8 md:p-12 shadow-[0_15px_40px_rgba(223,159,40,0.25)] border border-[#DF9F28]/20 text-white">
+            <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#0077FF] via-[#004EA8] to-[#002B66] p-8 md:p-12 shadow-[0_15px_40px_rgba(0,119,255,0.25)] border border-[#0077FF]/20 text-white">
               {/* Overlay Grid lines */}
               <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff10_1px,transparent_1px),linear-gradient(to_bottom,#ffffff10_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
               
@@ -365,7 +365,7 @@ export default function LuckyDrawPage() {
                   <button
                     disabled={activePool.length === 0}
                     onClick={handleTriggerDraw}
-                    className={`mt-4 w-full bg-white text-[#8C5D0D] hover:bg-gray-50 disabled:bg-white/50 disabled:text-white/80 py-3.5 px-6 rounded-full font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 shadow-lg shadow-black/10 hover:shadow-xl transition-all hover:-translate-y-0.5 cursor-pointer disabled:cursor-not-allowed`}
+                    className={`mt-4 w-full bg-white text-[#002B66] hover:bg-gray-50 disabled:bg-white/50 disabled:text-white/80 py-3.5 px-6 rounded-full font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 shadow-lg shadow-black/10 hover:shadow-xl transition-all hover:-translate-y-0.5 cursor-pointer disabled:cursor-not-allowed`}
                   >
                     <Play className="w-4 h-4 fill-current" />
                     Draw Now!
@@ -388,7 +388,7 @@ export default function LuckyDrawPage() {
               </div>
               <button
                 onClick={handleAddTestEntries}
-                className="bg-[#DF9F28] hover:bg-[#c58b20] text-white px-6 py-3.5 rounded-full text-xs font-bold tracking-[0.25em] uppercase flex items-center gap-2 transition-all shadow-md shadow-[#DF9F28]/15 hover:shadow-lg hover:shadow-[#DF9F28]/25 cursor-pointer shrink-0"
+                className="bg-[#0077FF] hover:bg-[#005ED1] text-white px-6 py-3.5 rounded-full text-xs font-bold tracking-[0.25em] uppercase flex items-center gap-2 transition-all shadow-md shadow-[#0077FF]/15 hover:shadow-lg hover:shadow-[#0077FF]/25 cursor-pointer shrink-0"
               >
                 <Plus className="w-4 h-4" /> Add Test Entries
               </button>
@@ -397,11 +397,11 @@ export default function LuckyDrawPage() {
             {/* My Personal Entries section */}
             <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-sm">
               <h3 className="text-xl font-serif tracking-wider uppercase text-black mb-6 flex items-center gap-2">
-                <Ticket className="w-5 h-5 text-[#DF9F28]" /> Your Live Entries
+                <Ticket className="w-5 h-5 text-[#0077FF]" /> Your Live Entries
               </h3>
 
               {userEnteredOrders.length === 0 ? (
-                <div className="text-center py-10 border border-dashed border-gray-200 rounded-2xl bg-[#FDFCF8]/50">
+                <div className="text-center py-10 border border-dashed border-gray-200 rounded-2xl bg-[#F5FAFF]/50">
                   <Ticket className="w-8 h-8 text-gray-300 mx-auto mb-3" />
                   <p className="text-gray-700 text-sm font-medium">No order entries yet</p>
                   <p className="text-gray-400 text-xs mt-1 max-w-xs mx-auto">
@@ -423,14 +423,14 @@ export default function LuckyDrawPage() {
                     return (
                       <div
                         key={o.id}
-                        className={`flex items-center justify-between p-4 border rounded-2xl transition-all bg-[#FDFCF8]/40 ${
+                        className={`flex items-center justify-between p-4 border rounded-2xl transition-all bg-[#F5FAFF]/40 ${
                           hasWon 
                             ? 'border-emerald-200 bg-emerald-50/10' 
                             : 'border-gray-100 hover:border-gray-200'
                         }`}
                       >
                         <div className="flex items-center gap-3">
-                          <div className={`p-2.5 rounded-xl ${hasWon ? 'bg-emerald-50 text-emerald-600' : 'bg-[#F9F8F4] text-gray-500'}`}>
+                          <div className={`p-2.5 rounded-xl ${hasWon ? 'bg-emerald-50 text-emerald-600' : 'bg-[#F1F7FF] text-gray-500'}`}>
                             <Ticket className="w-5 h-5" />
                           </div>
                           <div>
@@ -451,7 +451,7 @@ export default function LuckyDrawPage() {
                               <Award className="w-3.5 h-3.5 fill-emerald-100" /> Won Weekly Draw
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1.5 bg-[#FDF8EE] border border-[#DF9F28]/20 text-[#8C5D0D] px-3 py-1 rounded-full text-[0.6rem] font-bold uppercase tracking-widest animate-pulse">
+                            <span className="inline-flex items-center gap-1.5 bg-[#EAF4FF] border border-[#0077FF]/20 text-[#002B66] px-3 py-1 rounded-full text-[0.6rem] font-bold uppercase tracking-widest animate-pulse">
                               <Sparkles className="w-3 h-3 fill-current" /> Active Entry
                             </span>
                           )}
@@ -474,13 +474,13 @@ export default function LuckyDrawPage() {
               <div className="pb-5 border-b border-gray-100 flex items-center justify-between">
                 <div>
                   <h3 className="text-lg font-serif tracking-wider uppercase text-black flex items-center gap-2">
-                    <Users className="w-5 h-5 text-[#DF9F28]" /> Live Draw Pool
+                    <Users className="w-5 h-5 text-[#0077FF]" /> Live Draw Pool
                   </h3>
                   <p className="text-[0.65rem] text-gray-400 uppercase tracking-widest mt-0.5 font-semibold">
                     Order IDs entered in next raffle
                   </p>
                 </div>
-                <div className="bg-[#F9F8F4] border border-gray-100 rounded-full px-3 py-1 text-center shrink-0">
+                <div className="bg-[#F1F7FF] border border-gray-100 rounded-full px-3 py-1 text-center shrink-0">
                   <span className="block text-xs font-bold text-black font-sans leading-none">{activePool.length}</span>
                   <span className="text-[0.5rem] text-gray-400 font-bold uppercase tracking-widest">Entries</span>
                 </div>
@@ -501,13 +501,13 @@ export default function LuckyDrawPage() {
                       key={entry.orderId}
                       className={`flex items-center justify-between p-3.5 rounded-2xl border transition-all ${
                         entry.isUser 
-                          ? 'border-[#DF9F28]/35 bg-[#FDF8EE]/20 shadow-sm'
-                          : 'border-gray-50 bg-[#FDFCF8]/30 hover:border-gray-200'
+                          ? 'border-[#0077FF]/35 bg-[#EAF4FF]/20 shadow-sm'
+                          : 'border-gray-50 bg-[#F5FAFF]/30 hover:border-gray-200'
                       }`}
                     >
                       <div className="flex items-center gap-3">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-[0.65rem] tracking-wider ${
-                          entry.isUser ? 'bg-[#DF9F28] text-white' : 'bg-gray-100 text-gray-600'
+                          entry.isUser ? 'bg-[#0077FF] text-white' : 'bg-gray-100 text-gray-600'
                         }`}>
                           #{idx + 1}
                         </div>
@@ -520,7 +520,7 @@ export default function LuckyDrawPage() {
                       </div>
 
                       {entry.isUser ? (
-                        <span className="bg-[#DF9F28] text-white text-[0.55rem] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        <span className="bg-[#0077FF] text-white text-[0.55rem] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
                           YOU
                         </span>
                       ) : (
@@ -542,10 +542,10 @@ export default function LuckyDrawPage() {
         {/* Historical Winners Ledger */}
         <div className="mt-16">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-serif tracking-[0.1em] uppercase text-[#1A1A1A] mb-3">
+            <h2 className="text-3xl md:text-4xl font-serif tracking-[0.1em] uppercase text-[#061B3A] mb-3">
               Past Winners History
             </h2>
-            <div className="h-[1px] w-12 bg-[#DF9F28] mx-auto mb-4"></div>
+            <div className="h-[1px] w-12 bg-[#0077FF] mx-auto mb-4"></div>
             <p className="text-xs md:text-sm tracking-[0.2em] uppercase text-gray-500">
               The archive of our esteemed weekly prize recipients
             </p>
@@ -555,7 +555,7 @@ export default function LuckyDrawPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse font-sans">
                 <thead>
-                  <tr className="bg-[#FDFCF8] border-b border-gray-100 text-[0.65rem] font-bold tracking-[0.2em] text-gray-400 uppercase">
+                  <tr className="bg-[#F5FAFF] border-b border-gray-100 text-[0.65rem] font-bold tracking-[0.2em] text-gray-400 uppercase">
                     <th className="px-8 py-5">Draw Week</th>
                     <th className="px-8 py-5">Winner</th>
                     <th className="px-8 py-5">Location</th>
@@ -568,12 +568,12 @@ export default function LuckyDrawPage() {
                   {winners.map((winner, idx) => (
                     <tr
                       key={idx}
-                      className={`hover:bg-[#FDFCF8]/40 transition-colors ${
-                        winner.isUser ? 'bg-[#FDF8EE]/20 font-medium' : ''
+                      className={`hover:bg-[#F5FAFF]/40 transition-colors ${
+                        winner.isUser ? 'bg-[#EAF4FF]/20 font-medium' : ''
                       }`}
                     >
                       <td className="px-8 py-5">
-                        <span className="inline-flex items-center gap-1 text-[0.7rem] bg-[#F9F8F4] border border-gray-100 text-gray-700 px-3 py-1 rounded-full font-bold uppercase tracking-wider font-sans">
+                        <span className="inline-flex items-center gap-1 text-[0.7rem] bg-[#F1F7FF] border border-gray-100 text-gray-700 px-3 py-1 rounded-full font-bold uppercase tracking-wider font-sans">
                           Week {winner.week}
                         </span>
                       </td>
@@ -591,7 +591,7 @@ export default function LuckyDrawPage() {
                       <td className="px-8 py-5 font-bold font-sans tracking-wide text-black">{winner.orderId}</td>
                       <td className="px-8 py-5">
                         <div className="flex items-center gap-1.5 text-gray-800 font-medium">
-                          <Gift className="w-4 h-4 text-[#DF9F28]" />
+                          <Gift className="w-4 h-4 text-[#0077FF]" />
                           <span>{winner.prize}</span>
                         </div>
                       </td>
@@ -609,24 +609,24 @@ export default function LuckyDrawPage() {
       {/* Drawing Wheel Slot-Machine Modal */}
       {isDrawing && activePool.length > 0 && (
         <div className="fixed inset-0 bg-black/75 backdrop-blur-md z-[200] flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-[#1A1A1A] text-white w-full max-w-lg rounded-3xl shadow-2xl p-8 border border-white/10 text-center relative overflow-hidden">
+          <div className="bg-[#061B3A] text-white w-full max-w-lg rounded-3xl shadow-2xl p-8 border border-white/10 text-center relative overflow-hidden">
             
             {/* Ambient Background Gold Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#DF9F28]/15 rounded-full blur-3xl pointer-events-none"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#0077FF]/15 rounded-full blur-3xl pointer-events-none"></div>
 
-            <Sparkles className="w-12 h-12 text-[#DF9F28] mx-auto mb-4 animate-bounce" />
+            <Sparkles className="w-12 h-12 text-[#0077FF] mx-auto mb-4 animate-bounce" />
             <h3 className="text-2xl font-serif tracking-widest uppercase mb-1">Raffle Live Selection</h3>
             <p className="text-[0.6rem] text-white/50 uppercase tracking-widest font-semibold mb-10">Ticking active order IDs</p>
 
             {/* Spinner Cylinder Viewport */}
-            <div className="relative border-y-2 border-[#DF9F28] bg-black/40 py-8 my-8 overflow-hidden rounded-xl">
+            <div className="relative border-y-2 border-[#0077FF] bg-black/40 py-8 my-8 overflow-hidden rounded-xl">
               
               {/* Gold Selection Bracket Overlay */}
-              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-16 border-y border-[#DF9F28]/50 bg-[#DF9F28]/10 pointer-events-none z-10"></div>
+              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-16 border-y border-[#0077FF]/50 bg-[#0077FF]/10 pointer-events-none z-10"></div>
               
               <div className="relative h-16 flex items-center justify-center">
                 <div className="text-center transition-all duration-75 animate-scaleUp">
-                  <span className="block text-2xl font-bold font-sans tracking-[0.1em] text-[#DF9F28]">
+                  <span className="block text-2xl font-bold font-sans tracking-[0.1em] text-[#0077FF]">
                     {activePool[drawIndex]?.orderId}
                   </span>
                   <span className="text-xs uppercase tracking-widest text-white/70 block mt-1">
@@ -637,7 +637,7 @@ export default function LuckyDrawPage() {
             </div>
 
             <div className="flex items-center justify-center gap-2 text-white/40 text-xs uppercase tracking-widest font-semibold">
-              <span className="w-1.5 h-1.5 bg-[#DF9F28] rounded-full animate-ping"></span>
+              <span className="w-1.5 h-1.5 bg-[#0077FF] rounded-full animate-ping"></span>
               <span>Evaluating entries ledger...</span>
             </div>
           </div>
@@ -669,25 +669,25 @@ export default function LuckyDrawPage() {
             ))}
           </div>
 
-          <div className="bg-[#FDFCF8] text-black w-full max-w-xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-100 z-20 text-center animate-scaleUp relative p-8 md:p-12">
+          <div className="bg-[#F5FAFF] text-black w-full max-w-xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-100 z-20 text-center animate-scaleUp relative p-8 md:p-12">
             
             {/* Floating Sparkles decoration */}
             <div className="absolute top-8 left-8 animate-pulse">
-              <Sparkles className="w-6 h-6 text-[#DF9F28]" />
+              <Sparkles className="w-6 h-6 text-[#0077FF]" />
             </div>
             <div className="absolute top-12 right-12 animate-pulse" style={{ animationDelay: '200ms' }}>
-              <Sparkles className="w-8 h-8 text-[#DF9F28]/60" />
+              <Sparkles className="w-8 h-8 text-[#0077FF]/60" />
             </div>
 
             {/* Glowing gold trophy backdrop */}
             <div className="relative w-28 h-28 mx-auto mb-6 flex items-center justify-center">
-              <div className="absolute inset-0 bg-[#DF9F28]/10 blur-xl rounded-full scale-150 animate-pulse"></div>
-              <div className="relative bg-gradient-to-br from-[#DF9F28] to-[#8C5D0D] p-6 rounded-full shadow-[0_10px_25px_rgba(223,159,40,0.3)]">
+              <div className="absolute inset-0 bg-[#0077FF]/10 blur-xl rounded-full scale-150 animate-pulse"></div>
+              <div className="relative bg-gradient-to-br from-[#0077FF] to-[#002B66] p-6 rounded-full shadow-[0_10px_25px_rgba(0,119,255,0.30)]">
                 <Trophy className="w-12 h-12 text-white" strokeWidth={1.5} />
               </div>
             </div>
 
-            <span className="text-[#DF9F28] text-xs font-bold tracking-[0.3em] uppercase block mb-1">
+            <span className="text-[#0077FF] text-xs font-bold tracking-[0.3em] uppercase block mb-1">
               Lucky Winner Selected!
             </span>
             <h2 className="text-3xl md:text-4xl font-serif tracking-wide uppercase text-black mb-6">
@@ -695,8 +695,8 @@ export default function LuckyDrawPage() {
             </h2>
 
             {/* Winner Badge Grid */}
-            <div className="bg-[#F9F8F4] border border-gray-100 rounded-3xl p-6 md:p-8 mb-8 max-w-md mx-auto relative">
-              <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#DF9F28] text-white text-[0.55rem] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-sm">
+            <div className="bg-[#F1F7FF] border border-gray-100 rounded-3xl p-6 md:p-8 mb-8 max-w-md mx-auto relative">
+              <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#0077FF] text-white text-[0.55rem] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-sm">
                 Week {winnerResult.week} Giveaway
               </span>
               
@@ -712,7 +712,7 @@ export default function LuckyDrawPage() {
               
               <div className="h-[1px] bg-gray-200/60 my-5 max-w-[120px] mx-auto"></div>
               
-              <span className="text-[0.6rem] font-bold tracking-widest text-[#DF9F28] uppercase block">Prize Reward</span>
+              <span className="text-[0.6rem] font-bold tracking-widest text-[#0077FF] uppercase block">Prize Reward</span>
               <p className="text-sm md:text-base font-serif font-semibold text-gray-900 mt-1 uppercase tracking-wide leading-tight">
                 {winnerResult.prize}
               </p>

@@ -13,8 +13,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "STEVE JON SOLUTIONS LLP",
-  description: "New Beginning. Smarter Solutions. Stronger Future.",
+  title: "STEVEJON",
+  description: "STEVEJON has redefined bespoke tailoring for over three decades. Our journey began in a small atelier, fueled by a passion for exquisite fabrics, precise drafting, and the timeless art of the perfect fit. Tailoring is not just about measurements; it is about sculpting a silhouette that mirrors the soul and projects strength, elegance, and effortless sophistication.",
   icons: {
     icon: "/favicon.svg",
   },

@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 :root {
-  /* Steve Jon Solutions LLP blue technology theme, extracted from launch poster */
   --sj-bg: #F5FAFF;
   --sj-bg-alt: #F1F7FF;
   --sj-surface: #FFFFFF;

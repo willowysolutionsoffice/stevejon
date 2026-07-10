@@ -28,7 +28,9 @@ import { LoginData } from "@/types/auth";
 import { IconLogout } from "@tabler/icons-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
-
+type AdminSessionUser = {
+  role?: string | null;
+};
 export function AdminLoginForm({
   className,
   ...props
@@ -60,8 +62,7 @@ export function AdminLoginForm({
         toast.error(error.message || "Login failed");
       } else {
         const sessionResult = await authClient.getSession();
-const loggedInUser = sessionResult.data?.user as any;
-
+const loggedInUser = sessionResult.data?.user as AdminSessionUser | undefined;
 if (loggedInUser?.role !== "admin") {
   await authClient.signOut();
 

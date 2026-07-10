@@ -3,42 +3,50 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { admin } from "better-auth/plugins/admin";
 import { prisma } from "./prisma.js";
 
+const trustedOrigins = [
+  process.env.FRONTEND_URL || "http://localhost:3000",
+  process.env.ADMIN_URL || "http://localhost:3001",
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "http://localhost:3002",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:3001",
+  "http://127.0.0.1:3002",
+].filter(Boolean) as string[];
+
 const commonConfig = {
   database: prismaAdapter(prisma, {
     provider: "mongodb",
   }),
-  trustedOrigins: [
-    process.env.FRONTEND_URL || "http://localhost:3000",
-    process.env.ADMIN_URL || "http://localhost:3001",
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://localhost:3002",
-  ],
+
+  trustedOrigins,
+
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,
   },
+
   user: {
     additionalFields: {
       role: {
-        type: "string",
+        type: "string" as const,
         required: false,
         defaultValue: "user",
         input: true,
       },
       branch: {
-        type: "string",
+        type: "string" as const,
         required: false,
         input: true,
       },
       phone: {
-        type: "string",
+        type: "string" as const,
         required: false,
         input: true,
       },
     },
   },
-} as const;
+};
 
 export const webAuth = betterAuth({
   ...commonConfig,

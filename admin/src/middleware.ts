@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { betterFetch } from "@better-fetch/fetch";
 import { SessionResponse } from "@/types/auth";
-
+type SessionUserWithRole = {
+  role?: string | null;
+};
 export async function middleware(request: NextRequest) {
   const baseURL =
     process.env.NEXT_PUBLIC_AUTH_URL ||
@@ -38,7 +40,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard-login", request.url));
   }
 
-  if ((session.user as any).role !== "admin") {
+  const user = session.user as SessionUserWithRole;
+
+if (user.role !== "admin") {
     return NextResponse.redirect(new URL("/dashboard-login", request.url));
   }
 

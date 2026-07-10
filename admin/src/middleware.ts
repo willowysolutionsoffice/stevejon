@@ -8,13 +8,13 @@ export async function middleware(request: NextRequest) {
   const baseURL =
     process.env.NEXT_PUBLIC_AUTH_URL ||
     process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ||
-    "http://localhost:5000";
+    "https://stevejon-2vr4.onrender.com";
 
   const { data: session } = await betterFetch<SessionResponse>(
     "/api/auth-admin/get-session",
     {
       baseURL,
-      headers: {
+      headers: {    
         cookie: request.headers.get("cookie") || "",
       },
     }

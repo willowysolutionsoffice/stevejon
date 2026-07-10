@@ -7,7 +7,7 @@ import {
 import type { auth } from "@/lib/auth";
 
 export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_AUTH_URL || "http://localhost:5000",
+  baseURL: process.env.NEXT_PUBLIC_AUTH_URL || "https://stevejon-2vr4.onrender.com",
   basePath: "/api/auth-admin",
   plugins: [
     inferAdditionalFields<typeof auth>(),

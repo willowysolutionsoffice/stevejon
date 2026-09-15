@@ -45,7 +45,7 @@ export default function ProductCollectionGrid() {
   if (loading) {
     return (
       <section className="py-20 px-4 md:px-8 max-w-7xl mx-auto">
-        <h2 className="text-3xl font-serif text-center mb-12">Our Products</h2>
+        <h2 className="text-3xl font-sans font-extrabold text-stone-900 tracking-tight text-center mb-12">Our Products</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-16">
           {[1, 2, 3, 4, 5, 6].map((_, i) => (
             <div key={i} className="flex flex-col gap-4 animate-pulse">
@@ -63,7 +63,7 @@ export default function ProductCollectionGrid() {
 
   return (
     <section className="py-20 px-4 md:px-8 max-w-7xl mx-auto">
-      <h2 className="text-3xl font-serif text-center mb-12">Our Products</h2>
+      <h2 className="text-3xl font-sans font-extrabold text-stone-900 tracking-tight text-center mb-12">Our Products</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-16">
         {products.map((prod) => (
           <Link href={`/product?id=${prod.id}`} key={prod.id} className="group cursor-pointer block">
@@ -72,6 +72,7 @@ export default function ProductCollectionGrid() {
                 src={prod.image} 
                 alt={prod.name} 
                 fill
+                sizes="(max-width: 768px) 50vw, 33vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-105 mix-blend-multiply p-4"
               />
             </div>

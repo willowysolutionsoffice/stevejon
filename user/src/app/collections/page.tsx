@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { ArrowRight } from 'lucide-react';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import { getApiUrl } from '@/lib/api';
 
 interface Category {
@@ -19,9 +20,8 @@ export default function CollectionsPage() {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const apiUrl = getApiUrl();
       try {
-        const response = await fetch(`${apiUrl}/categories`);
+        const response = await fetch(`${getApiUrl()}/categories`);
         if (response.ok) {
           const data = await response.json();
           if (Array.isArray(data)) {
@@ -29,7 +29,7 @@ export default function CollectionsPage() {
           }
         }
       } catch (error) {
-        console.error("Error fetching collections categories:", error);
+        console.error('Error fetching collections categories:', error);
       } finally {
         setLoading(false);
       }
@@ -38,47 +38,82 @@ export default function CollectionsPage() {
     fetchCategories();
   }, []);
 
+  const displayCategories = categories.length > 0 ? categories : [
+    { id: '1', name: 'Tops & Shirts', image: '/cat_apparel_1778670103427.png' },
+    { id: '2', name: 'Leather Goods', image: '/cat_leather_1778670351299.png' },
+    { id: '3', name: 'Signature Accessories', image: '/cat_accessories_1778670517925.png' },
+    { id: '4', name: 'Tailored Bottoms', image: '/cat_apparel_1778670103427.png' },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#F5FAFF] text-[#061B3A] font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col justify-between">
       <Navbar />
-      
-      <div className="max-w-7xl mx-auto px-4 md:px-8 pt-40 pb-20">
-        <div className="text-center mb-20">
-          <h1 className="text-4xl md:text-5xl font-serif tracking-[0.1em] mb-4">OUR COLLECTIONS</h1>
-          <div className="w-24 h-[1px] bg-black/20 mx-auto"></div>
-        </div>
-        
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-16">
-            {[1, 2, 3].map((_, i) => (
-              <div key={i} className="flex flex-col animate-pulse">
-                <div className="aspect-[3/4] w-full bg-gray-200 rounded-2xl"></div>
-                <div className="h-6 bg-gray-200 rounded w-1/2 mx-auto mt-6"></div>
-              </div>
-            ))}
+
+      <main className="flex-1 py-12 md:py-20">
+        <div className="sj-container space-y-12">
+          
+          {/* Header */}
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <span className="inline-flex items-center text-xs font-bold tracking-[0.2em] text-blue-600 uppercase">
+              <span>THE COMPLETE WARDROBE</span>
+            </span>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-sans font-extrabold text-slate-900 tracking-tight">
+              Our Collections
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+              Explore bespoke categories crafted with master artisan techniques, organic fibres, and timeless silhouettes.
+            </p>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-16">
-            {categories.map((cat) => (
-              <Link href={`/product?category=${encodeURIComponent(cat.name)}`} key={cat.id} className="group cursor-pointer block">
-                <div className="relative aspect-[3/4] bg-[#E7F2FF] mb-4 overflow-hidden rounded-2xl">
-                  <Image 
-                    src={cat.image} 
-                    alt={cat.name} 
+
+          {/* Categories Grid */}
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="aspect-[4/5] bg-white rounded-2xl border border-slate-200 animate-pulse" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              {displayCategories.map((cat) => (
+                <Link
+                  key={cat.id}
+                  href={`/product?category=${encodeURIComponent(cat.name)}`}
+                  className="group relative aspect-[4/5] rounded-2xl overflow-hidden bg-slate-900 border border-slate-200/80 shadow-sm hover:shadow-xl hover:border-slate-300 transition-all duration-300 block"
+                >
+                  {/* Category Image */}
+                  <Image
+                    src={cat.image || '/cat_apparel_1778670103427.png'}
+                    alt={cat.name}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
                   />
-                </div>
-                <div className="flex flex-col items-center gap-1 mt-6">
-                  <h3 className="text-sm font-semibold tracking-widest uppercase text-gray-900">{cat.name}</h3>
-                  <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 border-b border-transparent group-hover:border-black/30 pb-1 transition-colors">Discover</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-      
+
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+
+                  {/* Card Content */}
+                  <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8 flex flex-col justify-end text-white z-10">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-300 mb-1">
+                      Department
+                    </span>
+                    <h3 className="text-xl sm:text-2xl font-sans font-bold text-white tracking-wide uppercase group-hover:text-blue-200 transition-colors">
+                      {cat.name}
+                    </h3>
+                    
+                    <div className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-slate-300 mt-3 group-hover:text-white transition-colors">
+                      <span>Explore Collection</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+
+        </div>
+      </main>
+
       <Footer />
     </div>
   );

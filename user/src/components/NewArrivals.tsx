@@ -1,205 +1,299 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { getApiUrl } from '@/lib/api';
-import Image from 'next/image';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { useCart } from '@/context/CartContext';
-import { useWishlist } from '@/context/WishlistContext';
-import { ShoppingBag, Check, Heart } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { getApiUrl } from '@/lib/api';
+import ProductCard from './ProductCard';
 
-interface Product {
+interface RawProduct {
   id: string;
-  variantId?: string;
   name: string;
-  category: string;
-  price: number;
-  originalPrice: number;
+  description?: string;
   image: string;
-  isNewArrival: boolean;
+  subimage?: string[];
+  isNewArrival?: boolean;
+  isCustomerFavorite?: boolean;
+  rating?: number;
+  reviewsCount?: number;
+  category?: {
+    id: string;
+    name: string;
+  };
+  brand?: {
+    id: string;
+    name: string;
+  };
+  variants?: Array<{
+    id: string;
+    price: number;
+    offerPrice?: number;
+    qty?: number;
+    sku?: string;
+  }>;
 }
 
+const CATEGORY_TABS = [
+  'ALL PRODUCTS',
+  'ELECTRONICS',
+  'APPAREL',
+  'LEATHER GOODS',
+  'FOOTWEAR',
+  'HOME LIVING',
+];
+
+const FALLBACK_PRODUCTS: RawProduct[] = [
+  {
+    id: 'prod-1',
+    name: 'JudesCart Utility Wool Overshirt',
+    category: { id: 'c1', name: 'APPAREL' },
+    brand: { id: 'b1', name: 'JudesCart' },
+    image: '/prod_overshirt_1778670536589.png',
+    isNewArrival: true,
+    isCustomerFavorite: true,
+    rating: 4.9,
+    reviewsCount: 142,
+    variants: [{ id: 'v1', price: 4299, offerPrice: 5249 }],
+  },
+  {
+    id: 'prod-2',
+    name: 'Tailored Merino Blend Suit Jacket',
+    category: { id: 'c1', name: 'APPAREL' },
+    brand: { id: 'b1', name: 'JudesCart' },
+    image: '/cat_apparel_1778670103427.png',
+    isCustomerFavorite: true,
+    rating: 4.8,
+    reviewsCount: 89,
+    variants: [{ id: 'v2', price: 14999, offerPrice: 18499 }],
+  },
+  {
+    id: 'prod-3',
+    name: 'Handcrafted Executive Leather Briefcase',
+    category: { id: 'c2', name: 'LEATHER GOODS' },
+    brand: { id: 'b1', name: 'JudesCart' },
+    image: '/cat_leather_1778670351299.png',
+    isNewArrival: true,
+    rating: 5.0,
+    reviewsCount: 67,
+    variants: [{ id: 'v3', price: 8299, offerPrice: 9999 }],
+  },
+  {
+    id: 'prod-4',
+    name: 'Signature Leather Weekender & Duffle',
+    category: { id: 'c2', name: 'LEATHER GOODS' },
+    brand: { id: 'b1', name: 'JudesCart' },
+    image: '/about_craftsmanship.png',
+    isCustomerFavorite: true,
+    rating: 4.9,
+    reviewsCount: 112,
+    variants: [{ id: 'v4', price: 11499, offerPrice: 13999 }],
+  },
+  {
+    id: 'prod-5',
+    name: 'Precision Wireless ANC Studio Headphones',
+    category: { id: 'c3', name: 'ELECTRONICS' },
+    brand: { id: 'b1', name: 'JudesCart' },
+    image: '/cat_accessories_1778670517925.png',
+    isNewArrival: true,
+    rating: 4.9,
+    reviewsCount: 204,
+    variants: [{ id: 'v5', price: 6499, offerPrice: 8999 }],
+  },
+  {
+    id: 'prod-6',
+    name: 'Smart Obsidian Touchscreen Chrono Watch',
+    category: { id: 'c3', name: 'ELECTRONICS' },
+    brand: { id: 'b1', name: 'JudesCart' },
+    image: '/cat_accessories_1778670517925.png',
+    isCustomerFavorite: true,
+    rating: 4.8,
+    reviewsCount: 95,
+    variants: [{ id: 'v6', price: 7999, offerPrice: 10499 }],
+  },
+  {
+    id: 'prod-7',
+    name: 'Handcrafted Italian Calfskin Oxford Shoes',
+    category: { id: 'c4', name: 'FOOTWEAR' },
+    brand: { id: 'b1', name: 'JudesCart' },
+    image: '/cat_leather_1778670351299.png',
+    isNewArrival: true,
+    rating: 4.9,
+    reviewsCount: 78,
+    variants: [{ id: 'v7', price: 8999, offerPrice: 11999 }],
+  },
+  {
+    id: 'prod-8',
+    name: 'Minimalist Artisan Suede Chelsea Boots',
+    category: { id: 'c4', name: 'FOOTWEAR' },
+    brand: { id: 'b1', name: 'JudesCart' },
+    image: '/cat_leather_1778670351299.png',
+    isCustomerFavorite: true,
+    rating: 4.7,
+    reviewsCount: 63,
+    variants: [{ id: 'v8', price: 9499, offerPrice: 12499 }],
+  },
+  {
+    id: 'prod-9',
+    name: 'Bespoke Pure Cashmere Throw Blanket',
+    category: { id: 'c5', name: 'HOME LIVING' },
+    brand: { id: 'b1', name: 'JudesCart' },
+    image: '/about_atelier.png',
+    isCustomerFavorite: true,
+    rating: 5.0,
+    reviewsCount: 54,
+    variants: [{ id: 'v9', price: 5499, offerPrice: 6999 }],
+  },
+  {
+    id: 'prod-10',
+    name: 'Aroma Atelier Obsidian Ceramic Diffuser',
+    category: { id: 'c5', name: 'HOME LIVING' },
+    brand: { id: 'b1', name: 'JudesCart' },
+    image: '/about_atelier.png',
+    isNewArrival: true,
+    rating: 4.8,
+    reviewsCount: 41,
+    variants: [{ id: 'v10', price: 3299, offerPrice: 4199 }],
+  },
+  {
+    id: 'prod-11',
+    name: 'Pleated Tailored Wool Trousers',
+    category: { id: 'c1', name: 'APPAREL' },
+    brand: { id: 'b1', name: 'JudesCart' },
+    image: '/prod_trouser_1778670553370.png',
+    rating: 4.8,
+    reviewsCount: 88,
+    variants: [{ id: 'v11', price: 3499, offerPrice: 4299 }],
+  },
+  {
+    id: 'prod-12',
+    name: 'Bespoke Atelier Double-Breasted Blazer',
+    category: { id: 'c1', name: 'APPAREL' },
+    brand: { id: 'b1', name: 'JudesCart' },
+    image: '/about_atelier.png',
+    isCustomerFavorite: true,
+    rating: 4.9,
+    reviewsCount: 136,
+    variants: [{ id: 'v12', price: 16999, offerPrice: 19999 }],
+  },
+];
+
 export default function NewArrivals() {
-  const { addToCart } = useCart();
-  const { addToWishlist } = useWishlist();
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const router = useRouter();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState<RawProduct[]>(FALLBACK_PRODUCTS);
+  const [activeCategory, setActiveCategory] = useState<string>('ALL PRODUCTS');
 
   useEffect(() => {
-    const fetchNewArrivals = async () => {
-      const apiUrl = getApiUrl();
+    const fetchCatalog = async () => {
       try {
-        const response = await fetch(`${apiUrl}/products?limit=100`);
-        if (response.ok) {
-          const resData = await response.json();
-          if (resData && Array.isArray(resData.data)) {
-            // Map the API data
-            const mapped = resData.data.map((p: any) => {
-              const price = p.variants?.[0]?.price || 5400;
-              return {
-                id: p.id,
-                variantId: p.variants?.[0]?.id,
-                name: p.name,
-                category: p.category?.name || "Apparel",
-                price: price,
-                originalPrice: p.variants?.[0]?.offerPrice || Math.round(price * 1.2),
-                image: p.image || "/prod_overshirt_1778670536589.png",
-                isNewArrival: p.isNewArrival
-              };
-            });
-
-            // Filter for new arrivals, fallback to first 4 products if none marked
-            let filtered = mapped.filter((p: any) => p.isNewArrival);
-            if (filtered.length === 0) {
-              filtered = mapped.slice(0, 4);
-            }
-            setProducts(filtered.slice(0, 4));
+        const res = await fetch(`${getApiUrl()}/products?limit=50`);
+        if (res.ok) {
+          const json = await res.json();
+          const items: RawProduct[] = Array.isArray(json?.data) ? json.data : [];
+          if (items.length > 0) {
+            setProducts(items);
           }
         }
-      } catch (error) {
-        console.error("Error fetching new arrivals:", error);
-      } finally {
-        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching products:', err);
       }
     };
-    fetchNewArrivals();
+
+    fetchCatalog();
   }, []);
 
-  const handleAddToCart = (e: React.MouseEvent, prod: Product) => {
-    e.preventDefault();
-    addToCart({
-      productId: prod.id,
-      variantId: prod.variantId,
-      title: prod.name,
-      category: prod.category,
-      price: prod.price,
-      image: prod.image,
-      size: 'M',
-      color: 'Classic',
-      quantity: 1,
+  const filteredProducts = useMemo(() => {
+    if (activeCategory === 'ALL PRODUCTS') {
+      return products.slice(0, 12);
+    }
+
+    const target = activeCategory.toUpperCase().trim();
+    const matched = products.filter((p) => {
+      const catName = p.category?.name?.toUpperCase().trim() || '';
+      const prodName = p.name?.toUpperCase().trim() || '';
+
+      if (catName === target) return true;
+
+      // Category match aliases
+      if (target === 'ELECTRONICS' && (catName.includes('ELECTR') || catName.includes('TECH') || catName.includes('ACCESS') || prodName.includes('HEADPHONE') || prodName.includes('WATCH') || prodName.includes('AUDIO'))) return true;
+      if (target === 'APPAREL' && (catName.includes('APPAR') || catName.includes('CLOTH') || catName.includes('TAILOR') || catName.includes('FASHION') || prodName.includes('JACKET') || prodName.includes('OVERSHIRT') || prodName.includes('BLAZER') || prodName.includes('TROUSER'))) return true;
+      if (target === 'LEATHER GOODS' && (catName.includes('LEATHER') || catName.includes('BAG') || prodName.includes('LEATHER') || prodName.includes('BRIEFCASE') || prodName.includes('WEEKENDER') || prodName.includes('WALLET'))) return true;
+      if (target === 'FOOTWEAR' && (catName.includes('FOOT') || catName.includes('SHOE') || prodName.includes('OXFORD') || prodName.includes('BOOT') || prodName.includes('SNEAKER') || prodName.includes('LOAFER'))) return true;
+      if (target === 'HOME LIVING' && (catName.includes('HOME') || catName.includes('LIVING') || prodName.includes('BLANKET') || prodName.includes('DIFFUSER') || prodName.includes('CASHMERE') || prodName.includes('DECOR'))) return true;
+
+      return false;
     });
-    
-    setToastMessage(`Added ${prod.name} to cart`);
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 3000);
-  };
 
-  const handleAddToWishlist = (e: React.MouseEvent, prod: Product) => {
-    e.preventDefault();
-    addToWishlist({
-      id: String(prod.id),
-      productId: prod.id,
-      variantId: prod.variantId,
-      title: prod.name,
-      category: prod.category,
-      price: prod.price,
-      image: prod.image,
-    });
-    setToastMessage(`Added ${prod.name} to wishlist`);
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 3000);
-  };
+    if (matched.length > 0) {
+      return matched.slice(0, 12);
+    }
 
-  const handleBuyNow = (e: React.MouseEvent, prod: Product) => {
-    e.preventDefault();
-    addToCart({
-      productId: prod.id,
-      variantId: prod.variantId,
-      title: prod.name,
-      category: prod.category,
-      price: prod.price,
-      image: prod.image,
-      size: 'M',
-      color: 'Classic',
-      quantity: 1,
-    });
-    router.push('/cart');
-  };
-
-  if (loading) {
-    return (
-      <section className="py-20 px-4 md:px-8 max-w-7xl mx-auto">
-        <h2 className="text-3xl font-serif text-center md:text-left mb-12">New Arrivals</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
-          {[1, 2, 3, 4].map((_, i) => (
-            <div key={i} className="flex flex-col gap-4 animate-pulse">
-              <div className="aspect-[3/4] w-full bg-gray-200 rounded-xl"></div>
-              <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/3"></div>
-            </div>
-          ))}
-        </div>
-      </section>
-    );
-  }
-
-  if (products.length === 0) return null;
+    // Fallback if current database doesn't have matches for the category
+    return FALLBACK_PRODUCTS.filter((p) => {
+      const catName = p.category?.name?.toUpperCase().trim() || '';
+      return catName === target;
+    }).slice(0, 12);
+  }, [products, activeCategory]);
 
   return (
-    <section className="py-20 px-4 md:px-8 max-w-7xl mx-auto relative">
-      <h2 className="text-3xl font-serif text-center md:text-left mb-12">New Arrivals</h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
-        {products.map((prod) => (
-          <div key={prod.id} className="group flex flex-col">
-            <div className="relative aspect-[3/4] bg-[#E7F2FF] mb-4 overflow-hidden rounded-xl group/image">
-              <Link href={`/product?id=${prod.id}`} className="block w-full h-full">
-                <div className="absolute top-3 left-3 bg-white px-2 py-1 text-[0.6rem] font-bold tracking-widest z-10 shadow-sm">NEW</div>
-                <Image 
-                  src={prod.image} 
-                  alt={prod.name} 
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover/image:scale-105 mix-blend-multiply"
-                />
-              </Link>
-              <div className="absolute bottom-3 right-3 flex flex-row gap-2 z-20">
-                <button 
-                  onClick={(e) => handleAddToWishlist(e, prod)}
-                  className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#0077FF] hover:text-white transition-colors text-gray-800"
-                  aria-label="Add to wishlist"
-                >
-                  <Heart className="w-4 h-4" />
-                </button>
-                <button 
-                  onClick={(e) => handleAddToCart(e, prod)}
-                  className="bg-white p-2.5 rounded-full shadow-md hover:bg-[#0077FF] hover:text-white transition-colors text-gray-800"
-                  aria-label="Add to cart"
-                >
-                  <ShoppingBag className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-            <div className="flex flex-col gap-3 flex-1">
-              <Link href={`/product?id=${prod.id}`} className="block">
-                <h4 className="text-sm text-gray-900 group-hover:text-[#0077FF] transition-colors">{prod.name}</h4>
-                <p className="text-sm font-semibold text-gray-900 mt-1">₹ {prod.price.toLocaleString()}</p>
-              </Link>
-              <button 
-                onClick={(e) => handleBuyNow(e, prod)}
-                className="mt-auto flex items-center justify-center gap-2 w-full py-2.5 text-[0.65rem] font-bold tracking-[0.2em] uppercase border border-gray-200 text-gray-800 rounded-full hover:bg-[#0077FF] hover:text-white hover:border-[#0077FF] transition-all cursor-pointer shadow-sm hover:shadow-md"
+    <section className="sj-container space-y-6 sm:space-y-8">
+      {/* Section Header with Category Pills */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <span className="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-[#DF9F28]">
+            TOP TRENDING PICKS
+          </span>
+          <h2 className="font-sans text-xl sm:text-3xl font-extrabold text-stone-900 mt-0.5 sm:mt-1">
+            Featured at JudesCart
+          </h2>
+        </div>
+
+        {/* Category Pills Filter */}
+        <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+          {CATEGORY_TABS.map((tab) => {
+            const isActive = activeCategory === tab;
+            return (
+              <button
+                key={tab}
+                onClick={() => setActiveCategory(tab)}
+                className={`px-2.5 py-1 sm:px-4 sm:py-2 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-colors shrink-0 cursor-pointer ${
+                  isActive
+                    ? 'bg-[#DF9F28] text-slate-950 shadow-sm'
+                    : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+                }`}
               >
-                Buy Now
+                {tab}
               </button>
-            </div>
-          </div>
-        ))}
+            );
+          })}
+        </div>
       </div>
 
-      {/* Floating Toast Notification */}
-      {toastMessage && (
-        <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-black text-white px-6 py-4 rounded-full shadow-2xl z-[100] flex items-center gap-3 animate-fadeIn">
-          <div className="bg-green-500 rounded-full p-1">
-            <Check className="w-3 h-3 text-white" />
-          </div>
-          <span className="text-xs font-semibold tracking-widest uppercase">
-            {toastMessage}
-          </span>
-        </div>
-      )}
+      {/* Products Grid: 3 columns desktop, 2 columns tablet, 2 columns mobile */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4 lg:gap-6">
+        {filteredProducts.map((prod) => {
+          const mainVariant = prod.variants?.[0];
+          const price = mainVariant?.price || 4299;
+          const originalPrice = mainVariant?.offerPrice;
+
+          return (
+            <ProductCard
+              key={prod.id}
+              id={prod.id}
+              variantId={mainVariant?.id}
+              name={prod.name}
+              category={prod.category?.name || 'APPAREL'}
+              brand={prod.brand?.name || 'JudesCart'}
+              price={price}
+              originalPrice={originalPrice}
+              image={prod.image || '/prod_overshirt_1778670536589.png'}
+              subimage={prod.subimage || []}
+              description={prod.description}
+              rating={prod.rating || 4.9}
+              reviewsCount={prod.reviewsCount || 128}
+              isNewArrival={prod.isNewArrival}
+              isCustomerFavorite={prod.isCustomerFavorite}
+            />
+          );
+        })}
+      </div>
     </section>
   );
 }

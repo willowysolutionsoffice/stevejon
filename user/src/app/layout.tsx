@@ -1,28 +1,16 @@
 import type { Metadata } from "next";
-import { Geist, Playfair_Display } from "next/font/google";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "STEVEJON",
-  description: "STEVEJON has redefined bespoke tailoring for over three decades. Our journey began in a small atelier, fueled by a passion for exquisite fabrics, precise drafting, and the timeless art of the perfect fit. Tailoring is not just about measurements; it is about sculpting a silhouette that mirrors the soul and projects strength, elegance, and effortless sophistication.",
-  icons: {
-    icon: "/favicon.svg",
-  },
-};
-
 import { CartProvider } from "@/context/CartContext";
 import { OrderProvider } from "@/context/OrderContext";
 import { WishlistProvider } from "@/context/WishlistContext";
+
+export const metadata: Metadata = {
+  title: "JudesCart | Shop More. Live Better. - All Products Superstore",
+  description: "Shop all products at JudesCart. Discover top-rated electronics, tech gear, premium apparel, footwear, leather goods, smart home essentials, and beauty items with transparent weekly lucky draw rewards.",
+  icons: {
+    icon: "/logo-icon.webp",
+  },
+};
 
 export default function RootLayout({
   children,
@@ -30,11 +18,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${playfair.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col font-sans bg-[#F5FAFF] text-[#061B3A] selection:bg-[#0077FF] selection:text-white">
+    <html lang="en" className="h-full antialiased">
+      <body className="min-h-full flex flex-col font-sans bg-[#F8FAFC] text-[#0F172A] selection:bg-[#DF9F28] selection:text-white">
         <CartProvider>
           <WishlistProvider>
             <OrderProvider>

@@ -1,38 +1,83 @@
+'use client';
+
 import React from 'react';
+import { Star, ShieldCheck, Quote } from 'lucide-react';
+
+const REVIEWS = [
+  {
+    quote: "The cashmere overshirt and tailored trousers exceeded all my expectations. The cut, drapery, and tactile feel are strictly top-tier.",
+    author: "Jonathan R.",
+    location: "Mumbai",
+    rating: 5,
+    tag: "Verified Buyer",
+  },
+  {
+    quote: "JudesCart has completely elevated my rotation. In addition to exquisite clothing, winning a leather duffle in the weekly lucky draw was an incredible bonus!",
+    author: "Marcus T.",
+    location: "Bengaluru",
+    rating: 5,
+    tag: "Lucky Draw Winner",
+  },
+  {
+    quote: "A seamless customer experience from browsing to delivery. The sizing recommendations were spot on and customer care was exceptionally responsive.",
+    author: "Alexander H.",
+    location: "Kochi",
+    rating: 5,
+    tag: "Verified Buyer",
+  },
+];
 
 export default function Testimonials() {
   return (
-    <section className="py-24 px-4 md:px-8 bg-[#F1F7FF] border-t border-b border-[#EAE8E1]">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-serif text-center mb-16 tracking-wide">Client Testimonials</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {[
-            {
-              quote: "The quality of the craftsmanship is unparalleled. Each piece feels like it was tailored specifically for me.",
-              author: "Jonathan R.",
-              location: "New York"
-            },
-            {
-              quote: "Stevejon has completely redefined my wardrobe. The materials are exquisite and the attention to detail is evident.",
-              author: "Marcus T.",
-              location: "London"
-            },
-            {
-              quote: "A seamless experience from start to finish. The garments have an enduring elegance that I absolutely love.",
-              author: "Alexander H.",
-              location: "Paris"
-            }
-          ].map((testimonial, index) => (
-            <div key={index} className="flex flex-col items-center text-center p-8 bg-white rounded-xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-[#EAE8E1] group transition-transform duration-300 hover:-translate-y-1">
-              <div className="mb-6 text-[#061B3A] opacity-20 group-hover:opacity-40 transition-opacity duration-300">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M14.017 18L14.017 10.609C14.017 4.905 17.748 1.039 23 0L23.995 2.151C21.563 3.068 20 5.789 20 8H24V18H14.017ZM0 18V10.609C0 4.905 3.748 1.038 9 0L9.996 2.151C7.563 3.068 6 5.789 6 8H9.983L9.983 18L0 18Z" />
-                </svg>
+    <section className="py-16 md:py-24 bg-white border-t border-slate-200/80">
+      <div className="sj-container">
+        <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
+          <span className="text-xs font-bold tracking-[0.2em] uppercase text-blue-600">
+            CLIENT SATISFACTION
+          </span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-slate-900 tracking-tight">
+            Voices of Refinement
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-500">
+            Real stories from our discerning community of patrons across the country.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {REVIEWS.map((review, idx) => (
+            <div
+              key={idx}
+              className="bg-slate-50 rounded-2xl border border-slate-200/80 p-6 sm:p-8 flex flex-col justify-between hover:border-blue-200 hover:shadow-md transition-all group"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-1 text-amber-400">
+                    {[...Array(review.rating)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-amber-400" />
+                    ))}
+                  </div>
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100">
+                    <ShieldCheck className="w-3 h-3" />
+                    {review.tag}
+                  </span>
+                </div>
+
+                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal italic">
+                  "{review.quote}"
+                </p>
               </div>
-              <p className="font-serif text-[1.05rem] leading-relaxed mb-6 italic text-[#0B2A55]">"{testimonial.quote}"</p>
-              <h4 className="text-xs font-bold tracking-[0.2em] uppercase mb-1">{testimonial.author}</h4>
-              <span className="text-[0.65rem] text-[#607A9D] uppercase tracking-wider">{testimonial.location}</span>
+
+              <div className="mt-6 pt-4 border-t border-slate-200/60 flex items-center justify-between">
+                <div>
+                  <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                    {review.author}
+                  </h4>
+                  <span className="text-[11px] text-slate-400 font-medium">
+                    {review.location}
+                  </span>
+                </div>
+                <Quote className="w-5 h-5 text-slate-300 group-hover:text-blue-400 transition-colors" />
+              </div>
             </div>
           ))}
         </div>

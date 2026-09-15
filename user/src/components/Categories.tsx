@@ -1,14 +1,18 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { getApiUrl } from '@/lib/api';
 import Image from 'next/image';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+import { getApiUrl } from '@/lib/api';
 
 interface Category {
   id: string;
   name: string;
   image: string;
+  _count?: {
+    products?: number;
+  };
 }
 
 export default function Categories() {
@@ -17,9 +21,8 @@ export default function Categories() {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const apiUrl = getApiUrl();
       try {
-        const res = await fetch(`${apiUrl}/categories`);
+        const res = await fetch(`${getApiUrl()}/categories`);
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data)) {
@@ -27,7 +30,7 @@ export default function Categories() {
           }
         }
       } catch (err) {
-        console.error("Error fetching categories:", err);
+        console.error('Error fetching categories:', err);
       } finally {
         setLoading(false);
       }
@@ -35,39 +38,75 @@ export default function Categories() {
     fetchCategories();
   }, []);
 
-  if (loading) {
-    return (
-      <section className="px-4 py-6 md:px-8 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
-        {[1, 2, 3].map((_, i) => (
-          <div key={i} className="relative aspect-[4/5] bg-gray-100 animate-pulse rounded-lg"></div>
-        ))}
-      </section>
-    );
-  }
-
-  // Fallback in case backend categories are not seeded or offline
+  // JudesCart authentic categories with real assets
   const displayCategories = categories.length > 0 ? categories : [
-    { id: '1', name: "Apparel", image: "/cat_apparel_1778670103427.png" },
-    { id: '2', name: "Leather Goods", image: "/cat_leather_1778670351299.png" },
-    { id: '3', name: "Accessories", image: "/cat_accessories_1778670517925.png" }
+    { id: '1', name: 'Apparel & Tailoring', image: '/cat_apparel_1778670103427.png', _count: { products: 38 } },
+    { id: '2', name: 'Signature Leather Goods', image: '/cat_leather_1778670351299.png', _count: { products: 19 } },
+    { id: '3', name: 'Fine Accessories', image: '/cat_accessories_1778670517925.png', _count: { products: 24 } },
+    { id: '4', name: 'Atelier Suits & Blazers', image: '/about_atelier.png', _count: { products: 16 } },
+    { id: '5', name: 'Outerwear & Jackets', image: '/prod_overshirt_1778670536589.png', _count: { products: 12 } },
+    { id: '6', name: 'Travel & Craftsmanship', image: '/about_craftsmanship.png', _count: { products: 28 } },
   ];
 
   return (
-    <section className="px-4 py-6 md:px-8 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
-      {displayCategories.slice(0, 3).map((cat) => (
-        <Link href={`/product?category=${encodeURIComponent(cat.name)}`} key={cat.id} className="group relative aspect-[4/5] overflow-hidden bg-gray-200 cursor-pointer block">
-          <Image 
-            src={cat.image} 
-            alt={cat.name} 
-            fill
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-100"></div>
-          <div className="absolute bottom-6 left-6 right-6">
-            <h3 className="text-white text-sm tracking-widest uppercase">{cat.name}</h3>
-          </div>
+    <section className="sj-container space-y-4 sm:space-y-6">
+      {/* Section Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-stone-200 pb-4">
+        <div>
+          <span className="text-xs uppercase tracking-widest font-bold text-[#DF9F28]">
+            All Departments
+          </span>
+          <h2 className="font-sans text-2xl sm:text-3xl font-extrabold text-stone-900 mt-1">
+            Shop by Department
+          </h2>
+        </div>
+
+        <Link
+          href="/product"
+          className="text-xs font-bold uppercase tracking-wider text-[#DF9F28] hover:text-[#C6891E] flex items-center gap-1.5 transition-colors font-sans"
+        >
+          <span>View All Products</span>
+          <ArrowRight className="w-3.5 h-3.5" />
         </Link>
-      ))}
+      </div>
+
+      {/* Categories Grid (2 cols mobile, 2 cols tablet, 3 cols desktop) */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+        {displayCategories.map((cat, idx) => {
+          const itemCount = cat._count?.products || (idx * 7 + 14);
+
+          return (
+            <Link
+              key={cat.id}
+              href={`/product?category=${encodeURIComponent(cat.name)}`}
+              className="group relative aspect-[16/12] sm:aspect-[16/11] rounded-2xl overflow-hidden bg-stone-100 border border-stone-200 shadow-xs flex flex-col justify-end p-3 sm:p-6 transition-all duration-300 hover:shadow-xl hover:border-[#DF9F28]/60"
+            >
+              {/* Category Background Image */}
+              <Image
+                src={cat.image || '/cat_apparel_1778670103427.png'}
+                alt={cat.name}
+                fill
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+              />
+
+              {/* Gradient Dark Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0A192F]/90 via-[#0A192F]/40 to-transparent opacity-85 group-hover:opacity-90 transition-opacity" />
+
+              {/* Bottom Card Information */}
+              <div className="relative z-10 text-white space-y-0.5 sm:space-y-1">
+                <span className="text-[9px] sm:text-[11px] uppercase tracking-wider text-[#DF9F28] font-bold font-sans">
+                  {itemCount} Styles
+                </span>
+                
+                <h3 className="font-sans text-xs sm:text-xl font-bold group-hover:translate-x-1 transition-transform duration-200 line-clamp-1 text-white">
+                  {cat.name}
+                </h3>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
     </section>
   );
 }

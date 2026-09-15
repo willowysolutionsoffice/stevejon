@@ -70,7 +70,7 @@ export default function TodaysDeal() {
       <div className="bg-white rounded-[2rem] border border-gray-100/80 shadow-[0_15px_50px_rgba(0,0,0,0.02)] overflow-hidden p-6 md:p-12 flex flex-col lg:flex-row items-stretch gap-8 min-h-[480px]">
         {/* Deal info & Countdown */}
         <div className="flex-1 flex flex-col justify-center items-center text-center p-4 lg:p-8 min-w-[280px]">
-          <h2 className="text-3xl md:text-[2.6rem] font-serif tracking-[0.1em] uppercase text-[#061B3A] mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold tracking-tight uppercase text-[#061B3A] mb-4">
             Today&apos;s Deal
           </h2>
           <p className="text-gray-500 text-xs md:text-sm tracking-[0.15em] uppercase mb-10">
@@ -80,7 +80,7 @@ export default function TodaysDeal() {
           {/* Countdown digits */}
           <div className="flex items-center justify-center gap-4 md:gap-6 mb-10">
             <div className="flex flex-col items-center">
-              <span className="text-4xl md:text-5xl lg:text-6xl font-serif text-[#061B3A] tracking-tight tabular-nums min-w-[3rem] md:min-w-[4rem]">
+              <span className="text-4xl md:text-5xl lg:text-6xl font-sans font-extrabold text-[#061B3A] tracking-tight tabular-nums min-w-[3rem] md:min-w-[4rem]">
                 {timeLeft.hours}
               </span>
               <span className="text-[0.65rem] md:text-xs tracking-[0.2em] font-medium text-gray-400 uppercase mt-2">Hours</span>
@@ -89,7 +89,7 @@ export default function TodaysDeal() {
             <span className="text-2xl md:text-3xl font-light text-[#061B3A]/30 -mt-6">:</span>
 
             <div className="flex flex-col items-center">
-              <span className="text-4xl md:text-5xl lg:text-6xl font-serif text-[#061B3A] tracking-tight tabular-nums min-w-[3rem] md:min-w-[4rem]">
+              <span className="text-4xl md:text-5xl lg:text-6xl font-sans font-extrabold text-[#061B3A] tracking-tight tabular-nums min-w-[3rem] md:min-w-[4rem]">
                 {timeLeft.minutes}
               </span>
               <span className="text-[0.65rem] md:text-xs tracking-[0.2em] font-medium text-gray-400 uppercase mt-2">Minutes</span>
@@ -98,7 +98,7 @@ export default function TodaysDeal() {
             <span className="text-2xl md:text-3xl font-light text-[#061B3A]/30 -mt-6">:</span>
 
             <div className="flex flex-col items-center">
-              <span className="text-4xl md:text-5xl lg:text-6xl font-serif text-[#061B3A] tracking-tight tabular-nums min-w-[3rem] md:min-w-[4rem]">
+              <span className="text-4xl md:text-5xl lg:text-6xl font-sans font-extrabold text-[#061B3A] tracking-tight tabular-nums min-w-[3rem] md:min-w-[4rem]">
                 {timeLeft.seconds}
               </span>
               <span className="text-[0.65rem] md:text-xs tracking-[0.2em] font-medium text-gray-400 uppercase mt-2">Seconds</span>

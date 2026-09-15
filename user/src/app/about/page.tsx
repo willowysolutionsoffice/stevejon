@@ -1,131 +1,119 @@
 'use client';
 
 import React from 'react';
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowRight, ShieldCheck, Heart, Award } from 'lucide-react';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#F5FAFF] text-[#061B3A] font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col justify-between">
       <Navbar />
-      
-      {/* Hero Section */}
-      <div className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-[#031B3F]">
-        {/* Subtle decorative background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/90 z-10" />
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-luminosity scale-105" 
-          style={{ backgroundImage: `url('/cat_apparel_1778670103427.png')` }}
-        />
-        
-        <div className="relative z-20 text-center px-4 max-w-4xl">
-          <span className="text-xs uppercase tracking-[0.3em] text-[#0077FF] font-semibold mb-6 block animate-fade-in">
-            ESTABLISHED IN PARIS
-          </span>
-          <h1 className="text-4xl md:text-7xl font-serif tracking-[0.15em] text-white mb-6">
-            STEVEJON
-          </h1>
-          <p className="text-sm md:text-lg text-white/70 font-light tracking-[0.1em] leading-relaxed max-w-2xl mx-auto">
-            Crafting the pinnacle of personalized tailoring and exclusive bespoke collections for the modern connoisseur.
-          </p>
-        </div>
-      </div>
 
-      {/* Our Heritage Section */}
-      <div className="max-w-6xl mx-auto px-6 md:px-12 py-24 md:py-32">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="space-y-8">
-            <span className="text-[10px] uppercase tracking-[0.25em] text-[#0077FF] font-bold">
-              OUR HERITAGE
+      <main className="flex-1">
+        {/* Editorial Hero */}
+        <section className="relative py-20 md:py-28 bg-[#0B132B] text-white overflow-hidden border-b border-slate-800">
+          <div className="absolute inset-0 bg-radial from-blue-900/30 via-slate-950/80 to-[#0B132B] pointer-events-none" />
+          <div className="sj-container relative z-10 text-center max-w-3xl mx-auto space-y-4">
+            <span className="inline-flex items-center text-xs font-bold tracking-[0.2em] text-blue-400 uppercase">
+              <span>THE JUDESCART ATELIER</span>
             </span>
-            <h2 className="text-3xl md:text-4xl font-serif tracking-[0.1em] leading-tight">
-              A Legacy of Uncompromising Excellence
-            </h2>
-            <div className="w-16 h-[1px] bg-[#0077FF]"></div>
-            <p className="text-sm text-gray-600 leading-relaxed font-light">
-              Founded on the belief that clothing is the ultimate expression of individuality, STEVEJON has redefined bespoke tailoring for over three decades. Our journey began in a small atelier, fueled by a passion for exquisite fabrics, precise drafting, and the timeless art of the perfect fit.
-            </p>
-            <p className="text-sm text-gray-600 leading-relaxed font-light">
-              Every garment we create is a collaborative masterpiece between the designer, the artisan, and the wearer. We source only the finest fabrics from historic mills in Italy and England, ensuring that each thread tells a story of luxury, comfort, and longevity.
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-sans font-extrabold text-white tracking-tight">
+              A Legacy of Sartorial Excellence
+            </h1>
+            <p className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed">
+              Crafting bespoke apparel, fine leather accessories, and refined essentials tailored for those who appreciate understated distinction.
             </p>
           </div>
-          
-          <div className="relative aspect-[4/5] bg-[#E7F2FF] overflow-hidden group shadow-lg">
-            <div 
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-[2000ms] group-hover:scale-105" 
-              style={{ backgroundImage: `url('/cat_leather_1778670351299.png')` }}
-            />
-            <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700" />
-          </div>
-        </div>
-      </div>
+        </section>
 
-      {/* The Philosophy - Full Width Elegant Statement */}
-      <div className="bg-[#021631] text-white py-24 md:py-32 px-6">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          <span className="text-xs uppercase tracking-[0.3em] text-[#0077FF] font-semibold">
-            THE PHILOSOPHY
-          </span>
-          <blockquote className="text-xl md:text-3xl font-serif italic font-light leading-relaxed tracking-wide text-white/90">
-            "Tailoring is not just about measurements; it is about sculpting a silhouette that mirrors the soul and projects strength, elegance, and effortless sophistication."
-          </blockquote>
-          <div className="w-12 h-[1px] bg-[#0077FF] mx-auto"></div>
-          <p className="text-xs uppercase tracking-[0.2em] text-white/50">
-            Steve Jon — Founder & Creative Director
-          </p>
-        </div>
-      </div>
+        {/* Story Section */}
+        <section className="py-16 md:py-24 bg-white border-b border-slate-200">
+          <div className="sj-container">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              <div className="space-y-6">
+                <span className="text-xs font-bold tracking-[0.2em] text-blue-600 uppercase">
+                  OUR PHILOSOPHY
+                </span>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-slate-900 leading-snug">
+                  Tailoring That Mirrors Character and Sophistication
+                </h2>
+                <div className="w-16 h-1 bg-blue-600 rounded-full" />
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  Founded on the belief that garments are an intimate expression of individuality, JudesCart has redefined modern wardrobe essentials for over three decades. Our journey started with a deep devotion to pure natural fabrics, precise drafting, and the art of the perfect fit.
+                </p>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  Every creation is a collaboration between master artisans and discerning patrons. We source certified organic cottons, pure cashmere, and full-grain leathers, ensuring each stitch reflects endurance, tactile comfort, and effortless elegance.
+                </p>
+              </div>
 
-      {/* The Three Pillars Section */}
-      <div className="max-w-6xl mx-auto px-6 md:px-12 py-24 md:py-32">
-        <div className="text-center mb-20 space-y-4">
-          <span className="text-[10px] uppercase tracking-[0.25em] text-[#0077FF] font-bold">
-            OUR THREE PILLARS
-          </span>
-          <h2 className="text-3xl md:text-4xl font-serif tracking-[0.1em]">
-            How We Define Perfection
-          </h2>
-          <div className="w-16 h-[1px] bg-black/10 mx-auto"></div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-          <div className="space-y-4 p-4 hover:bg-white transition-all duration-300 rounded-2xl hover:shadow-[0_10px_30px_rgba(0,0,0,0.03)]">
-            <div className="w-12 h-12 rounded-full bg-[#0077FF]/10 flex items-center justify-center mx-auto text-[#0077FF] font-serif text-lg font-semibold">
-              I
+              <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-slate-100 shadow-xl border border-slate-200">
+                <Image
+                  src="/cat_apparel_1778670103427.png"
+                  alt="JudesCart Tailoring Heritage"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                />
+              </div>
             </div>
-            <h3 className="text-sm font-semibold tracking-widest uppercase text-gray-900 pt-2">
-              Sartorial Integrity
-            </h3>
-            <p className="text-xs text-gray-500 leading-relaxed font-light max-w-xs mx-auto">
-              We adhere strictly to traditional tailoring methods, hand-stitching canvasses, lapels, and collars to produce a soft roll and unrivaled drape.
-            </p>
           </div>
+        </section>
 
-          <div className="space-y-4 p-4 hover:bg-white transition-all duration-300 rounded-2xl hover:shadow-[0_10px_30px_rgba(0,0,0,0.03)]">
-            <div className="w-12 h-12 rounded-full bg-[#0077FF]/10 flex items-center justify-center mx-auto text-[#0077FF] font-serif text-lg font-semibold">
-              II
+        {/* Pillars of Craft */}
+        <section className="py-16 md:py-24 bg-slate-50">
+          <div className="sj-container space-y-12">
+            <div className="text-center max-w-xl mx-auto space-y-2">
+              <span className="text-xs font-bold tracking-[0.2em] text-blue-600 uppercase">
+                CORE PRINCIPLES
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-slate-900 tracking-tight">
+                Crafted Without Compromise
+              </h2>
             </div>
-            <h3 className="text-sm font-semibold tracking-widest uppercase text-gray-900 pt-2">
-              Flawless Materials
-            </h3>
-            <p className="text-xs text-gray-500 leading-relaxed font-light max-w-xs mx-auto">
-              Our wool, cashmere, silk, and linens are selected exclusively from ethical, legendary European mills with centuries of heritage.
-            </p>
-          </div>
 
-          <div className="space-y-4 p-4 hover:bg-white transition-all duration-300 rounded-2xl hover:shadow-[0_10px_30px_rgba(0,0,0,0.03)]">
-            <div className="w-12 h-12 rounded-full bg-[#0077FF]/10 flex items-center justify-center mx-auto text-[#0077FF] font-serif text-lg font-semibold">
-              III
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                {
+                  icon: Award,
+                  title: 'Artisan Construction',
+                  desc: 'Every garment incorporates reinforced hand-finishing, structured canvassing, and precision drafting.',
+                },
+                {
+                  icon: ShieldCheck,
+                  title: 'Pure Sustainable Fibres',
+                  desc: 'We partner exclusively with certified ethical mills producing long-staple cottons and natural dyes.',
+                },
+                {
+                  icon: Heart,
+                  title: 'Patron Community',
+                  desc: 'We celebrate our loyal patrons through bespoke privileges, private previews, and our weekly live lucky draw.',
+                },
+              ].map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <div
+                    key={idx}
+                    className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xs hover:border-blue-200 hover:shadow-md transition-all space-y-4"
+                  >
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-base font-bold text-slate-900 uppercase tracking-wider">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
-            <h3 className="text-sm font-semibold tracking-widest uppercase text-gray-900 pt-2">
-              Perfect Adaptation
-            </h3>
-            <p className="text-xs text-gray-500 leading-relaxed font-light max-w-xs mx-auto">
-              Every detail, from the horn buttons to custom linings, is tailored precisely to your posture, movement, and personal tastes.
-            </p>
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
 
       <Footer />
     </div>

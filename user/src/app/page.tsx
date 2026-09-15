@@ -1,30 +1,26 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import MovingNewsBar from "@/components/MovingNewsBar";
 import Categories from "@/components/Categories";
 import NewArrivals from "@/components/NewArrivals";
-import PromoSection from "@/components/PromoSection";
+import BenefitsSection from "@/components/BenefitsSection";
 import LuckyDrawPoster from "@/components/LuckyDrawPoster";
-import Banner from "@/components/Banner";
-import ProductCollectionGrid from "@/components/ProductCollectionGrid";
+import RecentlyViewed from "@/components/RecentlyViewed";
 import Winners from "@/components/Winners";
-import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#F5FAFF] text-[#061B3A] font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col justify-between">
       <Navbar />
-      <Hero />
-      <MovingNewsBar />
-      <Categories />
-      <NewArrivals />
-      <PromoSection />
-      <LuckyDrawPoster />
-      <Banner />
-      <ProductCollectionGrid />
-      <Winners />
-      <Testimonials />
+      <main className="flex-1 space-y-12 sm:space-y-14 pb-20 pt-2">
+        <Hero />
+        <Categories />
+        <NewArrivals />
+        <BenefitsSection />
+        <LuckyDrawPoster />
+        <RecentlyViewed />
+        <Winners />
+      </main>
       <Footer />
     </div>
   );

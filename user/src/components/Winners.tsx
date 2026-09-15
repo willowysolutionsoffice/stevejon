@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { Trophy, ArrowRight } from 'lucide-react';
 import { getApiUrl } from '@/lib/api';
 
 interface ShowcaseWinner {
@@ -31,62 +33,67 @@ export default function Winners() {
       .catch(() => setLoaded(true));
   }, []);
 
-  // Hide section if no showcase winners published yet
   if (!loaded || winners.length === 0) return null;
 
   return (
-    <section className="py-24 px-4 md:px-8 bg-[#F5FAFF] border-t border-gray-100/50">
-      <div className="max-w-7xl mx-auto">
-
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-serif tracking-[0.1em] uppercase text-[#061B3A] mb-3">
-            Our Winners
+    <section className="sj-container space-y-4 sm:space-y-6">
+      {/* Section Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-stone-200 pb-4">
+        <div>
+          <span className="text-xs uppercase tracking-widest font-bold text-[#DF9F28]">
+            Community Winners
+          </span>
+          <h2 className="font-sans text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight mt-1">
+            Recent Lucky Draw Winners
           </h2>
-          <div className="h-[1px] w-12 bg-[#0077FF] mx-auto mb-4" />
-          <p className="text-xs md:text-sm tracking-[0.2em] uppercase text-gray-500">
-            Celebrated champions of our lucky draw
-          </p>
         </div>
 
-        {/* Winners Grid – centred */}
-        <div className="flex flex-wrap justify-center gap-6 md:gap-8">
-          {winners.map((winner, idx) => (
-            <div
-              key={winner.id}
-              className="flex flex-col items-center group w-[160px] md:w-[200px]"
-              style={{ animationDelay: `${idx * 100}ms` }}
-            >
-              {/* Portrait */}
-              <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 bg-[#E7F2FF] border border-gray-100/50">
-                <Image
-                  src={winner.winnerImage}
-                  alt={winner.winnerName}
-                  fill
-                  sizes="(max-width: 768px) 50vw, 200px"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  priority={idx < 4}
-                />
-                {/* Bottom overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
-              </div>
+        <Link
+          href="/lucky-draw"
+          className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#DF9F28] hover:text-[#C6891E] transition-colors group"
+        >
+          <span>Learn How To Participate</span>
+          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+        </Link>
+      </div>
 
-              {/* Name & details – centred */}
-              <div className="text-center mt-4 space-y-1">
-                <h4 className="text-xs md:text-sm font-semibold tracking-[0.12em] uppercase text-[#061B3A]">
-                  {winner.winnerName}
-                </h4>
-                <p className="text-[0.65rem] md:text-xs tracking-[0.18em] font-medium text-[#0077FF] uppercase">
-                  {winner.winnerPlace}
-                </p>
-                <p className="text-[0.6rem] text-gray-400 tracking-wide">
-                  {winner.drawCampaign.prizeName}
-                </p>
+      {/* Winners Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+        {winners.map((winner, idx) => (
+          <div
+            key={winner.id || idx}
+            className="bg-white rounded-2xl border border-stone-200 p-3.5 sm:p-4 flex flex-col items-center text-center shadow-xs hover:shadow-lg hover:border-[#DF9F28]/50 transition-all duration-300 group"
+          >
+            {/* Winner Portrait */}
+            <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-stone-100 mb-3 border border-stone-200">
+              <Image
+                src={winner.winnerImage || '/winner_man.jpg'}
+                alt={winner.winnerName}
+                fill
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute top-2 right-2 p-1.5 rounded-full bg-[#DF9F28] text-white shadow-xs">
+                <Trophy className="w-3 h-3" />
               </div>
             </div>
-          ))}
-        </div>
 
+            {/* Name & Location */}
+            <h4 className="font-sans text-xs sm:text-sm font-bold text-slate-900 line-clamp-1">
+              {winner.winnerName}
+            </h4>
+            <p className="text-[11px] text-[#DF9F28] font-bold uppercase tracking-wider mt-0.5">
+              {winner.winnerPlace}
+            </p>
+
+            {/* Prize Badge */}
+            <div className="mt-2.5 pt-2.5 border-t border-stone-100 w-full">
+              <p className="text-[10px] text-stone-500 font-medium line-clamp-1">
+                Won: {winner.drawCampaign?.prizeName || 'Luxury Prize'}
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );

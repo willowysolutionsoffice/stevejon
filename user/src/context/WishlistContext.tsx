@@ -32,7 +32,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 
   // Load from localStorage on mount (for guest/offline mode)
   useEffect(() => {
-    const storedWishlist = localStorage.getItem('stevejon_wishlist');
+    const storedWishlist = localStorage.getItem('judescart_wishlist') || localStorage.getItem('stevejon_wishlist');
     if (storedWishlist) {
       try {
         setItems(JSON.parse(storedWishlist));
@@ -46,7 +46,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
   // Save to localStorage on items change (only if not logged in)
   useEffect(() => {
     if (isInitialized && !session?.user) {
-      localStorage.setItem('stevejon_wishlist', JSON.stringify(items));
+      localStorage.setItem('judescart_wishlist', JSON.stringify(items));
     }
   }, [items, isInitialized, session]);
 
@@ -57,7 +57,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
     const syncAndFetchWishlist = async () => {
       if (session?.user) {
         try {
-          const storedWishlist = localStorage.getItem('stevejon_wishlist');
+          const storedWishlist = localStorage.getItem('judescart_wishlist') || localStorage.getItem('stevejon_wishlist');
           const localItems = storedWishlist ? JSON.parse(storedWishlist) : [];
 
           if (localItems.length > 0) {
@@ -68,6 +68,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
               body: JSON.stringify({ items: localItems }),
               credentials: 'include'
             });
+            localStorage.removeItem('judescart_wishlist');
             localStorage.removeItem('stevejon_wishlist');
           }
 
@@ -84,7 +85,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
         }
       } else {
         // Logged out, restore guest wishlist
-        const storedWishlist = localStorage.getItem('stevejon_wishlist');
+        const storedWishlist = localStorage.getItem('judescart_wishlist') || localStorage.getItem('stevejon_wishlist');
         if (storedWishlist) {
           try {
             setItems(JSON.parse(storedWishlist));

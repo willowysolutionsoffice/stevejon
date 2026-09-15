@@ -1,25 +1,31 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
+import React, { useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Lock, Mail, User, Phone, Check, AlertCircle, Loader2 } from 'lucide-react';
+import { authClient } from '@/lib/auth-client';
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [isChangePassword, setIsChangePassword] = useState(false);
-  const [oldPassword, setOldPassword] = useState("");
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [oldPassword, setOldPassword] = useState('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isExecuting, setIsExecuting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsExecuting(true);
+    setErrorMessage(null);
+    setSuccessMessage(null);
 
     try {
       if (isChangePassword) {
@@ -30,13 +36,13 @@ export default function LoginPage() {
         });
 
         if (error) {
-          alert(error.message || "Failed to change password.");
+          setErrorMessage(error.message || 'Failed to change password.');
         } else {
-          alert("Password changed successfully! Please login with your new password.");
+          setSuccessMessage('Password changed successfully! Please login with your new password.');
           setIsChangePassword(false);
           setIsLogin(true);
-          setPassword("");
-          setOldPassword("");
+          setPassword('');
+          setOldPassword('');
         }
         return;
       }
@@ -48,18 +54,17 @@ export default function LoginPage() {
         });
 
         if (error) {
-          alert(error.message || "Failed to initiate password reset.");
+          setErrorMessage(error.message || 'Failed to initiate password reset.');
         } else {
-          alert("If an account exists for " + email + ", a password reset link has been sent.");
+          setSuccessMessage(`If an account exists for ${email}, a password reset link has been sent.`);
           setIsForgotPassword(false);
           setIsLogin(true);
-          setPassword("");
+          setPassword('');
         }
         return;
       }
 
       if (!isLogin) {
-        // Create Account
         const { error } = await authClient.signUp.email({
           email,
           password,
@@ -68,214 +73,323 @@ export default function LoginPage() {
         } as any);
 
         if (error) {
-          alert(error.message || "Failed to create account.");
+          setErrorMessage(error.message || 'Failed to create account.');
         } else {
-          alert("Account created successfully!");
+          setSuccessMessage('Account created successfully!');
           router.push('/');
+          router.refresh();
         }
       } else {
-        // Login
         const { error } = await authClient.signIn.email({
           email,
           password,
         });
 
         if (error) {
-          alert(error.message || "Invalid email or password.");
+          setErrorMessage(error.message || 'Invalid email or password.');
         } else {
-          alert("Logged in successfully!");
+          setSuccessMessage('Signed in successfully!');
           router.push('/');
+          router.refresh();
         }
       }
     } catch (err: any) {
-      console.error("Auth error:", err);
-      alert("An unexpected error occurred. Please try again.");
+      console.error('Auth error:', err);
+      setErrorMessage('An unexpected error occurred. Please try again.');
     } finally {
       setIsExecuting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#F1F7FF] flex flex-col md:flex-row font-sans">
-      {/* Left side - Image */}
-      <div className="hidden md:block md:w-1/2 relative bg-[#061B3A]">
-        {/* Placeholder for a nice image */}
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-70 mix-blend-luminosity"></div>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="text-4xl md:text-5xl font-serif text-white tracking-[0.3em] font-light z-10 text-center px-10">
-            STEVEJON
-          </h1>
+    <div className="min-h-screen bg-slate-50 flex flex-col lg:flex-row font-sans text-slate-900">
+      
+      {/* Left Column: Visual Brand Editorial Banner */}
+      <div className="hidden lg:flex lg:w-1/2 relative bg-slate-950 text-white flex-col justify-between p-12 lg:p-16 overflow-hidden">
+        <div className="absolute inset-0 bg-radial from-blue-900/40 via-slate-950/80 to-slate-950 pointer-events-none" />
+        
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/cat_apparel_1778670103427.png"
+            alt="JudesCart Lifestyle"
+            fill
+            className="object-cover opacity-30 brightness-75"
+          />
+        </div>
+
+        {/* Top Header */}
+        <div className="relative z-10">
+          <Link href="/" className="inline-flex items-center gap-3">
+            <div className="relative w-9 h-9 rounded-xl overflow-hidden bg-white/10 p-1 flex items-center justify-center border border-white/10">
+              <Image
+                src="/logo-icon.webp"
+                alt="JudesCart Logo"
+                width={36}
+                height={36}
+                className="object-contain"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-sans text-xl font-extrabold tracking-tight text-white">
+                Judes<span className="text-blue-400">Cart</span>
+              </span>
+            </div>
+          </Link>
+        </div>
+
+        {/* Center Quote */}
+        <div className="relative z-10 max-w-md space-y-4">
+          <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-900/60 border border-blue-700/60 text-blue-300 text-xs font-semibold tracking-widest uppercase">
+            <span>PREMIUM SHOPPING & REWARDS</span>
+          </span>
+          <h2 className="text-3xl lg:text-4xl font-sans font-extrabold text-white leading-snug">
+            Enduring Style. Personalised Service. Exclusive Rewards.
+          </h2>
+          <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
+            Sign in to track orders, manage your address book, and view your verified lucky draw tickets.
+          </p>
+        </div>
+
+        {/* Bottom Footer */}
+        <div className="relative z-10 text-xs text-slate-500">
+          © {new Date().getFullYear()} JudesCart. All rights reserved.
         </div>
       </div>
 
-      {/* Right side - Form */}
-      <div className="w-full md:w-1/2 min-h-screen flex items-center justify-center p-8 md:p-24 relative">
+      {/* Right Column: Authentication Form */}
+      <div className="w-full lg:w-1/2 min-h-screen flex items-center justify-center p-6 sm:p-12 lg:p-16 relative">
         <Link
           href="/"
-          className="absolute top-8 right-8 text-xs font-bold tracking-[0.2em] text-[#607A9D] hover:text-black transition-colors uppercase"
+          className="absolute top-8 right-8 inline-flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase text-slate-500 hover:text-blue-600 transition-colors"
         >
-          Back to Home
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Store</span>
         </Link>
 
-        <div className="w-full max-w-md">
-          <div className="mb-12">
-            <h2 className="text-3xl font-serif mb-4 text-[#061B3A]">
-              {isChangePassword ? "Change Password" : isForgotPassword ? "Reset Password" : isLogin ? "Welcome Back" : "Create Account"}
-            </h2>
-            <p className="text-[#607A9D] text-sm">
+        <div className="w-full max-w-md space-y-8">
+          
+          <div className="space-y-2">
+            <span className="text-xs font-bold tracking-[0.2em] text-blue-600 uppercase">
+              {isChangePassword ? 'CREDENTIAL UPDATE' : isForgotPassword ? 'RECOVERY' : isLogin ? 'WELCOME BACK' : 'MEMBERSHIP'}
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-sans font-extrabold text-slate-900 tracking-tight">
               {isChangePassword
-                ? "Enter your email, old password and a new password to update your credentials."
+                ? 'Update Password'
                 : isForgotPassword
-                ? "Enter your email address and a new password to reset your account access."
+                ? 'Reset Your Password'
                 : isLogin
-                ? "Sign in to access your bespoke orders, saved items, and personalized recommendations."
-                : "Join Stevejon to experience the pinnacle of personalized tailoring and exclusive collections."}
+                ? 'Sign In to JudesCart'
+                : 'Create an Account'}
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-500">
+              {isChangePassword
+                ? 'Enter your current and new credentials below.'
+                : isForgotPassword
+                ? 'Enter your registered email to receive a recovery link.'
+                : isLogin
+                ? 'Access your saved pieces, orders, and lucky draw tickets.'
+                : 'Join the JudesCart community to unlock seamless checkout and weekly rewards.'}
             </p>
           </div>
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          {errorMessage && (
+            <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl text-xs text-rose-700 font-medium flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+              <span>{errorMessage}</span>
+            </div>
+          )}
+
+          {successMessage && (
+            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-700 font-medium flex items-center gap-2">
+              <Check className="w-4 h-4 shrink-0 text-emerald-600" />
+              <span>{successMessage}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && !isForgotPassword && !isChangePassword && (
               <>
-                <div>
-                  <label className="block text-xs font-bold tracking-widest text-[#061B3A] mb-2 uppercase">
+                <div className="space-y-1">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
                     Full Name
                   </label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full border-b border-[#BBD0EA] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
-                    placeholder="John Doe"
-                    required
-                  />
+                  <div className="relative">
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. John Doe"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 shadow-xs"
+                    />
+                    <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold tracking-widest text-[#061B3A] mb-2 uppercase">
+                <div className="space-y-1">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
                     Phone Number
                   </label>
-                  <input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full border-b border-[#BBD0EA] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
-                    placeholder="+1 (555) 000-0000"
-                    required
-                  />
+                  <div className="relative">
+                    <input
+                      type="tel"
+                      required
+                      placeholder="e.g. +91 98765 43210"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 shadow-xs"
+                    />
+                    <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  </div>
                 </div>
               </>
             )}
 
-            <div>
-              <label className="block text-xs font-bold tracking-widest text-[#061B3A] mb-2 uppercase">
+            <div className="space-y-1">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
                 Email Address
               </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full border-b border-[#BBD0EA] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
-                placeholder="you@example.com"
-                required
-              />
+              <div className="relative">
+                <input
+                  type="email"
+                  required
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 shadow-xs"
+                />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              </div>
             </div>
 
             {isChangePassword && (
-              <div>
-                <label className="block text-xs font-bold tracking-widest text-[#061B3A] mb-2 uppercase">
-                  Old Password
+              <div className="space-y-1">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                  Current Password
                 </label>
-                <input
-                  type="password"
-                  value={oldPassword}
-                  onChange={(e) => setOldPassword(e.target.value)}
-                  className="w-full border-b border-[#BBD0EA] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
-                  placeholder="••••••••"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    value={oldPassword}
+                    onChange={(e) => setOldPassword(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 shadow-xs"
+                  />
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                </div>
               </div>
             )}
 
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-xs font-bold tracking-widest text-[#061B3A] uppercase">
-                  {isForgotPassword || isChangePassword ? "New Password" : "Password"}
-                </label>
-                {isLogin && !isForgotPassword && !isChangePassword && (
-                  <div className="flex gap-4">
-                    <button
-                      type="button"
-                      onClick={() => setIsChangePassword(true)}
-                      className="text-xs text-[#0077FF] hover:text-black transition-colors"
-                    >
-                      Change password?
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setIsForgotPassword(true)}
-                      className="text-xs text-[#0077FF] hover:text-black transition-colors"
-                    >
-                      Forgot password?
-                    </button>
-                  </div>
-                )}
+            {!isForgotPassword && (
+              <div className="space-y-1">
+                <div className="flex justify-between items-center">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                    {isChangePassword ? 'New Password' : 'Password'}
+                  </label>
+                  {isLogin && (
+                    <div className="flex gap-3 text-[11px]">
+                      <button
+                        type="button"
+                        onClick={() => { setIsForgotPassword(true); setIsLogin(false); setErrorMessage(null); }}
+                        className="text-blue-600 hover:underline font-medium"
+                      >
+                        Forgot password?
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <div className="relative">
+                  <input
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 shadow-xs"
+                  />
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                </div>
               </div>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full border-b border-[#BBD0EA] bg-transparent pb-3 pt-2 px-0 focus:outline-none focus:border-black transition-colors text-sm"
-                placeholder="••••••••"
-                required
-              />
-            </div>
+            )}
 
             <button
               type="submit"
               disabled={isExecuting}
-              className="w-full bg-[#061B3A] hover:bg-black text-white py-4 rounded-none text-xs font-bold tracking-[0.2em] uppercase transition-colors mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-xl text-xs font-bold tracking-wider uppercase transition-all shadow-md flex items-center justify-center gap-2 mt-2"
             >
-              {isExecuting
-                ? "Processing..."
-                : isChangePassword
-                ? "Change Password"
-                : isForgotPassword
-                ? "Reset Password"
-                : isLogin
-                ? "Sign In"
-                : "Create Account"}
+              {isExecuting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Processing...</span>
+                </>
+              ) : (
+                <span>
+                  {isChangePassword
+                    ? 'Save New Password'
+                    : isForgotPassword
+                    ? 'Send Reset Link'
+                    : isLogin
+                    ? 'Sign In to Account'
+                    : 'Complete Registration'}
+                </span>
+              )}
             </button>
           </form>
 
-          <div className="mt-12 text-center">
-            <p className="text-[#607A9D] text-sm">
-              {isChangePassword || isForgotPassword ? (
-                <>
-                  Remember your password?
-                  <button
-                    type="button"
-                    onClick={() => { setIsForgotPassword(false); setIsChangePassword(false); setIsLogin(true); }}
-                    className="ml-2 font-bold text-[#061B3A] hover:text-[#0077FF] transition-colors border-b border-[#061B3A] pb-0.5"
-                  >
-                    Sign In
-                  </button>
-                </>
-              ) : (
-                <>
-                  {isLogin ? "Don't have an account?" : "Already have an account?"}
-                  <button
-                    type="button"
-                    onClick={() => setIsLogin(!isLogin)}
-                    className="ml-2 font-bold text-[#061B3A] hover:text-[#0077FF] transition-colors border-b border-[#061B3A] pb-0.5"
-                  >
-                    {isLogin ? "Sign Up" : "Sign In"}
-                  </button>
-                </>
-              )}
-            </p>
+          {/* Switch Modes */}
+          <div className="pt-4 border-t border-slate-200 text-center text-xs text-slate-500">
+            {isForgotPassword || isChangePassword ? (
+              <p>
+                Remember your password?{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsForgotPassword(false);
+                    setIsChangePassword(false);
+                    setIsLogin(true);
+                    setErrorMessage(null);
+                  }}
+                  className="font-bold text-blue-600 hover:underline ml-1"
+                >
+                  Sign In
+                </button>
+              </p>
+            ) : isLogin ? (
+              <p>
+                Don&apos;t have an account?{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsLogin(false);
+                    setErrorMessage(null);
+                  }}
+                  className="font-bold text-blue-600 hover:underline ml-1"
+                >
+                  Create Account
+                </button>
+              </p>
+            ) : (
+              <p>
+                Already have an account?{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsLogin(true);
+                    setErrorMessage(null);
+                  }}
+                  className="font-bold text-blue-600 hover:underline ml-1"
+                >
+                  Sign In
+                </button>
+              </p>
+            )}
           </div>
+
         </div>
       </div>
+
     </div>
   );
 }

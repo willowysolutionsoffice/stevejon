@@ -7,10 +7,10 @@ export default function MovingNewsBar() {
     " FREE SHIPPING ON ALL ORDERS ABOVE $499",
     <>
       {" "}
-      USE CODE: <strong>SJWELCOMETS</strong> FOR FLAT 15% OFF ON YOUR FIRST
+      USE CODE: <strong>JCWELCOME15</strong> FOR FLAT 15% OFF ON YOUR FIRST
       ORDER
     </>,
-    " STEVEJON ATELIER: BESPOKE PERSONALIZED TAILORING AVAILABLE NOW",
+    " JUDESCART ATELIER: BESPOKE PERSONALIZED TAILORING AVAILABLE NOW",
   ];
   return (
     <div className="w-full bg-[#021631] text-white/90 py-3.5 text-[9px] md:text-[10px] tracking-[0.2em] font-sans font-medium uppercase overflow-hidden border-y border-white/10 flex select-none relative z-30">

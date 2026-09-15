@@ -3,9 +3,9 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart, ArrowLeft, Trash2, ShoppingBag } from 'lucide-react';
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Heart, ArrowLeft, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import { useWishlist } from '@/context/WishlistContext';
 import { useCart } from '@/context/CartContext';
 
@@ -29,86 +29,109 @@ export default function WishlistPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5FAFF] text-[#061B3A] font-sans flex flex-col justify-between animate-fadeIn">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col justify-between">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 pt-40 pb-24 flex-1 w-full">
-        {/* Header */}
-        <div className="mb-12">
-          <Link
-            href="/product"
-            className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.2em] uppercase text-gray-500 hover:text-black transition-colors mb-6 group cursor-pointer"
-          >
-            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-            Back to Catalog
-          </Link>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif tracking-widest uppercase text-black mb-3">
-            Your Wishlist
-          </h1>
-          <p className="text-gray-500 text-xs md:text-sm tracking-[0.15em] uppercase font-medium">
-            Curate your favorite pieces
-          </p>
-        </div>
-
-        {wishlistItems.length === 0 ? (
-          /* Empty State */
-          <div className="text-center py-28 bg-white rounded-[8px] border border-gray-100 shadow-sm flex flex-col items-center justify-center my-8">
-            <div className="w-20 h-20 bg-[#E7F2FF] text-gray-400 rounded-full flex items-center justify-center mb-6">
-              <Heart className="w-8 h-8 stroke-[1.5]" />
+      <main className="flex-1 py-10 md:py-16">
+        <div className="sj-container space-y-8">
+          
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-slate-200/80">
+            <div className="space-y-1">
+              <span className="text-xs font-bold tracking-[0.2em] text-rose-600 uppercase">
+                SAVED ITEMS
+              </span>
+              <h1 className="text-2xl sm:text-3xl font-sans font-extrabold text-slate-900 tracking-tight">
+                Your Wishlist ({wishlistItems.length})
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-500">
+                Review your saved pieces and move them to your bag whenever you&apos;re ready.
+              </p>
             </div>
-            <h2 className="text-2xl font-serif tracking-wide text-black mb-3">Your wishlist is currently empty</h2>
-            <p className="text-gray-500 text-sm max-w-sm mx-auto mb-10 leading-relaxed font-sans">
-              Save your favorite items here to review and purchase them later.
-            </p>
             <Link
               href="/product"
-              className="bg-[#0077FF] hover:bg-[#005ED1] text-white px-10 py-4 rounded-full text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-xl shadow-[#0077FF]/20 hover:shadow-2xl hover:shadow-[#0077FF]/30 cursor-pointer"
+              className="inline-flex items-center gap-2 text-xs font-bold uppercase text-slate-600 hover:text-[#DF9F28] tracking-wider"
             >
-              Discover Products
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to Catalog</span>
             </Link>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {wishlistItems.map((item) => (
-              <div key={item.id} className="group flex flex-col">
-                <div className="relative aspect-[3/4] bg-[#E7F2FF] mb-4 overflow-hidden rounded-[8px] group/image">
-                  <Link href={`/product?id=${item.productId}`} className="block w-full h-full">
-                    <Image 
-                      src={item.image} 
-                      alt={item.title} 
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover/image:scale-105 mix-blend-multiply"
-                    />
-                  </Link>
-                  <div className="absolute top-3 right-3 z-20">
-                    <button 
+
+          {/* Wishlist Grid */}
+          {wishlistItems.length === 0 ? (
+            <div className="max-w-md mx-auto py-16 bg-white rounded-3xl border border-slate-200 text-center space-y-4 p-8">
+              <div className="w-16 h-16 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center mx-auto border border-rose-100">
+                <Heart className="w-8 h-8" />
+              </div>
+              <h2 className="text-xl font-sans font-extrabold text-slate-900 tracking-tight">Your Wishlist is Empty</h2>
+              <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                Save your favorite tailored garments and accessories to easily find and purchase them later.
+              </p>
+              <Link
+                href="/product"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#DF9F28] hover:bg-[#C6891E] text-slate-950 text-xs font-black uppercase tracking-wider rounded-full shadow-sm"
+              >
+                <span>Discover Products</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+              {wishlistItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="group relative flex flex-col bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition-all"
+                >
+                  <div className="relative aspect-[3/4] w-full bg-slate-100 overflow-hidden">
+                    <Link href={`/product?id=${item.productId}`} className="block w-full h-full">
+                      <Image
+                        src={item.image || '/prod_overshirt_1778670536589.png'}
+                        alt={item.title}
+                        fill
+                        className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </Link>
+
+                    <button
                       onClick={() => removeFromWishlist(item.productId)}
-                      className="bg-white p-2 rounded-full shadow-sm hover:bg-red-50 hover:text-red-500 transition-colors text-gray-400"
-                      aria-label="Remove from wishlist"
+                      className="absolute top-2.5 right-2.5 p-2 rounded-full bg-white/90 backdrop-blur-xs text-slate-400 hover:text-rose-600 shadow-xs transition-colors"
+                      aria-label="Remove"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
-                </div>
-                <div className="flex flex-col gap-3 flex-1">
-                  <Link href={`/product?id=${item.productId}`} className="block">
-                    <h4 className="text-sm text-gray-900 group-hover:text-[#0077FF] transition-colors">{item.title}</h4>
-                    <p className="text-sm font-semibold text-gray-900 mt-1">₹ {item.price}</p>
-                  </Link>
-                  <button 
-                    onClick={() => handleMoveToCart(item)}
-                    className="mt-auto flex items-center justify-center gap-2 w-full py-2.5 text-[0.65rem] font-bold tracking-[0.2em] uppercase border border-gray-200 text-gray-800 rounded-full hover:bg-[#0077FF] hover:text-white hover:border-[#0077FF] transition-all cursor-pointer shadow-sm hover:shadow-md"
-                  >
-                    <ShoppingBag className="w-3.5 h-3.5" />
-                    Move to Cart
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
 
-      </div>
+                  <div className="p-4 flex flex-col flex-1 justify-between gap-3">
+                    <div>
+                      <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                        {item.category}
+                      </p>
+                      <Link
+                        href={`/product?id=${item.productId}`}
+                        className="text-xs sm:text-sm font-bold text-slate-900 hover:text-[#DF9F28] line-clamp-1 mt-0.5"
+                      >
+                        {item.title}
+                      </Link>
+                      <p className="text-sm font-bold text-slate-900 mt-1">
+                        ₹{item.price.toLocaleString('en-IN')}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => handleMoveToCart(item)}
+                      className="w-full py-2.5 px-3 bg-slate-900 hover:bg-[#DF9F28] hover:text-slate-950 text-white rounded-xl text-xs font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-1.5 shadow-xs"
+                    >
+                      <ShoppingBag className="w-3.5 h-3.5" />
+                      <span>Move To Bag</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+        </div>
+      </main>
 
       <Footer />
     </div>

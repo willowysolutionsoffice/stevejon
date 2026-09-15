@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 40" width="160" height="40">
+  <defs>
+    <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#DFBA73" />
+      <stop offset="50%" stop-color="#C5A059" />
+      <stop offset="100%" stop-color="#9E7D3B" />
+    </linearGradient>
+  </defs>
+  <!-- Logo Mark -->
+  <rect x="2" y="2" width="36" height="36" rx="10" fill="#121212" stroke="url(#gold-grad)" stroke-width="1.5" />
+  <text x="20" y="26" font-family="-apple-system, BlinkMacSystemFont, 'Playfair Display', 'Georgia', serif" font-size="18" font-weight="bold" fill="url(#gold-grad)" text-anchor="middle">SJ</text>
+  <!-- Logo Text -->
+  <text x="48" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Playfair Display', 'Georgia', serif" font-size="13" font-weight="700" fill="#ffffff" letter-spacing="1.5">STEVE JOHN</text>
+</svg>

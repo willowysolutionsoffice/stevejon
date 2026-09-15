@@ -31,6 +31,9 @@ import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { authClient } from '@/lib/auth-client';
 import AnnouncementBar from './AnnouncementBar';
+import CartDrawer from './CartDrawer';
+import DailyGiftModal from './DailyGiftModal';
+import SearchModal from './SearchModal';
 
 export interface NavCategory {
   id: string;
@@ -212,7 +215,7 @@ const NAVIGATION_CATEGORIES: NavCategory[] = [
 export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
-  const { totalItems } = useCart();
+  const { totalItems, openDrawer } = useCart();
   const { totalItems: totalWishlistItems } = useWishlist();
   const { data: session } = authClient.useSession();
 
@@ -220,6 +223,8 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [isDailyGiftModalOpen, setIsDailyGiftModalOpen] = useState(false);
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
   const [mobileExpandedCat, setMobileExpandedCat] = useState<string | null>(null);
 
@@ -253,7 +258,7 @@ export default function Navbar() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        searchInputRef.current?.focus();
+        setIsSearchModalOpen((prev) => !prev);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -367,24 +372,22 @@ export default function Navbar() {
 
               {/* Center: Large Search Bar (Desktop) */}
               <div className="hidden md:flex flex-1 max-w-md ml-1 lg:ml-2">
-                <form onSubmit={handleSearchSubmit} className="w-full relative">
-                  <div className="w-full flex items-center justify-between px-3.5 py-2 rounded-full text-xs text-stone-500 bg-stone-100/90 hover:bg-stone-200/80 hover:text-stone-900 border border-stone-200 transition-all duration-150 shadow-2xs group focus-within:bg-white focus-within:border-[#DF9F28] focus-within:ring-2 focus-within:ring-amber-100">
+                <div 
+                  onClick={() => setIsSearchModalOpen(true)} 
+                  className="w-full relative cursor-pointer"
+                >
+                  <div className="w-full flex items-center justify-between px-3.5 py-2 rounded-full text-xs text-stone-500 bg-stone-100/90 hover:bg-stone-200/80 hover:text-stone-900 border border-stone-200 transition-all duration-150 shadow-2xs group">
                     <div className="flex items-center gap-2 flex-1 min-w-0">
                       <Search className="w-3.5 h-3.5 text-[#DF9F28] group-hover:scale-110 transition-transform shrink-0" />
-                      <input
-                        ref={searchInputRef}
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search all products, brands & categories..."
-                        className="w-full bg-transparent border-none outline-none text-[11px] lg:text-xs text-stone-900 placeholder:text-stone-400 font-medium"
-                      />
+                      <span className="text-[11px] lg:text-xs text-stone-400 font-medium truncate">
+                        Search all products, brands & categories...
+                      </span>
                     </div>
                     <kbd className="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[9px] font-mono font-semibold text-stone-400 bg-white rounded border border-stone-200 shadow-2xs shrink-0 select-none">
                       ⌘K
                     </kbd>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
 
@@ -417,15 +420,16 @@ export default function Navbar() {
               </Link>
 
               {/* Daily Gift Button */}
-              <Link
-                href="/lucky-draw"
+              <button
+                type="button"
+                onClick={() => setIsDailyGiftModalOpen(true)}
                 className="relative flex items-center gap-1 p-2 sm:px-3 sm:py-1.5 rounded-full bg-gradient-to-r from-amber-50 to-amber-100/60 hover:from-amber-100 hover:to-amber-200/80 border border-amber-200/80 text-amber-950 transition-all text-xs font-bold cursor-pointer shadow-2xs group shrink-0"
                 title="Daily JudesCart Mystery Vault - Open to Claim Rewards"
               >
                 <Gift className="w-4 h-4 text-[#DF9F28] group-hover:scale-110 transition-transform" />
                 <span className="hidden sm:inline">Daily Gift</span>
                 <span className="w-2 h-2 rounded-full bg-rose-500 absolute -top-0.5 -right-0.5 animate-ping" />
-              </Link>
+              </button>
 
               {/* JudesCoins Balance */}
               <Link
@@ -520,9 +524,10 @@ export default function Navbar() {
               </div>
 
               {/* Shopping Cart Button */}
-              <Link
-                href="/cart"
-                className="relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full bg-[#111111] hover:bg-[#DF9F28] text-white hover:text-slate-950 transition-all duration-150 active:scale-95 shadow-xs font-sans shrink-0 group"
+              <button
+                type="button"
+                onClick={() => openDrawer()}
+                className="relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full bg-[#111111] hover:bg-[#DF9F28] text-white hover:text-slate-950 transition-all duration-150 active:scale-95 shadow-xs font-sans shrink-0 group cursor-pointer"
                 aria-label="Shopping Cart"
               >
                 <ShoppingBag className="w-4 h-4 text-white group-hover:text-slate-950 transition-colors" />
@@ -530,7 +535,7 @@ export default function Navbar() {
                 <span className="flex items-center justify-center min-w-4 h-4 px-1 text-[10px] font-bold rounded-full bg-[#DF9F28] text-slate-950 group-hover:bg-slate-950 group-hover:text-white transition-colors">
                   {totalItems}
                 </span>
-              </Link>
+              </button>
 
             </div>
           </div>
@@ -898,6 +903,17 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
+      {/* Global Interactive Slide-Over Cart Drawer & Modals */}
+      <CartDrawer />
+      <DailyGiftModal
+        isOpen={isDailyGiftModalOpen}
+        onClose={() => setIsDailyGiftModalOpen(false)}
+      />
+      <SearchModal
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+      />
     </>
   );
 }

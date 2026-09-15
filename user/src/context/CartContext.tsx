@@ -20,18 +20,23 @@ export interface CartItem {
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (item: Omit<CartItem, 'id'>) => void;
+  addToCart: (item: any, quantity?: number) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
+  isDrawerOpen: boolean;
+  openDrawer: () => void;
+  closeDrawer: () => void;
+  setIsDrawerOpen: (open: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const { data: session } = authClient.useSession();
   const apiUrl = getApiUrl();
@@ -107,20 +112,50 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     syncAndFetchCart();
   }, [session, isInitialized]);
 
-  const addToCart = async (newItem: Omit<CartItem, 'id'>) => {
-    const id = `${newItem.productId}-${newItem.size}-${newItem.color}`;
+  const openDrawer = () => setIsDrawerOpen(true);
+  const closeDrawer = () => setIsDrawerOpen(false);
+
+  const addToCart = async (newItem: any, addedQty: number = 1) => {
+    const qty = typeof newItem.quantity === 'number' ? newItem.quantity : addedQty;
+    const title = newItem.title || newItem.name || 'JudesCart Item';
+    const productId = newItem.productId || newItem.id || String(Date.now());
+    const size = newItem.size || 'M';
+    const color = newItem.color || 'Standard';
+    const price = Number(newItem.price) || 0;
+    const image = newItem.image || '/prod_overshirt_1778670536589.png';
+    const category = newItem.category || 'Apparel';
+    const variantId = newItem.variantId;
+
+    const id = `${productId}-${size}-${color}`;
     
     // 1. Optimistic UI update
     setItems(prevItems => {
       const existingIndex = prevItems.findIndex(item => item.id === id);
       if (existingIndex > -1) {
         const updated = [...prevItems];
-        updated[existingIndex].quantity += newItem.quantity;
+        updated[existingIndex].quantity += qty;
         return updated;
       } else {
-        return [...prevItems, { ...newItem, id }];
+        return [
+          ...prevItems,
+          {
+            id,
+            productId,
+            variantId,
+            title,
+            category,
+            price,
+            image,
+            size,
+            color,
+            quantity: qty,
+          },
+        ];
       }
     });
+
+    // Auto open side drawer on add
+    setIsDrawerOpen(true);
 
     // 2. Persist to DB if logged in
     if (session?.user) {
@@ -129,13 +164,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            productId: newItem.productId,
-            variantId: newItem.variantId,
-            size: newItem.size,
-            color: newItem.color,
-            quantity: newItem.quantity
+            productId,
+            variantId,
+            size,
+            color,
+            quantity: qty,
           }),
-          credentials: 'include'
+          credentials: 'include',
         });
       } catch (e) {
         console.error("Failed to save cart item to DB:", e);
@@ -226,6 +261,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         clearCart,
         totalItems,
         totalPrice,
+        isDrawerOpen,
+        openDrawer,
+        closeDrawer,
+        setIsDrawerOpen,
       }}
     >
       {children}

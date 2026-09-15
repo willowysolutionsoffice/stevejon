@@ -34,6 +34,9 @@ import AnnouncementBar from './AnnouncementBar';
 import CartDrawer from './CartDrawer';
 import DailyGiftModal from './DailyGiftModal';
 import SearchModal from './SearchModal';
+import CurrencyModal, { CURRENCIES, Currency } from './CurrencyModal';
+import AccountDrawer from './AccountDrawer';
+import AuthModal from './AuthModal';
 
 export interface NavCategory {
   id: string;
@@ -225,6 +228,11 @@ export default function Navbar() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isDailyGiftModalOpen, setIsDailyGiftModalOpen] = useState(false);
+  const [isCurrencyModalOpen, setIsCurrencyModalOpen] = useState(false);
+  const [isAccountDrawerOpen, setIsAccountDrawerOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signin');
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency>(CURRENCIES[0]);
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
   const [mobileExpandedCat, setMobileExpandedCat] = useState<string | null>(null);
 
@@ -396,12 +404,17 @@ export default function Navbar() {
               
               {/* Currency Badge */}
               <div className="hidden sm:block">
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-stone-700 hover:text-stone-900 hover:bg-stone-100/90 transition-all border border-stone-200/80 bg-white/70 shadow-xs select-none">
-                  <span className="text-sm leading-none" role="img" aria-label="Indian Rupee">🇮🇳</span>
-                  <span className="font-semibold text-stone-900 tracking-tight">INR</span>
-                  <span className="text-stone-400 font-mono text-[11px] font-normal">(₹)</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 ring-2 ring-emerald-100" title="Auto-matched to India" />
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsCurrencyModalOpen(true)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-stone-700 hover:text-stone-900 hover:bg-stone-100/90 transition-all border border-stone-200/80 bg-white/70 shadow-xs cursor-pointer select-none"
+                  title="Select Currency"
+                >
+                  <span className="text-sm leading-none" role="img" aria-label={selectedCurrency.name}>{selectedCurrency.flag}</span>
+                  <span className="font-semibold text-stone-900 tracking-tight">{selectedCurrency.code}</span>
+                  <span className="text-stone-400 font-mono text-[11px] font-normal">({selectedCurrency.symbol})</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 ring-2 ring-emerald-100" title="Active" />
+                </button>
               </div>
 
               {/* Wishlist Link */}
@@ -432,15 +445,16 @@ export default function Navbar() {
               </button>
 
               {/* JudesCoins Balance */}
-              <Link
-                href="/lucky-draw"
+              <button
+                type="button"
+                onClick={() => setIsAccountDrawerOpen(true)}
                 className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-200/80 text-amber-900 transition-all text-xs font-bold group cursor-pointer shadow-2xs shrink-0"
                 title="JudesCoins Rewards Balance"
               >
                 <Coins className="w-3.5 h-3.5 text-[#DF9F28] group-hover:scale-110 transition-transform" />
                 <span>0</span>
                 <span className="text-[10px] text-amber-700/80 font-bold uppercase tracking-wider">Coins</span>
-              </Link>
+              </button>
 
               {/* User Account / Sign In */}
               <div className="relative" ref={userMenuRef}>
@@ -509,8 +523,12 @@ export default function Navbar() {
                     )}
                   </div>
                 ) : (
-                  <Link
-                    href="/login"
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthModalMode('signin');
+                      setIsAuthModalOpen(true);
+                    }}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-100 hover:bg-amber-50 border border-stone-200 hover:border-amber-200 text-slate-800 hover:text-[#DF9F28] transition-all text-xs font-bold cursor-pointer shrink-0 shadow-2xs group"
                     aria-label="Customer Sign In"
                   >
@@ -519,7 +537,7 @@ export default function Navbar() {
                     <span className="hidden xl:inline text-[10px] text-amber-800 font-extrabold bg-amber-100 border border-amber-200/80 px-1.5 py-0.2 rounded-full">
                       +200
                     </span>
-                  </Link>
+                  </button>
                 )}
               </div>
 
@@ -906,9 +924,29 @@ export default function Navbar() {
 
       {/* Global Interactive Slide-Over Cart Drawer & Modals */}
       <CartDrawer />
+      <AccountDrawer
+        isOpen={isAccountDrawerOpen}
+        onClose={() => setIsAccountDrawerOpen(false)}
+        onOpenAuth={(m) => {
+          setAuthModalMode(m || 'signin');
+          setIsAuthModalOpen(true);
+        }}
+        onOpenDailyGift={() => setIsDailyGiftModalOpen(true)}
+      />
       <DailyGiftModal
         isOpen={isDailyGiftModalOpen}
         onClose={() => setIsDailyGiftModalOpen(false)}
+      />
+      <CurrencyModal
+        isOpen={isCurrencyModalOpen}
+        onClose={() => setIsCurrencyModalOpen(false)}
+        selectedCurrency={selectedCurrency}
+        onSelectCurrency={(c) => setSelectedCurrency(c)}
+      />
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        initialMode={authModalMode}
+        onClose={() => setIsAuthModalOpen(false)}
       />
       <SearchModal
         isOpen={isSearchModalOpen}

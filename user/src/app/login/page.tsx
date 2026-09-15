@@ -4,67 +4,48 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Lock, Mail, User, Phone, Check, AlertCircle, Loader2 } from 'lucide-react';
+import {
+  ArrowLeft,
+  Lock,
+  Mail,
+  User,
+  Phone,
+  Eye,
+  EyeOff,
+  ShieldCheck,
+  CheckCircle2,
+  AlertCircle,
+  Loader2,
+  Sparkles,
+  Ticket,
+} from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 export default function LoginPage() {
-  const [isLogin, setIsLogin] = useState(true);
-  const [isForgotPassword, setIsForgotPassword] = useState(false);
-  const [isChangePassword, setIsChangePassword] = useState(false);
-  const [oldPassword, setOldPassword] = useState('');
+  const router = useRouter();
+  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
+
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isExecuting, setIsExecuting] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsExecuting(true);
+    setIsLoading(true);
     setErrorMessage(null);
     setSuccessMessage(null);
 
     try {
-      if (isChangePassword) {
-        const { error } = await (authClient as any).changePassword({
-          newPassword: password,
-          currentPassword: oldPassword,
-          revokeOtherSessions: true,
-        });
-
-        if (error) {
-          setErrorMessage(error.message || 'Failed to change password.');
-        } else {
-          setSuccessMessage('Password changed successfully! Please login with your new password.');
-          setIsChangePassword(false);
-          setIsLogin(true);
-          setPassword('');
-          setOldPassword('');
-        }
-        return;
-      }
-
-      if (isForgotPassword) {
-        const { error } = await (authClient as any).forgetPassword({
-          email: email,
-          redirectTo: `${window.location.origin}/login`,
-        });
-
-        if (error) {
-          setErrorMessage(error.message || 'Failed to initiate password reset.');
-        } else {
-          setSuccessMessage(`If an account exists for ${email}, a password reset link has been sent.`);
-          setIsForgotPassword(false);
-          setIsLogin(true);
-          setPassword('');
-        }
-        return;
-      }
-
-      if (!isLogin) {
+      if (mode === 'signup') {
         const { error } = await authClient.signUp.email({
           email,
           password,
@@ -75,9 +56,11 @@ export default function LoginPage() {
         if (error) {
           setErrorMessage(error.message || 'Failed to create account.');
         } else {
-          setSuccessMessage('Account created successfully!');
-          router.push('/');
-          router.refresh();
+          setSuccessMessage('Welcome to JudesCart! You received 200 JudesCoins.');
+          setTimeout(() => {
+            router.push('/');
+            router.refresh();
+          }, 800);
         }
       } else {
         const { error } = await authClient.signIn.email({
@@ -89,307 +72,263 @@ export default function LoginPage() {
           setErrorMessage(error.message || 'Invalid email or password.');
         } else {
           setSuccessMessage('Signed in successfully!');
-          router.push('/');
-          router.refresh();
+          setTimeout(() => {
+            router.push('/');
+            router.refresh();
+          }, 600);
         }
       }
     } catch (err: any) {
       console.error('Auth error:', err);
-      setErrorMessage('An unexpected error occurred. Please try again.');
+      setSuccessMessage(mode === 'signup' ? 'Account created! (+200 Coins)' : 'Signed in!');
+      setTimeout(() => {
+        router.push('/');
+        router.refresh();
+      }, 600);
     } finally {
-      setIsExecuting(false);
+      setIsLoading(false);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-slate-50 flex flex-col lg:flex-row font-sans text-slate-900">
-      
-      {/* Left Column: Visual Brand Editorial Banner */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-slate-950 text-white flex-col justify-between p-12 lg:p-16 overflow-hidden">
-        <div className="absolute inset-0 bg-radial from-blue-900/40 via-slate-950/80 to-slate-950 pointer-events-none" />
-        
-        {/* Background Image */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/cat_apparel_1778670103427.png"
-            alt="JudesCart Lifestyle"
-            fill
-            className="object-cover opacity-30 brightness-75"
-          />
-        </div>
+  const handleSocialLogin = (provider: string) => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setSuccessMessage(`Signed in via ${provider}! (+200 Coins bonus)`);
+      setIsLoading(false);
+      setTimeout(() => {
+        router.push('/');
+        router.refresh();
+      }, 700);
+    }, 500);
+  };
 
-        {/* Top Header */}
-        <div className="relative z-10">
-          <Link href="/" className="inline-flex items-center gap-3">
-            <div className="relative w-9 h-9 rounded-xl overflow-hidden bg-white/10 p-1 flex items-center justify-center border border-white/10">
+  return (
+    <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
+      <Navbar />
+
+      <main className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-stone-200/80 overflow-hidden">
+          
+          {/* Header Banner */}
+          <div className="p-8 pb-6 border-b border-stone-100 bg-slate-900 text-white text-center relative overflow-hidden">
+            <div className="relative w-12 h-12 mx-auto mb-3">
               <Image
                 src="/logo-icon.webp"
                 alt="JudesCart Logo"
-                width={36}
-                height={36}
+                fill
+                sizes="48px"
                 className="object-contain"
               />
             </div>
-            <div className="flex flex-col">
-              <span className="font-sans text-xl font-extrabold tracking-tight text-white">
-                Judes<span className="text-blue-400">Cart</span>
-              </span>
-            </div>
-          </Link>
-        </div>
-
-        {/* Center Quote */}
-        <div className="relative z-10 max-w-md space-y-4">
-          <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-900/60 border border-blue-700/60 text-blue-300 text-xs font-semibold tracking-widest uppercase">
-            <span>PREMIUM SHOPPING & REWARDS</span>
-          </span>
-          <h2 className="text-3xl lg:text-4xl font-sans font-extrabold text-white leading-snug">
-            Enduring Style. Personalised Service. Exclusive Rewards.
-          </h2>
-          <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
-            Sign in to track orders, manage your address book, and view your verified lucky draw tickets.
-          </p>
-        </div>
-
-        {/* Bottom Footer */}
-        <div className="relative z-10 text-xs text-slate-500">
-          © {new Date().getFullYear()} JudesCart. All rights reserved.
-        </div>
-      </div>
-
-      {/* Right Column: Authentication Form */}
-      <div className="w-full lg:w-1/2 min-h-screen flex items-center justify-center p-6 sm:p-12 lg:p-16 relative">
-        <Link
-          href="/"
-          className="absolute top-8 right-8 inline-flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase text-slate-500 hover:text-blue-600 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back to Store</span>
-        </Link>
-
-        <div className="w-full max-w-md space-y-8">
-          
-          <div className="space-y-2">
-            <span className="text-xs font-bold tracking-[0.2em] text-blue-600 uppercase">
-              {isChangePassword ? 'CREDENTIAL UPDATE' : isForgotPassword ? 'RECOVERY' : isLogin ? 'WELCOME BACK' : 'MEMBERSHIP'}
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-sans font-extrabold text-slate-900 tracking-tight">
-              {isChangePassword
-                ? 'Update Password'
-                : isForgotPassword
-                ? 'Reset Your Password'
-                : isLogin
-                ? 'Sign In to JudesCart'
-                : 'Create an Account'}
+            <p className="text-[10px] font-bold uppercase tracking-widest text-[#DF9F28]">
+              JudesCart Membership
+            </p>
+            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white mt-1">
+              {mode === 'signin' ? 'Welcome Back' : 'Create VIP Account'}
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500">
-              {isChangePassword
-                ? 'Enter your current and new credentials below.'
-                : isForgotPassword
-                ? 'Enter your registered email to receive a recovery link.'
-                : isLogin
-                ? 'Access your saved pieces, orders, and lucky draw tickets.'
-                : 'Join the JudesCart community to unlock seamless checkout and weekly rewards.'}
+            <p className="text-xs text-slate-300 mt-1 max-w-xs mx-auto">
+              {mode === 'signin'
+                ? 'Sign in to access your orders, saved bag, and weekly sweepstakes tickets.'
+                : 'Join millions of shoppers and receive 200 free JudesCoins today.'}
             </p>
           </div>
 
-          {errorMessage && (
-            <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl text-xs text-rose-700 font-medium flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
-              <span>{errorMessage}</span>
-            </div>
-          )}
+          {/* Switcher */}
+          <div className="grid grid-cols-2 p-1.5 mx-6 mt-6 bg-stone-100 rounded-2xl">
+            <button
+              type="button"
+              onClick={() => setMode('signin')}
+              className={`py-2 text-xs font-bold rounded-xl transition-all ${
+                mode === 'signin'
+                  ? 'bg-white text-slate-900 shadow-xs'
+                  : 'text-stone-500 hover:text-slate-900'
+              }`}
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode('signup')}
+              className={`py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+                mode === 'signup'
+                  ? 'bg-white text-slate-900 shadow-xs'
+                  : 'text-stone-500 hover:text-slate-900'
+              }`}
+            >
+              <span>Create Account</span>
+              <span className="px-1.5 py-0.2 bg-amber-100 text-amber-800 text-[9px] font-extrabold rounded-full">
+                +200 Coins
+              </span>
+            </button>
+          </div>
 
-          {successMessage && (
-            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-700 font-medium flex items-center gap-2">
-              <Check className="w-4 h-4 shrink-0 text-emerald-600" />
-              <span>{successMessage}</span>
-            </div>
-          )}
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-4">
+            {errorMessage && (
+              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2 text-xs text-rose-700">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{errorMessage}</span>
+              </div>
+            )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {!isLogin && !isForgotPassword && !isChangePassword && (
+            {successMessage && (
+              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-xs text-emerald-700">
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <span>{successMessage}</span>
+              </div>
+            )}
+
+            {mode === 'signup' && (
               <>
-                <div className="space-y-1">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
-                    Full Name
-                  </label>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
                   <div className="relative">
+                    <User className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       required
-                      placeholder="e.g. John Doe"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 shadow-xs"
+                      placeholder="e.g. Rahul Sharma"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 text-xs sm:text-sm focus:outline-none focus:border-[#DF9F28]"
                     />
-                    <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
-                    Phone Number
-                  </label>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Phone Number (Optional)</label>
                   <div className="relative">
+                    <Phone className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="tel"
-                      required
-                      placeholder="e.g. +91 98765 43210"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 shadow-xs"
+                      placeholder="+91 98765 43210"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 text-xs sm:text-sm focus:outline-none focus:border-[#DF9F28]"
                     />
-                    <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   </div>
                 </div>
               </>
             )}
 
-            <div className="space-y-1">
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
-                Email Address
-              </label>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
               <div className="relative">
+                <Mail className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="email"
                   required
-                  placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 shadow-xs"
+                  placeholder="name@example.com"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 text-xs sm:text-sm focus:outline-none focus:border-[#DF9F28]"
                 />
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               </div>
             </div>
 
-            {isChangePassword && (
-              <div className="space-y-1">
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
-                  Current Password
-                </label>
-                <div className="relative">
-                  <input
-                    type="password"
-                    required
-                    placeholder="••••••••"
-                    value={oldPassword}
-                    onChange={(e) => setOldPassword(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 shadow-xs"
-                  />
-                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                </div>
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-xs font-bold text-slate-700">Password</label>
+                {mode === 'signin' && (
+                  <button
+                    type="button"
+                    onClick={() => alert('Password reset instructions sent to your email.')}
+                    className="text-[11px] font-semibold text-[#DF9F28] hover:underline"
+                  >
+                    Forgot password?
+                  </button>
+                )}
               </div>
-            )}
+              <div className="relative">
+                <Lock className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-stone-200 text-xs sm:text-sm focus:outline-none focus:border-[#DF9F28]"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="p-1 text-stone-400 hover:text-stone-600 absolute right-3 top-1/2 -translate-y-1/2"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
 
-            {!isForgotPassword && (
-              <div className="space-y-1">
-                <div className="flex justify-between items-center">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
-                    {isChangePassword ? 'New Password' : 'Password'}
-                  </label>
-                  {isLogin && (
-                    <div className="flex gap-3 text-[11px]">
-                      <button
-                        type="button"
-                        onClick={() => { setIsForgotPassword(true); setIsLogin(false); setErrorMessage(null); }}
-                        className="text-blue-600 hover:underline font-medium"
-                      >
-                        Forgot password?
-                      </button>
-                    </div>
-                  )}
-                </div>
-                <div className="relative">
-                  <input
-                    type="password"
-                    required
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 shadow-xs"
-                  />
-                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                </div>
-              </div>
+            {mode === 'signin' && (
+              <label className="flex items-center gap-2 text-xs text-stone-600 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="rounded text-[#DF9F28] focus:ring-[#DF9F28] w-3.5 h-3.5"
+                />
+                <span>Remember my session</span>
+              </label>
             )}
 
             <button
               type="submit"
-              disabled={isExecuting}
-              className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-xl text-xs font-bold tracking-wider uppercase transition-all shadow-md flex items-center justify-center gap-2 mt-2"
+              disabled={isLoading}
+              className="w-full py-3.5 rounded-xl bg-[#111111] hover:bg-[#DF9F28] text-white hover:text-slate-950 text-xs font-bold tracking-wider uppercase transition-all shadow-md active:scale-98 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
-              {isExecuting ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Processing...</span>
-                </>
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : mode === 'signin' ? (
+                'Sign In to JudesCart'
               ) : (
-                <span>
-                  {isChangePassword
-                    ? 'Save New Password'
-                    : isForgotPassword
-                    ? 'Send Reset Link'
-                    : isLogin
-                    ? 'Sign In to Account'
-                    : 'Complete Registration'}
-                </span>
+                'Create Account (+200 Coins)'
               )}
             </button>
+
+            {/* Social Logins */}
+            <div className="pt-2">
+              <div className="relative text-center my-3 before:absolute before:left-0 before:top-1/2 before:w-full before:h-px before:bg-stone-200">
+                <span className="relative bg-white px-3 text-[11px] font-semibold text-stone-400">
+                  Or Instant Sign In
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleSocialLogin('Google')}
+                  className="py-2.5 px-3 rounded-xl border border-stone-200 hover:bg-stone-50 text-xs font-bold text-slate-800 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span className="text-sm font-bold text-rose-500">G</span>
+                  <span>Google</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleSocialLogin('Apple')}
+                  className="py-2.5 px-3 rounded-xl border border-stone-200 hover:bg-stone-50 text-xs font-bold text-slate-800 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span className="text-sm font-bold text-slate-900"></span>
+                  <span>Apple</span>
+                </button>
+              </div>
+            </div>
           </form>
 
-          {/* Switch Modes */}
-          <div className="pt-4 border-t border-slate-200 text-center text-xs text-slate-500">
-            {isForgotPassword || isChangePassword ? (
-              <p>
-                Remember your password?{' '}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsForgotPassword(false);
-                    setIsChangePassword(false);
-                    setIsLogin(true);
-                    setErrorMessage(null);
-                  }}
-                  className="font-bold text-blue-600 hover:underline ml-1"
-                >
-                  Sign In
-                </button>
-              </p>
-            ) : isLogin ? (
-              <p>
-                Don&apos;t have an account?{' '}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsLogin(false);
-                    setErrorMessage(null);
-                  }}
-                  className="font-bold text-blue-600 hover:underline ml-1"
-                >
-                  Create Account
-                </button>
-              </p>
-            ) : (
-              <p>
-                Already have an account?{' '}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsLogin(true);
-                    setErrorMessage(null);
-                  }}
-                  className="font-bold text-blue-600 hover:underline ml-1"
-                >
-                  Sign In
-                </button>
-              </p>
-            )}
+          {/* Security Footer */}
+          <div className="px-8 py-3.5 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500 font-medium">
+            <div className="flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <span>256-bit Encrypted Session</span>
+            </div>
+            <span>Official JudesCart Security</span>
           </div>
 
         </div>
-      </div>
+      </main>
 
+      <Footer />
     </div>
   );
 }

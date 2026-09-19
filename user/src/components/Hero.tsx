@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getApiUrl } from '@/lib/api';
 
@@ -229,28 +229,6 @@ export default function Hero() {
               </div>
             </motion.div>
           </AnimatePresence>
-
-          {/* Slider Arrow Navigation */}
-          {total > 1 && (
-            <>
-              <button
-                type="button"
-                aria-label="Previous Slide"
-                onClick={prevSlide}
-                className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white border border-white/20 flex items-center justify-center opacity-80 sm:opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer shadow-md active:scale-95"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <button
-                type="button"
-                aria-label="Next Slide"
-                onClick={nextSlide}
-                className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white border border-white/20 flex items-center justify-center opacity-80 sm:opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer shadow-md active:scale-95"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </>
-          )}
         </div>
 
         {/* =========================================================================

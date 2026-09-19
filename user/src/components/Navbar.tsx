@@ -323,30 +323,30 @@ export default function Navbar() {
     <>
       <header
         ref={headerRef}
-        className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-zinc-200 shadow-2xs transition-all duration-200"
+        className="sticky top-0 z-40 w-full bg-white/98 backdrop-blur-md border-b border-zinc-200 shadow-xs transition-all duration-200"
       >
         {/* 1. Main Header Row (Tier 1) */}
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14 sm:h-16 gap-2 sm:gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 sm:h-17 gap-3 sm:gap-6">
             
             {/* Left: Logo & Mobile Menu Toggle */}
-            <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-              <Link href="/" className="group flex items-center shrink-0 pr-0.5 focus-visible:outline-none" aria-label="JudesCart Home">
-                <div className="relative w-8 h-8 sm:w-9 sm:h-9 shrink-0">
+            <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+              <Link href="/" className="group flex items-center shrink-0 pr-1 focus-visible:outline-none" aria-label="JudesCart Home">
+                <div className="relative w-9 h-9 sm:w-10 sm:h-10 shrink-0">
                   <Image
                     src="/logo-icon.webp"
                     alt="JudesCart Logo"
                     fill
-                    sizes="36px"
+                    sizes="40px"
                     className="object-contain group-hover:scale-105 transition-transform"
                     priority
                   />
                 </div>
-                <div className="hidden sm:flex flex-col ml-2">
-                  <span className="text-lg sm:text-xl font-bold tracking-tight text-zinc-900 group-hover:text-[#DF9F28] transition-colors leading-none">
+                <div className="hidden sm:flex flex-col ml-2.5">
+                  <span className="text-xl sm:text-[22px] font-extrabold tracking-tight text-zinc-950 group-hover:text-[#DF9F28] transition-colors leading-none">
                     Judes<span className="text-[#DF9F28]">Cart</span>
                   </span>
-                  <span className="text-[9px] tracking-[0.2em] font-semibold text-zinc-400 uppercase mt-0.5">
+                  <span className="text-[10px] tracking-[0.22em] font-bold text-zinc-400 uppercase mt-0.5">
                     Shop More. Live Better.
                   </span>
                 </div>
@@ -375,19 +375,19 @@ export default function Navbar() {
               </button>
 
               {/* Center: Large Search Bar (Desktop) */}
-              <div className="hidden md:flex flex-1 max-w-md ml-1 lg:ml-2">
+              <div className="hidden md:flex flex-1 max-w-lg lg:max-w-xl ml-2">
                 <div 
                   onClick={() => setIsSearchModalOpen(true)} 
                   className="w-full relative cursor-pointer"
                 >
-                  <div className="w-full flex items-center justify-between px-3.5 py-2 rounded-full text-xs text-zinc-500 bg-zinc-100 hover:bg-zinc-200/70 hover:text-zinc-900 border border-zinc-200 transition-all duration-150 shadow-2xs group">
-                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <div className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs text-zinc-500 bg-zinc-100/90 hover:bg-zinc-100 hover:text-zinc-900 border border-zinc-200/90 transition-all duration-150 group">
+                    <div className="flex items-center gap-2.5 flex-1 min-w-0">
                       <Search className="w-4 h-4 text-[#DF9F28] group-hover:scale-110 transition-transform shrink-0" />
-                      <span className="text-xs text-zinc-500 font-normal truncate">
+                      <span className="text-xs text-zinc-500 font-medium truncate">
                         Search products, categories, or brands...
                       </span>
                     </div>
-                    <kbd className="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono font-medium text-zinc-500 bg-white rounded border border-zinc-200 shadow-2xs shrink-0 select-none">
+                    <kbd className="hidden lg:inline-flex items-center gap-0.5 px-2 py-0.5 text-[11px] font-mono font-semibold text-zinc-500 bg-white rounded-md border border-zinc-200 shadow-2xs shrink-0 select-none">
                       ⌘K
                     </kbd>
                   </div>
@@ -395,19 +395,19 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Right: Currency, Wishlist, Daily Gift, Coins, Sign In, Cart */}
-            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            {/* Right: Currency, Wishlist, Sign In, Cart */}
+            <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
               
               {/* Currency Badge */}
               <div className="hidden sm:block">
                 <button
                   type="button"
                   onClick={() => setIsCurrencyModalOpen(true)}
-                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 transition-all border border-zinc-200/80 bg-white cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 transition-all border border-zinc-200/90 bg-white cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-amber-500"
                   title="Select Currency"
                 >
                   <span className="text-sm leading-none" role="img" aria-label={selectedCurrency.name}>{selectedCurrency.flag}</span>
-                  <span className="font-semibold text-zinc-900 tracking-tight">{selectedCurrency.code}</span>
+                  <span className="font-bold text-zinc-900 tracking-tight">{selectedCurrency.code}</span>
                   <span className="text-zinc-400 font-mono text-[11px]">({selectedCurrency.symbol})</span>
                 </button>
               </div>
@@ -415,13 +415,13 @@ export default function Navbar() {
               {/* Wishlist Link */}
               <Link
                 href="/wishlist"
-                className="relative p-2 rounded-lg text-zinc-700 hover:text-[#DF9F28] hover:bg-zinc-100 transition-all shrink-0 focus-visible:ring-2 focus-visible:ring-amber-500"
+                className="relative p-2.5 rounded-xl text-zinc-700 hover:text-[#DF9F28] hover:bg-zinc-100 border border-transparent hover:border-zinc-200 transition-all shrink-0 focus-visible:ring-2 focus-visible:ring-amber-500"
                 aria-label="Wishlist"
                 title="View Wishlist"
               >
                 <Heart className="w-4 h-4" />
                 {totalWishlistItems > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 min-w-[15px] h-[15px] bg-[#DF9F28] text-zinc-950 text-[9px] font-bold rounded-full flex items-center justify-center px-0.5 shadow-xs">
+                  <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] bg-[#DF9F28] text-zinc-950 text-[9px] font-bold rounded-full flex items-center justify-center px-0.5 shadow-xs">
                     {totalWishlistItems}
                   </span>
                 )}

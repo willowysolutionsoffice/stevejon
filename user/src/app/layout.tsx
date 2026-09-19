@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import { OrderProvider } from "@/context/OrderContext";
 import { WishlistProvider } from "@/context/WishlistContext";
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-sans",
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 export const metadata: Metadata = {
   title: "JudesCart | Shop More. Live Better. - All Products Superstore",
@@ -18,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className={`h-full antialiased ${plusJakartaSans.variable}`}>
       <body className="min-h-full flex flex-col font-sans bg-[#FAFAFA] text-[#18181B] selection:bg-[#DF9F28] selection:text-zinc-950">
         <CartProvider>
           <WishlistProvider>

@@ -153,7 +153,7 @@ export default function Hero() {
   const spot2Banner = banners[spot2Index] || DEFAULT_BANNERS[1];
 
   return (
-    <section className="sj-container pt-6 sm:pt-8 md:pt-10 lg:pt-12 pb-4 select-none">
+    <section className="sj-container pt-8 sm:pt-12 md:pt-16 lg:pt-20 pb-0 select-none">
       {/* 2-Column Banner Grid: Large Main Banner (~70-73%) + Secondary Banner (~27-30%) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 lg:gap-6 items-stretch">
         
@@ -303,7 +303,7 @@ export default function Hero() {
           PAGINATION DOTS: (1, 2, 3)
          ========================================================================= */}
       {total > 1 && (
-        <div className="flex items-center justify-center gap-2 mt-3.5 sm:mt-4">
+        <div className="flex items-center justify-center gap-2 mt-2.5 sm:mt-3">
           {banners.map((banner, idx) => {
             const isActive = currentIndex === idx;
             return (

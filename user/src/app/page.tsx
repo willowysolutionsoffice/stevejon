@@ -12,14 +12,26 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#FAFAFA] text-zinc-900 font-sans flex flex-col justify-between">
       <Navbar />
-      <main className="flex-1 space-y-12 sm:space-y-16 md:space-y-20 lg:space-y-24 pb-20 md:pb-28">
+      <main className="flex-1 pb-20 md:pb-28">
         <Hero />
-        <Categories />
-        <NewArrivals />
-        <BenefitsSection />
-        <LuckyDrawPoster />
-        <RecentlyViewed />
-        <Winners />
+        <div className="mt-5 sm:mt-7 md:mt-9">
+          <Categories />
+        </div>
+        <div className="mt-12 sm:mt-16 md:mt-20">
+          <NewArrivals />
+        </div>
+        <div className="mt-14 sm:mt-18 md:mt-22">
+          <BenefitsSection />
+        </div>
+        <div className="mt-12 sm:mt-16 md:mt-20">
+          <LuckyDrawPoster />
+        </div>
+        <div className="mt-12 sm:mt-16 md:mt-20">
+          <RecentlyViewed />
+        </div>
+        <div className="mt-12 sm:mt-16 md:mt-20">
+          <Winners />
+        </div>
       </main>
       <Footer />
     </div>

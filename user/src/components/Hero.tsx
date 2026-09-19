@@ -1,635 +1,349 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  Flame,
-  Calendar,
-  Trophy,
-  Crown,
-  ShoppingBag,
-  ArrowRight,
-  Clock,
-  Bell,
-  Check,
-  ChevronLeft,
-  ChevronRight,
-} from 'lucide-react';
-import { useCart } from '@/context/CartContext';
+import { ChevronLeft, ChevronRight, ArrowRight, ArrowUpRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { getApiUrl } from '@/lib/api';
 
-// Deal items for the interactive Deal Card
-const FLASH_DEALS = [
-  {
-    id: 'deal-1',
-    name: 'JudesCart Utility Wool Overshirt',
-    price: 4299,
-    originalPrice: 5249,
-    discount: '-18%',
-    image: '/prod_overshirt_1778670536589.png',
-    href: '/product?id=prod-1',
-    stock: 'In Stock • Ready to Dispatch',
-  },
-  {
-    id: 'deal-2',
-    name: 'Tailored Merino Blend Suit Jacket',
-    price: 14999,
-    originalPrice: 18499,
-    discount: '-19%',
-    image: '/cat_apparel_1778670103427.png',
-    href: '/product?id=prod-2',
-    stock: 'Only 3 left in batch',
-  },
-  {
-    id: 'deal-3',
-    name: 'Handcrafted Leather Briefcase',
-    price: 8299,
-    originalPrice: 9999,
-    discount: '-17%',
-    image: '/cat_leather_1778670351299.png',
-    href: '/product?id=prod-3',
-    stock: 'Hand-Burnished Edition',
-  },
-  {
-    id: 'deal-4',
-    name: 'Minimalist Bifold Cardholder',
-    price: 2199,
-    originalPrice: 2899,
-    discount: '-24%',
-    image: '/cat_accessories_1778670517925.png',
-    href: '/product?id=prod-5',
-    stock: 'Limited Atelier Run',
-  },
-];
-
-// Typed hero campaign card interface
-export interface HeroCardConfig {
+export interface BannerSlide {
   id: string;
-  tabLabel: string;
-  tabIcon: React.ElementType;
-  pillIcon: React.ElementType;
-  pillLabel: string;
-  pillClass: string;
-  badgeLabel: string;
-  badgeClass: string;
+  tag: string;
   title: string;
-  subtitle: string;
-  bgImage: string;
-  gradientClass: string;
-  borderClass: string;
-  linkText: string;
-  linkHref: string;
-  linkColor: string;
-  type: 'deal' | 'countdown' | 'weekly-draw' | 'bumper-jackpot';
+  offerPrice?: string;
+  description: string;
+  buttonText: string;
+  buttonLink: string;
+  image: string;
+  badge?: string;
 }
 
-export const HERO_CARDS: HeroCardConfig[] = [
+// Authentic high-resolution Steve Jon landscape e-commerce banners
+const DEFAULT_BANNERS: BannerSlide[] = [
   {
-    id: 'special-drops',
-    tabLabel: 'Flash Deals',
-    tabIcon: Flame,
-    pillIcon: Flame,
-    pillLabel: 'Special Offers',
-    pillClass: 'bg-amber-500/20 border-amber-400/40 text-amber-300',
-    badgeLabel: 'Save Up To 24%',
-    badgeClass: 'bg-rose-600 text-white font-bold',
-    title: 'Discounted & Flash Deals',
-    subtitle: 'Handpicked premium drops on immediate offer.',
-    bgImage: '/prod_overshirt_1778670536589.png',
-    gradientClass: 'from-[#1c1204] via-[#261906] to-[#120b02]',
-    borderClass: 'border-amber-500/40 hover:border-amber-400',
-    linkText: 'Explore All Catalog Offers',
-    linkHref: '/product',
-    linkColor: 'text-[#DF9F28] hover:text-amber-200',
-    type: 'deal',
+    id: 'banner-1',
+    tag: 'AUTUMN / WINTER COLLECTION',
+    title: 'Signature Tailoring & Outerwear',
+    offerPrice: 'Starting from ₹4,299*',
+    description: 'Precision-tailored wool overshirts, blazers, and luxury knitwear engineered for effortless modern distinction.',
+    buttonText: 'Shop Collection',
+    buttonLink: '/product',
+    image: '/banners/Banner.jpg',
+    badge: 'NEW SEASON',
   },
   {
-    id: 'seasonal-gala',
-    tabLabel: 'Sale Events',
-    tabIcon: Calendar,
-    pillIcon: Calendar,
-    pillLabel: 'Upcoming Sales',
-    pillClass: 'bg-amber-500/20 border-amber-400/40 text-amber-300',
-    badgeLabel: 'In 3 Days',
-    badgeClass: 'bg-amber-500/90 text-slate-950 font-bold',
-    title: 'Sale Days & Events',
-    subtitle: 'JudesCart Autumn Gala arrives shortly.',
-    bgImage: '/cat_leather_1778670351299.png',
-    gradientClass: 'from-[#0a1224] via-[#121c38] to-[#070c18]',
-    borderClass: 'border-amber-400/30 hover:border-amber-400',
-    linkText: 'Preview Early-Bird Catalog',
-    linkHref: '/collections',
-    linkColor: 'text-[#DF9F28] hover:text-amber-200',
-    type: 'countdown',
+    id: 'banner-2',
+    tag: 'HANDCRAFTED ATELIER',
+    title: 'Artisan Bags & Leather Goods',
+    offerPrice: 'Up to 40% OFF',
+    description: 'Hand-burnished full-grain leather briefcases, wallets, and accessories crafted to age with authentic character.',
+    buttonText: 'Explore Leather',
+    buttonLink: '/product?category=Signature%20Leather%20Goods',
+    image: '/banners/banner5.jpg',
+    badge: 'LIMITED EDITION',
   },
   {
-    id: 'weekly-draws',
-    tabLabel: 'Lucky Draws',
-    tabIcon: Trophy,
-    pillIcon: Trophy,
-    pillLabel: 'Weekly Lucky Draws',
-    pillClass: 'bg-emerald-500/20 border-emerald-400/40 text-emerald-300',
-    badgeLabel: '3 Tiers',
-    badgeClass: 'bg-emerald-600 text-white font-bold',
-    title: 'Shop & Win Every Week',
-    subtitle: 'Every verified order automatically enters draw.',
-    bgImage: '/cat_accessories_1778670517925.png',
-    gradientClass: 'from-[#031d14] via-[#062b1e] to-[#02140e]',
-    borderClass: 'border-emerald-500/40 hover:border-emerald-400',
-    linkText: 'Weekly Draw Rules',
-    linkHref: '/lucky-draw#rules',
-    linkColor: 'text-emerald-300 hover:text-emerald-200',
-    type: 'weekly-draw',
-  },
-  {
-    id: 'grand-bumper',
-    tabLabel: 'JUDES Jackpot',
-    tabIcon: Crown,
-    pillIcon: Crown,
-    pillLabel: 'Judes Exclusive',
-    pillClass: 'bg-purple-500/25 border-amber-400/50 text-amber-300',
-    badgeLabel: 'Annual Grand',
-    badgeClass: 'bg-[#DF9F28] text-slate-950 font-bold',
-    title: 'Grand Bumper Jackpot',
-    subtitle: 'Annual flagship prize draw for valued patrons.',
-    bgImage: '/about_craftsmanship.png',
-    gradientClass: 'from-[#1a0828] via-[#2c0d44] to-[#11031c]',
-    borderClass: 'border-amber-400/50 hover:border-amber-400',
-    linkText: 'View Bumper Draw Details',
-    linkHref: '/lucky-draw',
-    linkColor: 'text-[#DF9F28] hover:text-amber-200',
-    type: 'bumper-jackpot',
+    id: 'banner-3',
+    tag: 'CONTEMPORARY FOOTWEAR',
+    title: 'Signature Footwear & Sneakers',
+    offerPrice: 'Up to 50% OFF',
+    description: 'Clean silhouette sneakers, boots, and everyday essentials crafted for durability and timeless appeal.',
+    buttonText: 'Explore Deals',
+    buttonLink: '/product',
+    image: '/banners/banner2.jpg',
+    badge: 'SALE EVENT',
   },
 ];
-
-interface HeroCampaignCardProps {
-  card: HeroCardConfig;
-  timeLeft: { days: number; hours: number; mins: number; secs: number };
-  activeDealIndex: number;
-  onSelectDeal: (idx: number) => void;
-  dealAdded: boolean;
-  alertSet: boolean;
-  onQuickAddDeal: (e: React.MouseEvent) => void;
-  onSetAlert: (e: React.MouseEvent) => void;
-}
-
-function HeroCampaignCard({
-  card,
-  timeLeft,
-  activeDealIndex,
-  onSelectDeal,
-  dealAdded,
-  alertSet,
-  onQuickAddDeal,
-  onSetAlert,
-}: HeroCampaignCardProps) {
-  const PillIcon = card.pillIcon;
-  const currentDeal = FLASH_DEALS[activeDealIndex] || FLASH_DEALS[0];
-
-  return (
-    <div
-      className={`w-full h-full rounded-2xl overflow-hidden flex flex-col justify-between p-3.5 sm:p-4 md:p-5 lg:p-6 bg-gradient-to-b ${card.gradientClass} border ${card.borderClass} text-white relative select-none shadow-md hover:shadow-2xl transition-all duration-300 group`}
-    >
-      {/* Background Silhouette Image */}
-      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
-        <Image
-          src={card.bgImage}
-          alt={card.title}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          className="object-cover group-hover:scale-105 transition-transform duration-500"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent" />
-      </div>
-
-      {/* Main Content Stack */}
-      <div className="relative z-10 space-y-2 sm:space-y-2.5 md:space-y-3">
-        {/* Row 1: Header Badges */}
-        <div className="flex items-center justify-between">
-          <div
-            className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border text-[10px] font-extrabold uppercase tracking-wider shrink-0 whitespace-nowrap ${card.pillClass}`}
-          >
-            <PillIcon className="w-3 h-3 shrink-0" />
-            <span>{card.pillLabel}</span>
-          </div>
-          <span
-            className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded shrink-0 whitespace-nowrap ${card.badgeClass}`}
-          >
-            {card.badgeLabel}
-          </span>
-        </div>
-
-        {/* Row 2: Title & Subtitle */}
-        <div>
-          <h2 className="font-sans text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white leading-tight">
-            {card.title}
-          </h2>
-          <p className="text-[11px] sm:text-xs text-amber-200/80 mt-0.5 line-clamp-1">
-            {card.subtitle}
-          </p>
-        </div>
-
-        {/* Row 3: Dynamic Interactive Content Section */}
-        {card.type === 'deal' && (
-          <>
-            <div className="p-2 sm:p-2.5 space-y-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/15">
-              <div className="flex items-center gap-2 sm:gap-2.5">
-                <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-lg overflow-hidden bg-black/40 shrink-0 border border-white/20">
-                  <Image
-                    src={currentDeal.image}
-                    alt={currentDeal.name}
-                    fill
-                    sizes="48px"
-                    className="object-cover"
-                  />
-                  <div className="absolute top-0.5 left-0.5 px-1 py-0.2 rounded text-[7px] sm:text-[8px] font-black bg-rose-600 text-white leading-none">
-                    {currentDeal.discount}
-                  </div>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <Link
-                    href={currentDeal.href}
-                    className="text-[11px] font-bold text-white hover:text-amber-300 transition-colors line-clamp-1 block"
-                    title={currentDeal.name}
-                  >
-                    {currentDeal.name}
-                  </Link>
-                  <div className="flex items-baseline gap-1.5 mt-0.5">
-                    <span className="text-xs font-black text-amber-300">
-                      ₹{currentDeal.price.toLocaleString('en-IN')}
-                    </span>
-                    <span className="text-[10px] text-stone-400 line-through">
-                      ₹{currentDeal.originalPrice.toLocaleString('en-IN')}
-                    </span>
-                  </div>
-                  <span className="text-[9px] text-emerald-300 font-semibold block">
-                    {currentDeal.stock}
-                  </span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={onQuickAddDeal}
-                className="w-full py-1.5 px-2.5 text-[11px] rounded-md font-bold flex items-center justify-center gap-1 transition-all duration-200 shadow-xs cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 hover:shadow-amber-500/30 active:scale-98"
-              >
-                {dealAdded ? <Check className="w-3.5 h-3.5" /> : <ShoppingBag className="w-3.5 h-3.5" />}
-                <span>{dealAdded ? 'Added to Bag' : 'Quick Add Deal'}</span>
-              </button>
-            </div>
-
-            {/* Deal Pagination Indicators */}
-            <div className="flex items-center justify-between pt-0.5">
-              <span className="text-[8px] sm:text-[9px] text-stone-400 font-medium">
-                Deal {activeDealIndex + 1} of {FLASH_DEALS.length}
-              </span>
-              <div className="flex items-center gap-1">
-                {FLASH_DEALS.map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => onSelectDeal(i)}
-                    className={`h-1.5 rounded-full transition-all duration-200 cursor-pointer ${
-                      activeDealIndex === i
-                        ? 'w-4 bg-amber-400'
-                        : 'w-1.5 bg-white/30 hover:bg-white/60'
-                    }`}
-                    aria-label={`Show deal ${i + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-          </>
-        )}
-
-        {card.type === 'countdown' && (
-          <>
-            <div className="p-2 sm:p-2.5 rounded-lg bg-white/10 backdrop-blur-md border border-white/15">
-              <div className="text-[9px] font-extrabold text-indigo-300 uppercase tracking-wider mb-1 flex items-center gap-1">
-                <Clock className="w-2.5 h-2.5 text-cyan-400 animate-spin" style={{ animationDuration: '6s' }} />
-                <span>Autumn Gala Countdown</span>
-              </div>
-              <div className="grid grid-cols-4 gap-1 text-center">
-                <div className="bg-black/40 rounded p-1 border border-indigo-400/20">
-                  <span className="block text-sm font-black text-white leading-none">
-                    {String(timeLeft.days).padStart(2, '0')}
-                  </span>
-                  <span className="text-[7px] sm:text-[8px] text-indigo-200 uppercase font-bold">Days</span>
-                </div>
-                <div className="bg-black/40 rounded p-1 border border-indigo-400/20">
-                  <span className="block text-sm font-black text-white leading-none">
-                    {String(timeLeft.hours).padStart(2, '0')}
-                  </span>
-                  <span className="text-[7px] sm:text-[8px] text-indigo-200 uppercase font-bold">Hours</span>
-                </div>
-                <div className="bg-black/40 rounded p-1 border border-indigo-400/20">
-                  <span className="block text-sm font-black text-white leading-none">
-                    {String(timeLeft.mins).padStart(2, '0')}
-                  </span>
-                  <span className="text-[7px] sm:text-[8px] text-indigo-200 uppercase font-bold">Mins</span>
-                </div>
-                <div className="bg-black/40 rounded p-1 border border-indigo-400/20">
-                  <span className="block text-sm font-black text-cyan-300 leading-none">
-                    {String(timeLeft.secs).padStart(2, '0')}
-                  </span>
-                  <span className="text-[7px] sm:text-[8px] text-indigo-200 uppercase font-bold">Secs</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-1.5 rounded-md bg-white/5 border border-white/10 flex items-center justify-between text-[9px] sm:text-[10px]">
-              <span className="font-semibold text-slate-200 truncate">Sept 18–22: Mega Autumn Gala</span>
-              <span className="font-bold text-amber-300 shrink-0 ml-1">Up to 60%</span>
-            </div>
-
-            <button
-              type="button"
-              onClick={onSetAlert}
-              className="w-full py-1.5 px-2.5 text-[11px] rounded-md font-bold flex items-center justify-center gap-1 transition-all duration-200 shadow-xs cursor-pointer bg-white/15 hover:bg-white/25 text-indigo-200 border border-white/20 active:scale-98"
-            >
-              {alertSet ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Bell className="w-3.5 h-3.5 text-indigo-300" />}
-              <span>{alertSet ? 'Alert Configured' : 'Set Sale Alert'}</span>
-            </button>
-          </>
-        )}
-
-        {card.type === 'weekly-draw' && (
-          <>
-            <div className="space-y-1">
-              <div className="p-1 sm:p-1.5 rounded-lg bg-white/10 backdrop-blur-md border border-emerald-400/20 flex items-center justify-between">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-4 h-4 sm:w-5 sm:h-5 rounded bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-[9px]">
-                    💎
-                  </span>
-                  <div>
-                    <span className="text-[10px] sm:text-[11px] font-bold text-white leading-none block">
-                      Platinum Tier
-                    </span>
-                    <span className="text-[8px] sm:text-[9px] text-emerald-200">
-                      Bespoke Suits & Watches
-                    </span>
-                  </div>
-                </div>
-                <span className="text-[8px] sm:text-[9px] font-extrabold text-amber-300 bg-amber-400/10 px-1.5 py-0.2 rounded">
-                  &gt;₹5,000
-                </span>
-              </div>
-
-              <div className="p-1 sm:p-1.5 rounded-lg bg-white/10 backdrop-blur-md border border-emerald-400/20 flex items-center justify-between">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-4 h-4 sm:w-5 sm:h-5 rounded bg-blue-500/20 border border-blue-400/40 flex items-center justify-center text-[9px]">
-                    🥇
-                  </span>
-                  <div>
-                    <span className="text-[10px] sm:text-[11px] font-bold text-white leading-none block">
-                      Gold Tier
-                    </span>
-                    <span className="text-[8px] sm:text-[9px] text-emerald-200">
-                      Signature Leather Goods
-                    </span>
-                  </div>
-                </div>
-                <span className="text-[8px] sm:text-[9px] font-extrabold text-blue-300 bg-blue-400/10 px-1.5 py-0.2 rounded">
-                  ₹2,500+
-                </span>
-              </div>
-
-              <div className="p-1.5 rounded-lg bg-white/10 backdrop-blur-md border border-emerald-400/20 flex items-center justify-between">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-5 h-5 rounded bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-[9px]">
-                    🥈
-                  </span>
-                  <div>
-                    <span className="text-[11px] font-bold text-white leading-none block">
-                      Silver
-                    </span>
-                    <span className="text-[9px] text-emerald-200">
-                      Cashmere & Accessories
-                    </span>
-                  </div>
-                </div>
-                <span className="text-[9px] font-extrabold text-cyan-300 bg-cyan-400/10 px-1.5 py-0.2 rounded">
-                  ₹1,000+
-                </span>
-              </div>
-            </div>
-
-            <Link
-              href="/lucky-draw"
-              className="w-full py-1.5 px-2.5 text-[11px] rounded-md font-bold flex items-center justify-center gap-1 transition-all duration-200 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white shadow-xs cursor-pointer active:scale-98"
-            >
-              <Trophy className="w-3.5 h-3.5 text-amber-200" />
-              <span>Open Prize Wheel</span>
-            </Link>
-          </>
-        )}
-
-        {card.type === 'bumper-jackpot' && (
-          <>
-            <div className="p-2 space-y-1.5 rounded-lg bg-white/10 backdrop-blur-md border border-amber-400/30">
-              <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-white">
-                <span className="w-4 h-4 sm:w-5 sm:h-5 rounded bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-xs shrink-0">
-                  🚗
-                </span>
-                <span className="font-bold text-amber-200 truncate">Luxury SUV & Vehicle</span>
-              </div>
-              <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-white">
-                <span className="w-4 h-4 sm:w-5 sm:h-5 rounded bg-pink-400/20 border border-pink-400/40 flex items-center justify-center text-xs shrink-0">
-                  ✈️
-                </span>
-                <span className="font-bold text-pink-200 truncate">7-Day International Tour</span>
-              </div>
-              <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-white">
-                <span className="w-4 h-4 sm:w-5 sm:h-5 rounded bg-yellow-400/20 border border-yellow-400/40 flex items-center justify-center text-xs shrink-0">
-                  💰
-                </span>
-                <span className="font-bold text-yellow-200 truncate">₹5,00,000 Cash Spree</span>
-              </div>
-            </div>
-
-            <Link
-              href="/product"
-              className="w-full py-1.5 px-2.5 text-[11px] rounded-md font-black flex items-center justify-center gap-1 transition-all duration-200 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:brightness-110 text-slate-950 shadow-xs active:scale-98"
-            >
-              <Crown className="w-3.5 h-3.5 text-slate-950" />
-              <span>Shop Brand JudesCart</span>
-            </Link>
-          </>
-        )}
-      </div>
-
-      {/* Card Footer Link */}
-      <div className="relative z-10 pt-2 mt-2 border-t border-white/10">
-        <Link
-          href={card.linkHref}
-          className={`group/link flex items-center justify-between text-[11px] font-bold transition-colors ${card.linkColor}`}
-        >
-          <span>{card.linkText}</span>
-          <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-1 transition-transform" />
-        </Link>
-      </div>
-    </div>
-  );
-}
 
 export default function Hero() {
-  const { addToCart } = useCart();
-  const [activeCard, setActiveCard] = useState(0);
-  const [activeDealIndex, setActiveDealIndex] = useState(0);
-  const [dealAdded, setDealAdded] = useState(false);
-  const [alertSet, setAlertSet] = useState(false);
+  const [banners, setBanners] = useState<BannerSlide[]>(DEFAULT_BANNERS);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const touchStartX = useRef<number | null>(null);
 
-  // Countdown timer state
-  const [timeLeft, setTimeLeft] = useState({
-    days: 3,
-    hours: 13,
-    mins: 45,
-    secs: 41,
-  });
-
+  // Fetch admin banners from backend if configured
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev.secs > 0) return { ...prev, secs: prev.secs - 1 };
-        if (prev.mins > 0) return { ...prev, mins: 59, secs: 59 };
-        if (prev.hours > 0) return { ...prev, hours: prev.hours - 1, mins: 59, secs: 59 };
-        if (prev.days > 0) return { ...prev, days: prev.days - 1, hours: 23, mins: 59, secs: 59 };
-        return prev;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
+    let isMounted = true;
+    const fetchBanners = async () => {
+      try {
+        const apiUrl = getApiUrl();
+        const res = await fetch(`${apiUrl}/banners`);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0 && isMounted) {
+            const activeBanners = data.filter((b: any) => b.isActive !== false);
+            if (activeBanners.length >= 2) {
+              const mapped: BannerSlide[] = activeBanners.map((b: any, idx: number) => {
+                const def = DEFAULT_BANNERS[idx % DEFAULT_BANNERS.length];
+                return {
+                  id: b.id || `banner-${idx}`,
+                  tag: 'EXCLUSIVE DROP',
+                  title: b.title || def.title,
+                  offerPrice: def.offerPrice,
+                  description: def.description,
+                  buttonText: b.buttonText || 'Shop Now',
+                  buttonLink: b.buttonLink || '/product',
+                  image: b.image || def.image,
+                  badge: 'FEATURED',
+                };
+              });
+              setBanners(mapped);
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching banners:', err);
+      }
+    };
+
+    fetchBanners();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const handleQuickAddDeal = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const deal = FLASH_DEALS[activeDealIndex] || FLASH_DEALS[0];
-    addToCart({
-      productId: deal.id,
-      title: deal.name,
-      category: 'Apparel',
-      price: deal.price,
-      image: deal.image,
-      size: 'L',
-      color: 'Classic',
-      quantity: 1,
-    });
-    setDealAdded(true);
-    setTimeout(() => setDealAdded(false), 2000);
+  const total = banners.length;
+
+  // Next / Previous rotation
+  const nextSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % total);
+  }, [total]);
+
+  const prevSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + total) % total);
+  }, [total]);
+
+  // When clicking Card 2 (Secondary Banner on right):
+  // Advances by 1: (1, 2) -> (2, 3) -> (3, 1) -> (1, 2)
+  const handleSecondaryClick = () => {
+    nextSlide();
   };
 
-  const handleSetAlert = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setAlertSet(true);
-    setTimeout(() => setAlertSet(false), 2500);
+  // Autoplay (6.5s) with pause on hover
+  useEffect(() => {
+    if (isHovered || total <= 1) return;
+    const timer = setInterval(() => {
+      nextSlide();
+    }, 6500);
+    return () => clearInterval(timer);
+  }, [isHovered, nextSlide, total]);
+
+  // Touch gesture support
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
   };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+    }
+    touchStartX.current = null;
+  };
+
+  // Pair logic: Spot 1 shows banners[currentIndex], Spot 2 shows banners[(currentIndex + 1) % total]
+  const spot1Banner = banners[currentIndex] || DEFAULT_BANNERS[0];
+  const spot2Index = (currentIndex + 1) % total;
+  const spot2Banner = banners[spot2Index] || DEFAULT_BANNERS[1];
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 font-sans">
-      {/* Section Heading Row */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-4 sm:mb-6">
-        <div>
-          <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#DF9F28] block mb-1">
-            Curated Drops & Campaigns
-          </span>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-            Discover JudesCart Campaigns
-          </h1>
+    <section className="sj-container pt-1 sm:pt-3 select-none">
+      {/* 2-Column Banner Grid: Large Main Banner (~70-73%) + Secondary Banner (~27-30%) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 lg:gap-5 items-stretch">
+        
+        {/* =========================================================================
+            SPOT 1: LARGE MAIN CAMPAIGN BANNER (~70–73% width on Desktop)
+            Landscape e-commerce image background + readable promotional text + CTA
+           ========================================================================= */}
+        <div
+          className="lg:col-span-8 xl:col-span-8 relative rounded-2xl sm:rounded-3xl overflow-hidden bg-zinc-900 border border-zinc-200/80 shadow-sm transition-all duration-300 group flex flex-col justify-between min-h-[360px] sm:min-h-[400px] lg:h-[440px] xl:h-[460px]"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={spot1Banner.id}
+              initial={{ opacity: 0.8 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0.8 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="absolute inset-0 flex flex-col justify-between"
+            >
+              {/* Wide Landscape Banner Image */}
+              <Image
+                src={spot1Banner.image}
+                alt={spot1Banner.title}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 75vw"
+                className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+              />
+
+              {/* Clean Left-to-Right Readability Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-transparent pointer-events-none" />
+
+              {/* Banner Text Content & CTA (Left-Aligned) */}
+              <div className="relative z-10 p-6 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-between h-full max-w-xl space-y-4">
+                <div className="space-y-2">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-amber-400 block">
+                    {spot1Banner.tag}
+                  </span>
+
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[38px] font-bold text-white tracking-tight leading-tight">
+                    {spot1Banner.title}
+                  </h1>
+
+                  {spot1Banner.offerPrice && (
+                    <p className="text-base sm:text-lg font-bold text-amber-300 tracking-tight pt-0.5">
+                      {spot1Banner.offerPrice}
+                    </p>
+                  )}
+
+                  <p className="text-xs sm:text-sm text-zinc-200 font-normal leading-relaxed line-clamp-2 max-w-md pt-1">
+                    {spot1Banner.description}
+                  </p>
+                </div>
+
+                {/* Primary CTA Button */}
+                <div className="pt-2 flex flex-col items-start gap-2">
+                  <Link
+                    href={spot1Banner.buttonLink}
+                    className="px-6 py-2.5 sm:px-7 sm:py-3 bg-white hover:bg-zinc-100 text-zinc-950 font-semibold text-xs sm:text-sm tracking-wide rounded-xl shadow-md transition-all duration-200 inline-flex items-center gap-2 group/btn cursor-pointer active:scale-98 focus-visible:ring-2 focus-visible:ring-white"
+                  >
+                    <span>{spot1Banner.buttonText}</span>
+                    <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover/btn:translate-x-1" />
+                  </Link>
+
+                  <span className="text-[11px] text-zinc-300 font-medium pt-1">
+                    Complimentary Lucky Draw ticket included with every order
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Slider Arrow Navigation */}
+          {total > 1 && (
+            <>
+              <button
+                type="button"
+                aria-label="Previous Slide"
+                onClick={prevSlide}
+                className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white border border-white/20 flex items-center justify-center opacity-80 sm:opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer shadow-md active:scale-95"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                aria-label="Next Slide"
+                onClick={nextSlide}
+                className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white border border-white/20 flex items-center justify-center opacity-80 sm:opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer shadow-md active:scale-95"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </>
+          )}
         </div>
-        <p className="text-xs sm:text-sm text-slate-500 max-w-md leading-[1.3] font-normal">
-          Explore exclusive seasonal tailoring, limited handcrafted leather drops, weekly verified sweepstakes, and the JudesCart grand bumper jackpot.
-        </p>
+
+        {/* =========================================================================
+            SPOT 2: SECONDARY PROMOTIONAL BANNER (~27–30% width on Desktop)
+           ========================================================================= */}
+        <div
+          onClick={handleSecondaryClick}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className="lg:col-span-4 xl:col-span-4 relative rounded-2xl sm:rounded-3xl overflow-hidden bg-zinc-900 border border-zinc-200/80 shadow-sm hover:shadow-md transition-all duration-300 group cursor-pointer min-h-[240px] sm:min-h-[280px] lg:h-[440px] xl:h-[460px] flex flex-col justify-between"
+          title="Click to bring this banner into the main spotlight"
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={spot2Banner.id}
+              initial={{ opacity: 0.8 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0.8 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="absolute inset-0 flex flex-col justify-between p-5 sm:p-6 lg:p-7"
+            >
+              {/* Secondary Landscape Banner Image */}
+              <Image
+                src={spot2Banner.image}
+                alt={spot2Banner.title}
+                fill
+                sizes="(max-width: 1024px) 100vw, 30vw"
+                className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+
+              {/* Top-to-Bottom Dark Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/30 pointer-events-none" />
+
+              {/* Top Status Badge */}
+              <div className="relative z-10 flex items-center justify-between">
+                <span className="inline-block px-2.5 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-white/20 text-white border border-white/30 backdrop-blur-xs">
+                  {spot2Banner.badge || 'UP NEXT'}
+                </span>
+                <span className="text-[10px] font-semibold text-white/90 uppercase tracking-wider flex items-center gap-1 group-hover:text-amber-300 transition-colors">
+                  <span>Up Next</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </span>
+              </div>
+
+              {/* Bottom Promotional Details */}
+              <div className="relative z-10 space-y-2 pt-6">
+                {spot2Banner.offerPrice && (
+                  <span className="text-sm font-bold text-amber-300 uppercase tracking-wide block">
+                    {spot2Banner.offerPrice}
+                  </span>
+                )}
+
+                <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight leading-snug line-clamp-2">
+                  {spot2Banner.title}
+                </h2>
+
+                <div className="pt-2 flex items-center justify-between border-t border-white/20">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-white group-hover:text-amber-200 transition-colors">
+                    {spot2Banner.buttonText}
+                  </span>
+                  <div className="w-8 h-8 rounded-lg bg-white text-zinc-950 flex items-center justify-center shadow-xs group-hover:translate-x-1 transition-transform">
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
 
-      {/* Mobile Interactive Tab Switcher & Swipe Frame */}
-      <div className="block md:hidden pb-3">
-        <div className="flex items-center justify-between gap-1 overflow-x-auto no-scrollbar pb-2.5 pt-1 px-1">
-          {HERO_CARDS.map((card, idx) => {
-            const TabIcon = card.tabIcon;
-            const isActive = activeCard === idx;
+      {/* =========================================================================
+          PAGINATION DOTS: (1, 2, 3)
+         ========================================================================= */}
+      {total > 1 && (
+        <div className="flex items-center justify-center gap-2 mt-3.5 sm:mt-4">
+          {banners.map((banner, idx) => {
+            const isActive = currentIndex === idx;
             return (
               <button
-                key={card.id}
+                key={banner.id}
                 type="button"
-                onClick={() => setActiveCard(idx)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold transition-all shrink-0 cursor-pointer ${
+                aria-label={`Go to banner ${idx + 1}`}
+                onClick={() => setCurrentIndex(idx)}
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                   isActive
-                    ? 'bg-[#DF9F28] text-slate-950 shadow-md font-bold'
-                    : 'bg-stone-200/70 text-stone-700 hover:bg-stone-300/60'
+                    ? 'w-6 bg-zinc-900 shadow-xs'
+                    : 'w-2 bg-zinc-300 hover:bg-zinc-400'
                 }`}
-              >
-                <TabIcon className="w-3.5 h-3.5" />
-                <span>{card.tabLabel}</span>
-              </button>
+              />
             );
           })}
         </div>
-
-        {/* Mobile Card Frame */}
-        <div className="relative w-full max-w-[360px] mx-auto pt-1">
-          <HeroCampaignCard
-            card={HERO_CARDS[activeCard]}
-            timeLeft={timeLeft}
-            activeDealIndex={activeDealIndex}
-            onSelectDeal={setActiveDealIndex}
-            dealAdded={dealAdded}
-            alertSet={alertSet}
-            onQuickAddDeal={handleQuickAddDeal}
-            onSetAlert={handleSetAlert}
-          />
-        </div>
-
-        {/* Mobile Pagination Control */}
-        <div className="flex items-center justify-between mt-3 px-3 max-w-[360px] mx-auto">
-          <button
-            type="button"
-            aria-label="Previous Campaign Card"
-            onClick={() => setActiveCard((prev) => (prev > 0 ? prev - 1 : HERO_CARDS.length - 1))}
-            className="w-8 h-8 rounded-full flex items-center justify-center bg-white border border-stone-200 shadow-xs text-stone-700 hover:text-[#DF9F28] active:scale-90 transition-all cursor-pointer"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <div className="flex items-center gap-1.5">
-            {HERO_CARDS.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                aria-label={`Go to card ${i + 1}`}
-                onClick={() => setActiveCard(i)}
-                className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                  activeCard === i ? 'w-6 bg-[#DF9F28]' : 'w-1.5 bg-stone-300 hover:bg-stone-400'
-                }`}
-              />
-            ))}
-          </div>
-          <button
-            type="button"
-            aria-label="Next Campaign Card"
-            onClick={() => setActiveCard((prev) => (prev < HERO_CARDS.length - 1 ? prev + 1 : 0))}
-            className="w-8 h-8 rounded-full flex items-center justify-center bg-white border border-stone-200 shadow-xs text-stone-700 hover:text-[#DF9F28] active:scale-90 transition-all cursor-pointer"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* Desktop 4-Card Grid */}
-      <div className="hidden md:grid md:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 items-stretch">
-        {HERO_CARDS.map((card) => (
-          <div key={card.id} className="w-full h-full">
-            <HeroCampaignCard
-              card={card}
-              timeLeft={timeLeft}
-              activeDealIndex={activeDealIndex}
-              onSelectDeal={setActiveDealIndex}
-              dealAdded={dealAdded}
-              alertSet={alertSet}
-              onQuickAddDeal={handleQuickAddDeal}
-              onSetAlert={handleSetAlert}
-            />
-          </div>
-        ))}
-      </div>
+      )}
     </section>
   );
 }

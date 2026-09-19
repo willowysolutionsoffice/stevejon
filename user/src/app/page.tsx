@@ -10,9 +10,9 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col justify-between">
+    <div className="min-h-screen bg-[#FAFAFA] text-zinc-900 font-sans flex flex-col justify-between">
       <Navbar />
-      <main className="flex-1 space-y-12 sm:space-y-14 pb-20 pt-2">
+      <main className="flex-1 space-y-10 sm:space-y-14 pb-20 pt-2">
         <Hero />
         <Categories />
         <NewArrivals />

@@ -237,26 +237,27 @@ export default function NewArrivals() {
       {/* Section Header with Category Pills */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <span className="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-[#DF9F28]">
+          <span className="text-xs uppercase tracking-wider font-semibold text-[#DF9F28]">
             TOP TRENDING PICKS
           </span>
-          <h2 className="font-sans text-xl sm:text-3xl font-extrabold text-stone-900 mt-0.5 sm:mt-1">
+          <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 tracking-tight mt-1">
             Featured at JudesCart
           </h2>
         </div>
 
         {/* Category Pills Filter */}
-        <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
           {CATEGORY_TABS.map((tab) => {
             const isActive = activeCategory === tab;
             return (
               <button
                 key={tab}
+                type="button"
                 onClick={() => setActiveCategory(tab)}
-                className={`px-2.5 py-1 sm:px-4 sm:py-2 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-colors shrink-0 cursor-pointer ${
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#DF9F28] ${
                   isActive
-                    ? 'bg-[#DF9F28] text-slate-950 shadow-sm'
-                    : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+                    ? 'bg-zinc-900 text-white shadow-xs'
+                    : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900'
                 }`}
               >
                 {tab}
@@ -267,7 +268,7 @@ export default function NewArrivals() {
       </div>
 
       {/* Products Grid: 3 columns desktop, 2 columns tablet, 2 columns mobile */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4 lg:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 lg:gap-6">
         {filteredProducts.map((prod) => {
           const mainVariant = prod.variants?.[0];
           const price = mainVariant?.price || 4299;

@@ -132,26 +132,26 @@ export default function RecentlyViewed() {
 
   return (
     <section className="sj-container">
-      <div className="space-y-6 pt-6 sm:pt-8">
+      <div className="space-y-6 pt-4 sm:pt-6">
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-200 pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-200 pb-4">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-[#DF9F28]/10 text-[#DF9F28] border border-[#DF9F28]/20">
-              <History className="w-5 h-5 text-[#DF9F28]" />
+            <div className="p-2 rounded-xl bg-amber-50 text-[#DF9F28] border border-amber-200">
+              <History className="w-4 h-4 text-[#DF9F28]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-sans text-xl sm:text-2xl font-extrabold text-[#0A192F]">
+                <h3 className="text-xl sm:text-2xl font-bold text-zinc-900 tracking-tight">
                   Recently Viewed &amp; Recommended
                 </h3>
                 {hasRecent && (
-                  <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                  <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 text-amber-900 border border-amber-200">
                     <Sparkles className="w-3 h-3 text-[#DF9F28]" />
                     Personalized
                   </span>
                 )}
               </div>
-              <p className="text-xs text-stone-500 mt-0.5">
+              <p className="text-xs text-zinc-500 mt-0.5">
                 Curated suggestions based on your taste and catalog bestsellers
               </p>
             </div>
@@ -159,7 +159,7 @@ export default function RecentlyViewed() {
 
           <Link
             href="/product"
-            className="text-xs font-bold text-[#DF9F28] hover:text-[#C6891E] hover:underline inline-flex items-center gap-1.5 transition-colors self-start sm:self-auto"
+            className="text-xs font-semibold text-[#DF9F28] hover:text-[#C6891E] inline-flex items-center gap-1.5 transition-colors self-start sm:self-auto focus-visible:outline-none"
           >
             <span>Browse entire catalog</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -167,7 +167,7 @@ export default function RecentlyViewed() {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
           {products.map((prod) => (
             <ProductCard
               key={prod.id}

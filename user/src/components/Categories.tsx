@@ -51,19 +51,19 @@ export default function Categories() {
   return (
     <section className="sj-container space-y-4 sm:space-y-6">
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-stone-200 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-zinc-200 pb-4">
         <div>
-          <span className="text-xs uppercase tracking-widest font-bold text-[#DF9F28]">
+          <span className="text-xs uppercase tracking-wider font-semibold text-[#DF9F28]">
             All Departments
           </span>
-          <h2 className="font-sans text-2xl sm:text-3xl font-extrabold text-stone-900 mt-1">
+          <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 tracking-tight mt-1">
             Shop by Department
           </h2>
         </div>
 
         <Link
           href="/product"
-          className="text-xs font-bold uppercase tracking-wider text-[#DF9F28] hover:text-[#C6891E] flex items-center gap-1.5 transition-colors font-sans"
+          className="text-xs font-semibold uppercase tracking-wider text-[#DF9F28] hover:text-[#C6891E] flex items-center gap-1.5 transition-colors focus-visible:outline-none"
         >
           <span>View All Products</span>
           <ArrowRight className="w-3.5 h-3.5" />
@@ -71,7 +71,7 @@ export default function Categories() {
       </div>
 
       {/* Categories Grid (2 cols mobile, 2 cols tablet, 3 cols desktop) */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
         {displayCategories.map((cat, idx) => {
           const itemCount = cat._count?.products || (idx * 7 + 14);
 
@@ -79,7 +79,7 @@ export default function Categories() {
             <Link
               key={cat.id}
               href={`/product?category=${encodeURIComponent(cat.name)}`}
-              className="group relative aspect-[16/12] sm:aspect-[16/11] rounded-2xl overflow-hidden bg-stone-100 border border-stone-200 shadow-xs flex flex-col justify-end p-3 sm:p-6 transition-all duration-300 hover:shadow-xl hover:border-[#DF9F28]/60"
+              className="group relative aspect-[16/11] rounded-2xl overflow-hidden bg-zinc-100 border border-zinc-200 shadow-xs flex flex-col justify-end p-4 sm:p-6 transition-all duration-200 hover:shadow-md hover:border-zinc-300 focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
             >
               {/* Category Background Image */}
               <Image
@@ -87,19 +87,19 @@ export default function Categories() {
                 alt={cat.name}
                 fill
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
-                className="object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                className="object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
               />
 
               {/* Gradient Dark Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0A192F]/90 via-[#0A192F]/40 to-transparent opacity-85 group-hover:opacity-90 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent pointer-events-none" />
 
               {/* Bottom Card Information */}
-              <div className="relative z-10 text-white space-y-0.5 sm:space-y-1">
-                <span className="text-[9px] sm:text-[11px] uppercase tracking-wider text-[#DF9F28] font-bold font-sans">
+              <div className="relative z-10 text-white space-y-1">
+                <span className="text-[11px] uppercase tracking-wider text-amber-300 font-semibold block">
                   {itemCount} Styles
                 </span>
                 
-                <h3 className="font-sans text-xs sm:text-xl font-bold group-hover:translate-x-1 transition-transform duration-200 line-clamp-1 text-white">
+                <h3 className="text-sm sm:text-lg font-bold text-white leading-tight line-clamp-1">
                   {cat.name}
                 </h3>
               </div>

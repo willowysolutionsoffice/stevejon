@@ -38,19 +38,19 @@ export default function Winners() {
   return (
     <section className="sj-container space-y-4 sm:space-y-6">
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-stone-200 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-zinc-200 pb-4">
         <div>
-          <span className="text-xs uppercase tracking-widest font-bold text-[#DF9F28]">
+          <span className="text-xs uppercase tracking-wider font-semibold text-[#DF9F28]">
             Community Winners
           </span>
-          <h2 className="font-sans text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight mt-1">
+          <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 tracking-tight mt-1">
             Recent Lucky Draw Winners
           </h2>
         </div>
 
         <Link
           href="/lucky-draw"
-          className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#DF9F28] hover:text-[#C6891E] transition-colors group"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#DF9F28] hover:text-[#C6891E] transition-colors group focus-visible:outline-none"
         >
           <span>Learn How To Participate</span>
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
@@ -58,14 +58,14 @@ export default function Winners() {
       </div>
 
       {/* Winners Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
         {winners.map((winner, idx) => (
           <div
             key={winner.id || idx}
-            className="bg-white rounded-2xl border border-stone-200 p-3.5 sm:p-4 flex flex-col items-center text-center shadow-xs hover:shadow-lg hover:border-[#DF9F28]/50 transition-all duration-300 group"
+            className="bg-white rounded-2xl border border-zinc-200 p-3.5 sm:p-4 flex flex-col items-center text-center shadow-xs hover:shadow-md hover:border-zinc-300 transition-all duration-200 group"
           >
             {/* Winner Portrait */}
-            <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-stone-100 mb-3 border border-stone-200">
+            <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-zinc-100 mb-3 border border-zinc-200">
               <Image
                 src={winner.winnerImage || '/winner_man.jpg'}
                 alt={winner.winnerName}
@@ -73,22 +73,22 @@ export default function Winners() {
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="absolute top-2 right-2 p-1.5 rounded-full bg-[#DF9F28] text-white shadow-xs">
-                <Trophy className="w-3 h-3" />
+              <div className="absolute top-2 right-2 p-1.5 rounded-full bg-[#DF9F28] text-zinc-950 shadow-xs">
+                <Trophy className="w-3.5 h-3.5" />
               </div>
             </div>
 
             {/* Name & Location */}
-            <h4 className="font-sans text-xs sm:text-sm font-bold text-slate-900 line-clamp-1">
+            <h4 className="text-xs sm:text-sm font-semibold text-zinc-900 line-clamp-1">
               {winner.winnerName}
             </h4>
-            <p className="text-[11px] text-[#DF9F28] font-bold uppercase tracking-wider mt-0.5">
+            <p className="text-[11px] text-[#DF9F28] font-semibold uppercase tracking-wider mt-0.5">
               {winner.winnerPlace}
             </p>
 
             {/* Prize Badge */}
-            <div className="mt-2.5 pt-2.5 border-t border-stone-100 w-full">
-              <p className="text-[10px] text-stone-500 font-medium line-clamp-1">
+            <div className="mt-2 pt-2 border-t border-zinc-100 w-full">
+              <p className="text-[11px] text-zinc-500 font-normal line-clamp-1">
                 Won: {winner.drawCampaign?.prizeName || 'Luxury Prize'}
               </p>
             </div>

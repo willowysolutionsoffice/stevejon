@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col font-sans bg-[#F8FAFC] text-[#0F172A] selection:bg-[#DF9F28] selection:text-white">
+      <body className="min-h-full flex flex-col font-sans bg-[#FAFAFA] text-[#18181B] selection:bg-[#DF9F28] selection:text-zinc-950">
         <CartProvider>
           <WishlistProvider>
             <OrderProvider>

@@ -3,27 +3,28 @@
 :root {
   --sj-font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
-  --sj-bg: #F8FAFC;
-  --sj-bg-alt: #F1F5F9;
+  /* JudesCart Neutral Palette - Warm Zinc */
+  --sj-bg: #FAFAFA;
+  --sj-bg-alt: #F4F4F5;
   --sj-surface: #FFFFFF;
-  --sj-surface-subtle: #F8FAFC;
-  --sj-ink: #0F172A;
-  --sj-ink-muted: #64748B;
-  --sj-ink-light: #94A3B8;
-  --sj-border: #E2E8F0;
-  --sj-border-light: #F1F5F9;
+  --sj-surface-subtle: #F4F4F5;
+  --sj-ink: #18181B;
+  --sj-ink-muted: #52525B;
+  --sj-ink-light: #71717A;
+  --sj-border: #E4E4E7;
+  --sj-border-light: #F4F4F5;
   
   /* JudesCart Brand Palette */
   --sj-primary: #DF9F28;
   --sj-primary-hover: #C6891E;
-  --sj-primary-light: #FEF8EC;
+  --sj-primary-light: #FFFBEB;
   --sj-dark-surface: #111111;
-  --sj-dark-nav: #1A1A1A;
+  --sj-dark-nav: #18181B;
   --sj-accent: #DF9F28;
   --sj-gold: #DF9F28;
   --sj-gold-light: #FEF3C7;
-  --sj-success: #10B981;
-  --sj-error: #EF4444;
+  --sj-success: #059669;
+  --sj-error: #DC2626;
 }
 
 @theme inline {
@@ -61,17 +62,17 @@
 }
 
 html {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: var(--sj-font-stack);
   background-color: var(--sj-bg);
   scroll-behavior: smooth;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: var(--sj-font-stack);
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 15px;
+  line-height: 1.5;
   color: var(--sj-ink);
   background-color: var(--sj-bg);
   -webkit-font-smoothing: antialiased;
@@ -80,7 +81,13 @@ body {
 
 ::selection {
   background-color: #DF9F28;
-  color: #FFFFFF;
+  color: #18181B;
+}
+
+/* Accessibility Focus Visible Ring */
+:focus-visible {
+  outline: 2px solid #DF9F28;
+  outline-offset: 2px;
 }
 
 /* Container Structure */
@@ -111,12 +118,13 @@ body {
   background: #FFFFFF;
   border: 1px solid var(--sj-border);
   border-radius: 1rem;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .sj-card:hover {
   border-color: #DF9F28;
-  box-shadow: 0 12px 30px -8px rgba(223, 159, 40, 0.15);
+  box-shadow: 0 8px 24px -4px rgba(223, 159, 40, 0.12);
 }
 
 /* Hide scrollbars for clean horizontal scrollers while preserving touch/scrollability */

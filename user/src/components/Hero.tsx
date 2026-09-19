@@ -153,7 +153,7 @@ export default function Hero() {
   const spot2Banner = banners[spot2Index] || DEFAULT_BANNERS[1];
 
   return (
-    <section className="sj-container pt-1 sm:pt-3 select-none">
+    <section className="sj-container pt-4 sm:pt-6 lg:pt-8 pb-2 select-none">
       {/* 2-Column Banner Grid: Large Main Banner (~70-73%) + Secondary Banner (~27-30%) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 lg:gap-5 items-stretch">
         

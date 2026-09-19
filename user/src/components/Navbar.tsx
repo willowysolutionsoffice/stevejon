@@ -427,29 +427,6 @@ export default function Navbar() {
                 )}
               </Link>
 
-              {/* Daily Gift Button */}
-              <button
-                type="button"
-                onClick={() => setIsDailyGiftModalOpen(true)}
-                className="relative flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg bg-amber-50/90 hover:bg-amber-100 border border-amber-200/70 text-amber-950 transition-all text-xs font-semibold cursor-pointer group shrink-0 focus-visible:ring-2 focus-visible:ring-amber-500"
-                title="Daily JudesCart Mystery Vault - Open to Claim Rewards"
-              >
-                <Gift className="w-3.5 h-3.5 text-[#DF9F28] group-hover:scale-110 transition-transform" />
-                <span className="hidden sm:inline">Daily Gift</span>
-              </button>
-
-              {/* JudesCoins Balance */}
-              <button
-                type="button"
-                onClick={() => setIsAccountDrawerOpen(true)}
-                className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-zinc-100 hover:bg-zinc-200/80 border border-zinc-200 text-zinc-800 transition-all text-xs font-semibold group cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-amber-500"
-                title="JudesCoins Rewards Balance"
-              >
-                <Coins className="w-3.5 h-3.5 text-[#DF9F28] group-hover:scale-110 transition-transform" />
-                <span>0</span>
-                <span className="text-[10px] text-zinc-500 font-medium uppercase tracking-wider">Coins</span>
-              </button>
-
               {/* User Account / Sign In */}
               <div className="relative" ref={userMenuRef}>
                 {session?.user ? (
@@ -764,17 +741,17 @@ export default function Navbar() {
               {/* Mobile Quick Action Buttons */}
               <div className="grid grid-cols-2 gap-2 p-3 bg-zinc-50 border-b border-zinc-200">
                 <Link
-                  href="/lucky-draw"
+                  href="/product"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-amber-50 text-amber-950 border border-amber-200 text-xs font-semibold"
+                  className="flex items-center gap-2 p-2.5 rounded-xl bg-white text-zinc-800 border border-zinc-200 text-xs font-semibold hover:border-zinc-300"
                 >
-                  <Gift className="w-4 h-4 text-[#DF9F28] shrink-0" />
-                  <span>Daily Gift</span>
+                  <SlidersHorizontal className="w-4 h-4 text-zinc-600 shrink-0" />
+                  <span>All Products</span>
                 </Link>
                 <Link
                   href="/wishlist"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-white text-zinc-800 border border-zinc-200 text-xs font-semibold"
+                  className="flex items-center gap-2 p-2.5 rounded-xl bg-white text-zinc-800 border border-zinc-200 text-xs font-semibold hover:border-zinc-300"
                 >
                   <Heart className="w-4 h-4 text-rose-500 shrink-0" />
                   <span>Wishlist ({totalWishlistItems})</span>

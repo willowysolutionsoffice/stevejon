@@ -325,28 +325,28 @@ export default function Navbar() {
         ref={headerRef}
         className="sticky top-0 z-40 w-full bg-white/98 backdrop-blur-md border-b border-zinc-200 shadow-xs transition-all duration-200"
       >
-        {/* 1. Main Header Row (Tier 1 - Substantially Increased Height) */}
+        {/* 1. Main Header Row (Tier 1 - Refined & Balanced Height) */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20 sm:h-22 lg:h-24 gap-3 sm:gap-6">
+          <div className="flex items-center justify-between h-18 sm:h-20 gap-3 sm:gap-6">
             
             {/* Left: Logo & Mobile Menu Toggle */}
-            <div className="flex items-center gap-3 sm:gap-5 flex-1 min-w-0">
+            <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
               <Link href="/" className="group flex items-center shrink-0 pr-1 focus-visible:outline-none" aria-label="JudesCart Home">
-                <div className="relative w-11 h-11 sm:w-12 sm:h-12 shrink-0">
+                <div className="relative w-9 h-9 sm:w-10 sm:h-10 shrink-0">
                   <Image
                     src="/logo-icon.webp"
                     alt="JudesCart Logo"
                     fill
-                    sizes="48px"
+                    sizes="40px"
                     className="object-contain group-hover:scale-105 transition-transform"
                     priority
                   />
                 </div>
-                <div className="hidden sm:flex flex-col ml-3">
-                  <span className="text-2xl sm:text-[26px] font-extrabold tracking-tight text-zinc-950 group-hover:text-[#DF9F28] transition-colors leading-none">
+                <div className="hidden sm:flex flex-col ml-2.5">
+                  <span className="text-xl sm:text-[22px] font-bold tracking-tight text-zinc-950 group-hover:text-[#DF9F28] transition-colors leading-none">
                     Judes<span className="text-[#DF9F28]">Cart</span>
                   </span>
-                  <span className="text-[11px] tracking-[0.24em] font-bold text-zinc-400 uppercase mt-1">
+                  <span className="text-[10px] tracking-[0.22em] font-semibold text-zinc-400 uppercase mt-0.5">
                     Shop More. Live Better.
                   </span>
                 </div>
@@ -356,38 +356,38 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="p-2.5 text-zinc-700 hover:text-[#DF9F28] hover:bg-zinc-100 rounded-xl transition-colors shrink-0 cursor-pointer lg:hidden focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
+                className="p-2 text-zinc-700 hover:text-[#DF9F28] hover:bg-zinc-100 rounded-xl transition-colors shrink-0 cursor-pointer lg:hidden focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
                 aria-label="Toggle navigation menu"
                 title="Menu & Options"
               >
-                <Menu className="w-6 h-6" />
+                <Menu className="w-5 h-5" />
               </button>
 
               {/* Mobile Quick Search Button */}
               <button
                 type="button"
                 onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
-                className="md:hidden p-2.5 text-zinc-700 hover:text-[#DF9F28] hover:bg-zinc-100 rounded-xl transition-colors shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
+                className="md:hidden p-2 text-zinc-700 hover:text-[#DF9F28] hover:bg-zinc-100 rounded-xl transition-colors shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
                 aria-label="Search catalog"
                 title="Search"
               >
-                <Search className="w-5 h-5" />
+                <Search className="w-4 h-4" />
               </button>
 
-              {/* Center: Large Search Bar (Desktop - Prominently Sized) */}
-              <div className="hidden md:flex flex-1 max-w-lg lg:max-w-2xl ml-3">
+              {/* Center: Large Search Bar (Desktop) */}
+              <div className="hidden md:flex flex-1 max-w-lg lg:max-w-xl ml-2">
                 <div 
                   onClick={() => setIsSearchModalOpen(true)} 
                   className="w-full relative cursor-pointer"
                 >
-                  <div className="w-full flex items-center justify-between px-5 py-3 sm:py-3.5 rounded-2xl text-sm text-zinc-500 bg-zinc-100/90 hover:bg-zinc-100 hover:text-zinc-900 border border-zinc-200 transition-all duration-150 group shadow-2xs">
-                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <Search className="w-5 h-5 text-[#DF9F28] group-hover:scale-110 transition-transform shrink-0" />
-                      <span className="text-sm text-zinc-500 font-medium truncate">
+                  <div className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs text-zinc-500 bg-zinc-100/90 hover:bg-zinc-100 hover:text-zinc-900 border border-zinc-200/90 transition-all duration-150 group">
+                    <div className="flex items-center gap-2.5 flex-1 min-w-0">
+                      <Search className="w-4 h-4 text-[#DF9F28] group-hover:scale-110 transition-transform shrink-0" />
+                      <span className="text-xs text-zinc-500 font-medium truncate">
                         Search products, categories, or brands...
                       </span>
                     </div>
-                    <kbd className="hidden lg:inline-flex items-center gap-0.5 px-2.5 py-1 text-xs font-mono font-semibold text-zinc-500 bg-white rounded-lg border border-zinc-200 shadow-2xs shrink-0 select-none">
+                    <kbd className="hidden lg:inline-flex items-center gap-0.5 px-2 py-0.5 text-[11px] font-mono font-semibold text-zinc-500 bg-white rounded-md border border-zinc-200 shadow-2xs shrink-0 select-none">
                       ⌘K
                     </kbd>
                   </div>
@@ -396,32 +396,32 @@ export default function Navbar() {
             </div>
 
             {/* Right: Currency, Wishlist, Sign In, Cart */}
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
               
               {/* Currency Badge */}
               <div className="hidden sm:block">
                 <button
                   type="button"
                   onClick={() => setIsCurrencyModalOpen(true)}
-                  className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 transition-all border border-zinc-200/90 bg-white cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 transition-all border border-zinc-200/90 bg-white cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-amber-500"
                   title="Select Currency"
                 >
-                  <span className="text-base leading-none" role="img" aria-label={selectedCurrency.name}>{selectedCurrency.flag}</span>
+                  <span className="text-sm leading-none" role="img" aria-label={selectedCurrency.name}>{selectedCurrency.flag}</span>
                   <span className="font-bold text-zinc-900 tracking-tight">{selectedCurrency.code}</span>
-                  <span className="text-zinc-400 font-mono text-xs">({selectedCurrency.symbol})</span>
+                  <span className="text-zinc-400 font-mono text-[11px]">({selectedCurrency.symbol})</span>
                 </button>
               </div>
 
               {/* Wishlist Link */}
               <Link
                 href="/wishlist"
-                className="relative p-3 rounded-xl text-zinc-700 hover:text-[#DF9F28] hover:bg-zinc-100 border border-transparent hover:border-zinc-200 transition-all shrink-0 focus-visible:ring-2 focus-visible:ring-amber-500"
+                className="relative p-2.5 rounded-xl text-zinc-700 hover:text-[#DF9F28] hover:bg-zinc-100 border border-transparent hover:border-zinc-200 transition-all shrink-0 focus-visible:ring-2 focus-visible:ring-amber-500"
                 aria-label="Wishlist"
                 title="View Wishlist"
               >
-                <Heart className="w-5 h-5" />
+                <Heart className="w-4 h-4" />
                 {totalWishlistItems > 0 && (
-                  <span className="absolute 0.5 top-0.5 right-0.5 min-w-[18px] h-[18px] bg-[#DF9F28] text-zinc-950 text-[10px] font-bold rounded-full flex items-center justify-center px-0.5 shadow-xs">
+                  <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] bg-[#DF9F28] text-zinc-950 text-[9px] font-bold rounded-full flex items-center justify-center px-0.5 shadow-xs">
                     {totalWishlistItems}
                   </span>
                 )}
@@ -434,31 +434,31 @@ export default function Navbar() {
                     <button
                       type="button"
                       onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                      className="flex items-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-zinc-100 hover:bg-zinc-200/80 border border-zinc-200 text-zinc-900 transition-all text-sm font-semibold cursor-pointer shrink-0 group focus-visible:ring-2 focus-visible:ring-amber-500"
+                      className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200/80 border border-zinc-200 text-zinc-900 transition-all text-xs font-semibold cursor-pointer shrink-0 group focus-visible:ring-2 focus-visible:ring-amber-500"
                       aria-label="User Account Menu"
                     >
-                      <User className="w-4 h-4 text-[#DF9F28] group-hover:scale-110 transition-transform" />
-                      <span className="hidden sm:inline max-w-[90px] truncate">
+                      <User className="w-3.5 h-3.5 text-[#DF9F28] group-hover:scale-110 transition-transform" />
+                      <span className="hidden sm:inline max-w-[80px] truncate">
                         {session.user.name || 'Account'}
                       </span>
-                      <ChevronDown className={`w-3.5 h-3.5 text-zinc-500 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
+                      <ChevronDown className={`w-3 h-3 text-zinc-500 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
                     </button>
 
                     {/* Account Dropdown */}
                     {isUserMenuOpen && (
-                      <div className="absolute right-0 mt-2 w-60 bg-white rounded-2xl shadow-xl border border-zinc-200 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                      <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-zinc-200 py-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                         <div className="px-4 py-2.5 border-b border-zinc-100">
-                          <p className="text-sm font-semibold text-zinc-900 truncate">
+                          <p className="text-xs font-semibold text-zinc-900 truncate">
                             {session.user.name || 'User'}
                           </p>
-                          <p className="text-xs text-zinc-500 truncate">
+                          <p className="text-[11px] text-zinc-500 truncate">
                             {session.user.email}
                           </p>
                         </div>
 
                         <Link
                           href="/profile"
-                          className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
                         >
                           <User className="w-4 h-4 text-zinc-400" />
                           <span>My Profile & Addresses</span>
@@ -466,7 +466,7 @@ export default function Navbar() {
 
                         <Link
                           href="/orders"
-                          className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
                         >
                           <Package className="w-4 h-4 text-zinc-400" />
                           <span>My Orders</span>
@@ -474,7 +474,7 @@ export default function Navbar() {
 
                         <Link
                           href="/lucky-draw"
-                          className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
                         >
                           <Ticket className="w-4 h-4 text-[#DF9F28]" />
                           <span>My Lucky Tickets</span>
@@ -500,10 +500,10 @@ export default function Navbar() {
                       setAuthModalMode('signin');
                       setIsAuthModalOpen(true);
                     }}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-100 hover:bg-zinc-200/80 border border-zinc-200 text-zinc-900 transition-all text-sm font-semibold cursor-pointer shrink-0 group focus-visible:ring-2 focus-visible:ring-amber-500"
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200/80 border border-zinc-200 text-zinc-900 transition-all text-xs font-semibold cursor-pointer shrink-0 group focus-visible:ring-2 focus-visible:ring-amber-500"
                     aria-label="Customer Sign In"
                   >
-                    <User className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                    <User className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
                     <span>Sign In</span>
                   </button>
                 )}
@@ -513,12 +513,12 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => openDrawer()}
-                className="relative flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white transition-all duration-150 active:scale-95 shrink-0 group cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-500 shadow-sm"
+                className="relative flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white transition-all duration-150 active:scale-95 shrink-0 group cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-500 shadow-sm"
                 aria-label="Shopping Cart"
               >
-                <ShoppingBag className="w-5 h-5 text-white group-hover:text-[#DF9F28] transition-colors" />
-                <span className="hidden sm:inline text-sm font-semibold tracking-wide">Cart</span>
-                <span className="flex items-center justify-center min-w-[20px] h-[20px] px-1.5 text-xs font-bold rounded-full bg-[#DF9F28] text-zinc-950">
+                <ShoppingBag className="w-4 h-4 text-white group-hover:text-[#DF9F28] transition-colors" />
+                <span className="hidden sm:inline text-xs font-semibold tracking-wide">Cart</span>
+                <span className="flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold rounded-full bg-[#DF9F28] text-zinc-950">
                   {totalItems}
                 </span>
               </button>
@@ -556,36 +556,36 @@ export default function Navbar() {
           onMouseLeave={handleMouseLeave}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-13 sm:h-14">
+            <div className="flex items-center justify-between h-11 sm:h-12">
               
               {/* Category Nav Items */}
-              <div className="flex items-center space-x-1.5 xl:space-x-2.5">
+              <div className="flex items-center space-x-1 xl:space-x-2">
                 {NAVIGATION_CATEGORIES.map((cat) => {
                   const Icon = cat.icon;
                   const isActive = activeCategoryId === cat.id;
 
                   return (
-                    <div key={cat.id} className="relative py-1.5">
+                    <div key={cat.id} className="relative py-1">
                       <Link
                         href={cat.href}
                         onMouseEnter={() => handleCategoryMouseEnter(cat.id)}
-                        className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-[13px] font-semibold transition-all duration-150 select-none group ${
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 select-none group ${
                           isActive
                             ? 'bg-[#DF9F28] text-zinc-950 font-bold shadow-xs'
                             : 'text-zinc-300 hover:text-white hover:bg-white/10'
                         }`}
                       >
                         <span className={isActive ? 'text-zinc-950' : 'text-[#DF9F28]'}>
-                          <Icon className="w-4 h-4" />
+                          <Icon className="w-3.5 h-3.5" />
                         </span>
                         <span>{cat.label}</span>
                         {cat.popular && (
-                          <span className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider bg-[#DF9F28] text-zinc-950">
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider bg-[#DF9F28] text-zinc-950">
                             Popular
                           </span>
                         )}
                         <ChevronDown
-                          className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                          className={`w-3 h-3 transition-transform duration-200 ${
                             isActive ? 'rotate-180 text-zinc-950' : 'text-zinc-400 group-hover:text-zinc-200'
                           }`}
                         />
@@ -596,9 +596,9 @@ export default function Navbar() {
               </div>
 
               {/* Right Trust & Guarantee Badges */}
-              <div className="hidden xl:flex items-center gap-5 text-xs sm:text-[13px] font-medium text-zinc-400">
-                <span className="flex items-center gap-2 text-emerald-400 font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <div className="hidden xl:flex items-center gap-4 text-xs font-medium text-zinc-400">
+                <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   Free Delivery over ₹999
                 </span>
                 <span className="text-zinc-700">•</span>

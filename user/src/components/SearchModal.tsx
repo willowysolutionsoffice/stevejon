@@ -154,16 +154,16 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-slate-950/60 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-[#0A192F]/70 backdrop-blur-md animate-in fade-in duration-200">
       <div 
         className="fixed inset-0" 
         onClick={onClose} 
         aria-hidden="true" 
       />
 
-      <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-stone-200 overflow-hidden z-10 flex flex-col max-h-[80vh] animate-in zoom-in-95 duration-150">
+      <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-[#E2E8F0] overflow-hidden z-10 flex flex-col max-h-[80vh] animate-in zoom-in-95 duration-150">
         {/* Search Header */}
-        <form onSubmit={handleSearchSubmit} className="relative flex items-center px-5 py-4 border-b border-stone-100 bg-white">
+        <form onSubmit={handleSearchSubmit} className="relative flex items-center px-5 py-4 border-b border-[#E2E8F0] bg-white">
           <Search className="w-5 h-5 text-[#DF9F28] shrink-0 mr-3" />
           <input
             ref={inputRef}
@@ -171,13 +171,13 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search products, brands, materials, SKU..."
-            className="w-full bg-transparent text-sm sm:text-base text-slate-900 placeholder:text-stone-400 font-medium outline-none"
+            className="w-full bg-transparent text-sm sm:text-base text-[#111111] placeholder:text-[#888888] font-medium outline-none"
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery('')}
-              className="p-1 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 mr-2 transition-colors"
+              className="p-1 rounded-full text-[#888888] hover:text-[#111111] hover:bg-slate-100 mr-2 transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -185,14 +185,14 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
           <button
             type="button"
             onClick={onClose}
-            className="px-2 py-1 text-xs font-semibold text-stone-500 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 rounded-lg transition-colors"
+            className="px-2 py-1 text-xs font-semibold text-[#555555] hover:text-[#111111] bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
           >
             ESC
           </button>
         </form>
 
         {/* Category Filter Pills */}
-        <div className="flex items-center gap-1.5 px-5 py-2.5 bg-stone-50/80 border-b border-stone-100 overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-1.5 px-5 py-2.5 bg-[#F8FAFC] border-b border-[#E2E8F0] overflow-x-auto no-scrollbar">
           {SEARCH_CATEGORIES.map((cat) => (
             <button
               key={cat.label}
@@ -200,8 +200,8 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
               onClick={() => setSelectedCategory(selectedCategory === cat.query ? '' : cat.query)}
               className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
                 selectedCategory === cat.query
-                  ? 'bg-slate-900 text-white shadow-xs'
-                  : 'bg-white text-stone-600 hover:bg-stone-200/70 border border-stone-200'
+                  ? 'bg-[#0A192F] text-white shadow-xs'
+                  : 'bg-white text-[#555555] hover:bg-slate-100 border border-[#E2E8F0]'
               }`}
             >
               {cat.label}
@@ -214,7 +214,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
           {/* Quick Suggestions when query is empty */}
           {query === '' && (
             <div>
-              <div className="flex items-center gap-1.5 text-xs font-bold text-stone-400 uppercase tracking-wider mb-2.5">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#888888] uppercase tracking-wider mb-2.5">
                 <TrendingUp className="w-3.5 h-3.5 text-[#DF9F28]" />
                 <span>Trending Searches</span>
               </div>
@@ -224,7 +224,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                     key={term}
                     type="button"
                     onClick={() => setQuery(term)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50/80 hover:bg-amber-100/80 text-amber-900 text-xs font-semibold border border-amber-200/60 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FEF8EE] hover:bg-[#FEF3C7] text-[#111111] text-xs font-semibold border border-[#DF9F28]/30 transition-colors cursor-pointer"
                   >
                     <Sparkles className="w-3 h-3 text-[#DF9F28]" />
                     <span>{term}</span>
@@ -236,13 +236,13 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
           {/* Results List */}
           <div>
-            <div className="flex items-center justify-between text-xs font-bold text-stone-400 uppercase tracking-wider mb-3">
+            <div className="flex items-center justify-between text-xs font-bold text-[#888888] uppercase tracking-wider mb-3">
               <span>{query ? `Search Results (${filteredProducts.length})` : 'Recommended Products'}</span>
               {query && (
                 <Link
                   href={`/product?search=${encodeURIComponent(query)}`}
                   onClick={onClose}
-                  className="text-[#DF9F28] hover:underline flex items-center gap-0.5 text-xs font-bold"
+                  className="text-[#DF9F28] hover:text-[#C6891E] flex items-center gap-0.5 text-xs font-bold"
                 >
                   <span>View full catalog</span>
                   <ArrowRight className="w-3 h-3" />
@@ -252,9 +252,9 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
             {filteredProducts.length === 0 ? (
               <div className="text-center py-10">
-                <Package className="w-10 h-10 text-stone-300 mx-auto mb-2" />
-                <p className="text-sm font-bold text-slate-800">No products found</p>
-                <p className="text-xs text-stone-500 mt-1">Try searching for generic terms like &quot;Audio&quot;, &quot;Jacket&quot;, or &quot;Boots&quot;</p>
+                <Package className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+                <p className="text-sm font-bold text-[#111111]">No products found</p>
+                <p className="text-xs text-[#555555] mt-1">Try searching for generic terms like &quot;Audio&quot;, &quot;Jacket&quot;, or &quot;Boots&quot;</p>
               </div>
             ) : (
               <div className="space-y-2">
@@ -262,10 +262,10 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   <div
                     key={item.id}
                     onClick={() => handleProductSelect(item.id)}
-                    className="flex items-center justify-between p-2.5 rounded-2xl hover:bg-stone-50 border border-transparent hover:border-stone-200 transition-all cursor-pointer group"
+                    className="flex items-center justify-between p-2.5 rounded-2xl hover:bg-[#F8FAFC] border border-transparent hover:border-[#DF9F28] transition-all cursor-pointer group"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="relative w-12 h-12 rounded-xl bg-stone-100 overflow-hidden shrink-0 border border-stone-200/60">
+                      <div className="relative w-12 h-12 rounded-xl bg-slate-100 overflow-hidden shrink-0 border border-[#E2E8F0]">
                         <Image
                           src={item.image || '/prod_overshirt_1778670536589.png'}
                           alt={item.name}
@@ -275,22 +275,22 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-xs font-bold text-slate-900 group-hover:text-[#DF9F28] transition-colors truncate">
+                        <p className="text-xs font-bold text-[#111111] group-hover:text-[#DF9F28] transition-colors truncate">
                           {item.name}
                         </p>
-                        <p className="text-[11px] text-stone-500">
+                        <p className="text-[11px] text-[#555555]">
                           {item.category || 'General'}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 shrink-0 ml-3">
                       <div className="text-right">
-                        <p className="text-xs font-bold text-slate-900">₹{item.price.toLocaleString('en-IN')}</p>
+                        <p className="text-xs font-bold text-[#111111]">₹{item.price.toLocaleString('en-IN')}</p>
                         {item.originalPrice && (
-                          <p className="text-[10px] text-stone-400 line-through">₹{item.originalPrice.toLocaleString('en-IN')}</p>
+                          <p className="text-[10px] text-[#888888] line-through">₹{item.originalPrice.toLocaleString('en-IN')}</p>
                         )}
                       </div>
-                      <ChevronRight className="w-4 h-4 text-stone-400 group-hover:text-[#DF9F28] group-hover:translate-x-0.5 transition-all" />
+                      <ChevronRight className="w-4 h-4 text-[#888888] group-hover:text-[#DF9F28] group-hover:translate-x-0.5 transition-all" />
                     </div>
                   </div>
                 ))}
@@ -300,16 +300,16 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
         </div>
 
         {/* Footer info */}
-        <div className="px-5 py-3 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
+        <div className="px-5 py-3 bg-[#F8FAFC] border-t border-[#E2E8F0] flex items-center justify-between text-[11px] text-[#555555]">
           <div className="flex items-center gap-2">
             <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-white border border-stone-200 rounded font-mono text-[10px] shadow-2xs">↵</kbd> to search
+              <kbd className="px-1.5 py-0.5 bg-white border border-[#E2E8F0] rounded font-mono text-[10px] shadow-2xs">↵</kbd> to search
             </span>
             <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-white border border-stone-200 rounded font-mono text-[10px] shadow-2xs">ESC</kbd> to close
+              <kbd className="px-1.5 py-0.5 bg-white border border-[#E2E8F0] rounded font-mono text-[10px] shadow-2xs">ESC</kbd> to close
             </span>
           </div>
-          <span className="text-amber-800 font-semibold">Weekly Lucky Draw on every order</span>
+          <span className="text-[#DF9F28] font-semibold">Weekly Lucky Draw on every order</span>
         </div>
       </div>
     </div>

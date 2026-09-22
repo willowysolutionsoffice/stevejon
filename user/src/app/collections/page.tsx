@@ -46,7 +46,7 @@ export default function CollectionsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col justify-between">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#111111] font-sans flex flex-col justify-between">
       <Navbar />
 
       <main className="flex-1 py-12 md:py-20">
@@ -54,13 +54,13 @@ export default function CollectionsPage() {
           
           {/* Header */}
           <div className="text-center max-w-2xl mx-auto space-y-3">
-            <span className="inline-flex items-center text-xs font-bold tracking-[0.2em] text-blue-600 uppercase">
+            <span className="inline-flex items-center text-xs font-bold tracking-[0.2em] text-[#DF9F28] uppercase">
               <span>THE COMPLETE WARDROBE</span>
             </span>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-sans font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-sans font-extrabold text-[#111111] tracking-tight">
               Our Collections
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#555555] leading-relaxed">
               Explore bespoke categories crafted with master artisan techniques, organic fibres, and timeless silhouettes.
             </p>
           </div>
@@ -78,7 +78,7 @@ export default function CollectionsPage() {
                 <Link
                   key={cat.id}
                   href={`/product?category=${encodeURIComponent(cat.name)}`}
-                  className="group relative aspect-[4/5] rounded-2xl overflow-hidden bg-slate-900 border border-slate-200/80 shadow-sm hover:shadow-xl hover:border-slate-300 transition-all duration-300 block"
+                  className="group relative aspect-[4/5] rounded-2xl overflow-hidden bg-[#0A192F] border border-slate-200/80 shadow-sm hover:shadow-xl hover:border-[#DF9F28]/50 transition-all duration-300 block"
                 >
                   {/* Category Image */}
                   <Image
@@ -90,18 +90,18 @@ export default function CollectionsPage() {
                   />
 
                   {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A192F]/95 via-[#061B3A]/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
 
                   {/* Card Content */}
                   <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8 flex flex-col justify-end text-white z-10">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-300 mb-1">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#DF9F28] mb-1">
                       Department
                     </span>
-                    <h3 className="text-xl sm:text-2xl font-sans font-bold text-white tracking-wide uppercase group-hover:text-blue-200 transition-colors">
+                    <h3 className="text-xl sm:text-2xl font-sans font-bold text-white tracking-wide uppercase group-hover:text-amber-200 transition-colors">
                       {cat.name}
                     </h3>
                     
-                    <div className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-slate-300 mt-3 group-hover:text-white transition-colors">
+                    <div className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-slate-300 mt-3 group-hover:text-[#DF9F28] transition-colors">
                       <span>Explore Collection</span>
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </div>

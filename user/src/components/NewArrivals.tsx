@@ -240,7 +240,7 @@ export default function NewArrivals() {
           <span className="text-xs uppercase tracking-wider font-semibold text-[#DF9F28]">
             TOP TRENDING PICKS
           </span>
-          <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 tracking-tight mt-1">
+          <h2 className="text-xl sm:text-2xl font-bold text-[#111111] tracking-tight mt-1">
             Featured at JudesCart
           </h2>
         </div>
@@ -256,8 +256,8 @@ export default function NewArrivals() {
                 onClick={() => setActiveCategory(tab)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#DF9F28] ${
                   isActive
-                    ? 'bg-zinc-900 text-white shadow-xs'
-                    : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900'
+                    ? 'bg-[#0A192F] text-white shadow-xs'
+                    : 'bg-white text-[#555555] border border-[#E2E8F0] hover:border-[#DF9F28] hover:text-[#111111]'
                 }`}
               >
                 {tab}

@@ -32,13 +32,13 @@ export default function Testimonials() {
     <section className="py-16 md:py-24 bg-white border-t border-slate-200/80">
       <div className="sj-container">
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
-          <span className="text-xs font-bold tracking-[0.2em] uppercase text-blue-600">
+          <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#DF9F28]">
             CLIENT SATISFACTION
           </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-[#111111] tracking-tight">
             Voices of Refinement
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500">
+          <p className="text-xs sm:text-sm text-[#555555]">
             Real stories from our discerning community of patrons across the country.
           </p>
         </div>
@@ -47,13 +47,13 @@ export default function Testimonials() {
           {REVIEWS.map((review, idx) => (
             <div
               key={idx}
-              className="bg-slate-50 rounded-2xl border border-slate-200/80 p-6 sm:p-8 flex flex-col justify-between hover:border-blue-200 hover:shadow-md transition-all group"
+              className="bg-[#F8FAFC] rounded-2xl border border-slate-200/80 p-6 sm:p-8 flex flex-col justify-between hover:border-[#DF9F28]/40 hover:shadow-md transition-all group"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-1 text-amber-400">
+                  <div className="flex items-center gap-1 text-[#DF9F28]">
                     {[...Array(review.rating)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-amber-400" />
+                      <Star key={i} className="w-4 h-4 fill-[#DF9F28]" />
                     ))}
                   </div>
                   <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100">
@@ -62,21 +62,21 @@ export default function Testimonials() {
                   </span>
                 </div>
 
-                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal italic">
-                  "{review.quote}"
+                <p className="text-xs sm:text-sm text-[#555555] leading-relaxed font-normal italic">
+                  &ldquo;{review.quote}&rdquo;
                 </p>
               </div>
 
               <div className="mt-6 pt-4 border-t border-slate-200/60 flex items-center justify-between">
                 <div>
-                  <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                  <h4 className="text-xs font-bold text-[#111111] uppercase tracking-wider">
                     {review.author}
                   </h4>
-                  <span className="text-[11px] text-slate-400 font-medium">
+                  <span className="text-[11px] text-[#888888] font-medium">
                     {review.location}
                   </span>
                 </div>
-                <Quote className="w-5 h-5 text-slate-300 group-hover:text-blue-400 transition-colors" />
+                <Quote className="w-5 h-5 text-slate-300 group-hover:text-[#DF9F28] transition-colors" />
               </div>
             </div>
           ))}

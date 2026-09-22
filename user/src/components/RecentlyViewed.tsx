@@ -134,24 +134,24 @@ export default function RecentlyViewed() {
     <section className="sj-container">
       <div className="space-y-6 pt-4 sm:pt-6">
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-200 pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E2E8F0] pb-4">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-amber-50 text-[#DF9F28] border border-amber-200">
+            <div className="p-2 rounded-xl bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/30">
               <History className="w-4 h-4 text-[#DF9F28]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-xl sm:text-2xl font-bold text-zinc-900 tracking-tight">
+                <h3 className="text-xl sm:text-2xl font-bold text-[#111111] tracking-tight">
                   Recently Viewed &amp; Recommended
                 </h3>
                 {hasRecent && (
-                  <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 text-amber-900 border border-amber-200">
+                  <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/30">
                     <Sparkles className="w-3 h-3 text-[#DF9F28]" />
                     Personalized
                   </span>
                 )}
               </div>
-              <p className="text-xs text-zinc-500 mt-0.5">
+              <p className="text-xs text-[#555555] mt-0.5">
                 Curated suggestions based on your taste and catalog bestsellers
               </p>
             </div>

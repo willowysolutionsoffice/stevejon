@@ -9,15 +9,15 @@ import Footer from '@/components/Footer';
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col justify-between">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#111111] font-sans flex flex-col justify-between">
       <Navbar />
 
       <main className="flex-1">
         {/* Editorial Hero */}
-        <section className="relative py-20 md:py-28 bg-[#0B132B] text-white overflow-hidden border-b border-slate-800">
-          <div className="absolute inset-0 bg-radial from-blue-900/30 via-slate-950/80 to-[#0B132B] pointer-events-none" />
+        <section className="relative py-20 md:py-28 bg-[#0A192F] text-white overflow-hidden border-b border-[#061B3A]">
+          <div className="absolute inset-0 bg-radial from-[#DF9F28]/15 via-[#061B3A]/80 to-[#0A192F] pointer-events-none" />
           <div className="sj-container relative z-10 text-center max-w-3xl mx-auto space-y-4">
-            <span className="inline-flex items-center text-xs font-bold tracking-[0.2em] text-blue-400 uppercase">
+            <span className="inline-flex items-center text-xs font-bold tracking-[0.2em] text-[#DF9F28] uppercase">
               <span>THE JUDESCART ATELIER</span>
             </span>
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-sans font-extrabold text-white tracking-tight">
@@ -34,17 +34,17 @@ export default function AboutPage() {
           <div className="sj-container">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               <div className="space-y-6">
-                <span className="text-xs font-bold tracking-[0.2em] text-blue-600 uppercase">
+                <span className="text-xs font-bold tracking-[0.2em] text-[#DF9F28] uppercase">
                   OUR PHILOSOPHY
                 </span>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-slate-900 leading-snug">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-[#111111] leading-snug">
                   Tailoring That Mirrors Character and Sophistication
                 </h2>
-                <div className="w-16 h-1 bg-blue-600 rounded-full" />
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                <div className="w-16 h-1 bg-[#DF9F28] rounded-full" />
+                <p className="text-xs sm:text-sm text-[#555555] leading-relaxed">
                   Founded on the belief that garments are an intimate expression of individuality, JudesCart has redefined modern wardrobe essentials for over three decades. Our journey started with a deep devotion to pure natural fabrics, precise drafting, and the art of the perfect fit.
                 </p>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#555555] leading-relaxed">
                   Every creation is a collaboration between master artisans and discerning patrons. We source certified organic cottons, pure cashmere, and full-grain leathers, ensuring each stitch reflects endurance, tactile comfort, and effortless elegance.
                 </p>
               </div>
@@ -63,13 +63,13 @@ export default function AboutPage() {
         </section>
 
         {/* Pillars of Craft */}
-        <section className="py-16 md:py-24 bg-slate-50">
+        <section className="py-16 md:py-24 bg-[#F8FAFC]">
           <div className="sj-container space-y-12">
             <div className="text-center max-w-xl mx-auto space-y-2">
-              <span className="text-xs font-bold tracking-[0.2em] text-blue-600 uppercase">
+              <span className="text-xs font-bold tracking-[0.2em] text-[#DF9F28] uppercase">
                 CORE PRINCIPLES
               </span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-slate-900 tracking-tight">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-[#111111] tracking-tight">
                 Crafted Without Compromise
               </h2>
             </div>
@@ -96,15 +96,15 @@ export default function AboutPage() {
                 return (
                   <div
                     key={idx}
-                    className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xs hover:border-blue-200 hover:shadow-md transition-all space-y-4"
+                    className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xs hover:border-[#DF9F28]/40 hover:shadow-md transition-all space-y-4"
                   >
-                    <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
+                    <div className="w-12 h-12 rounded-2xl bg-[#FEF8EE] text-[#DF9F28] flex items-center justify-center border border-[#DF9F28]/20">
                       <Icon className="w-6 h-6" />
                     </div>
-                    <h3 className="text-base font-bold text-slate-900 uppercase tracking-wider">
+                    <h3 className="text-base font-bold text-[#111111] uppercase tracking-wider">
                       {item.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-[#555555] leading-relaxed">
                       {item.desc}
                     </p>
                   </div>

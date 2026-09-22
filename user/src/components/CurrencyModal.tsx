@@ -50,29 +50,29 @@ export default function CurrencyModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center pt-20 sm:pt-0 px-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center pt-20 sm:pt-0 px-4 bg-[#0A192F]/70 backdrop-blur-xs animate-in fade-in duration-150">
       <div className="fixed inset-0" onClick={onClose} aria-hidden="true" />
 
       <div
         ref={modalRef}
-        className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-stone-200 overflow-hidden z-10 flex flex-col animate-in zoom-in-95 duration-150"
+        className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-[#E2E8F0] overflow-hidden z-10 flex flex-col animate-in zoom-in-95 duration-150"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-stone-100 bg-white">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[#E2E8F0] bg-white">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-amber-50 text-[#DF9F28] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-[#FEF8EE] text-[#DF9F28] flex items-center justify-center border border-[#DF9F28]/30">
               <Globe className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-slate-900">Select Display Currency</h3>
-              <p className="text-[11px] text-stone-500">Auto-calculated checkout conversion</p>
+              <h3 className="text-sm font-bold text-[#111111]">Select Display Currency</h3>
+              <p className="text-[11px] text-[#555555]">Auto-calculated checkout conversion</p>
             </div>
           </div>
 
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors"
+            className="p-1.5 rounded-full text-[#888888] hover:text-[#111111] hover:bg-slate-100 transition-colors"
             aria-label="Close currency modal"
           >
             <X className="w-4 h-4" />
@@ -93,8 +93,8 @@ export default function CurrencyModal({
                 }}
                 className={`w-full flex items-center justify-between p-3 rounded-2xl transition-all text-left cursor-pointer border ${
                   isSelected
-                    ? 'bg-amber-50/80 border-[#DF9F28] text-amber-950 shadow-xs'
-                    : 'hover:bg-stone-50 border-transparent text-slate-800'
+                    ? 'bg-[#FEF8EE] border-[#DF9F28] text-[#111111] shadow-xs'
+                    : 'hover:bg-[#F8FAFC] border-transparent text-[#555555]'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -103,9 +103,9 @@ export default function CurrencyModal({
                   </span>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-slate-900">{c.code}</span>
-                      <span className="text-xs text-stone-400">•</span>
-                      <span className="text-xs text-stone-600 font-medium">{c.name}</span>
+                      <span className="text-xs font-bold text-[#111111]">{c.code}</span>
+                      <span className="text-xs text-[#888888]">•</span>
+                      <span className="text-xs text-[#555555] font-medium">{c.name}</span>
                     </div>
                     {c.isDefault && (
                       <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 mt-0.5">
@@ -117,9 +117,9 @@ export default function CurrencyModal({
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
-                  <span className="text-sm font-bold text-slate-900 font-mono">{c.symbol}</span>
+                  <span className="text-sm font-bold text-[#111111] font-mono">{c.symbol}</span>
                   {isSelected && (
-                    <div className="w-5 h-5 rounded-full bg-[#DF9F28] text-slate-950 flex items-center justify-center">
+                    <div className="w-5 h-5 rounded-full bg-[#DF9F28] text-[#111111] flex items-center justify-center">
                       <Check className="w-3 h-3 stroke-[3]" />
                     </div>
                   )}
@@ -130,7 +130,7 @@ export default function CurrencyModal({
         </div>
 
         {/* Footer info */}
-        <div className="px-6 py-3.5 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
+        <div className="px-6 py-3.5 bg-[#F8FAFC] border-t border-[#E2E8F0] flex items-center justify-between text-[11px] text-[#555555]">
           <span className="flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-[#DF9F28]" />
             <span>Prices convert automatically based on real-time rates.</span>

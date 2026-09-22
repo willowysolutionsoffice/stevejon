@@ -38,12 +38,12 @@ export default function Winners() {
   return (
     <section className="sj-container space-y-4 sm:space-y-6">
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-zinc-200 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-[#E2E8F0] pb-4">
         <div>
           <span className="text-xs uppercase tracking-wider font-semibold text-[#DF9F28]">
             Community Winners
           </span>
-          <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 tracking-tight mt-1">
+          <h2 className="text-xl sm:text-2xl font-bold text-[#111111] tracking-tight mt-1">
             Recent Lucky Draw Winners
           </h2>
         </div>
@@ -62,10 +62,10 @@ export default function Winners() {
         {winners.map((winner, idx) => (
           <div
             key={winner.id || idx}
-            className="bg-white rounded-2xl border border-zinc-200 p-3.5 sm:p-4 flex flex-col items-center text-center shadow-xs hover:shadow-md hover:border-zinc-300 transition-all duration-200 group"
+            className="bg-white rounded-2xl border border-[#E2E8F0] p-3.5 sm:p-4 flex flex-col items-center text-center shadow-xs hover:shadow-md hover:border-[#DF9F28] transition-all duration-200 group"
           >
             {/* Winner Portrait */}
-            <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-zinc-100 mb-3 border border-zinc-200">
+            <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-slate-100 mb-3 border border-[#E2E8F0]">
               <Image
                 src={winner.winnerImage || '/winner_man.jpg'}
                 alt={winner.winnerName}
@@ -73,13 +73,13 @@ export default function Winners() {
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="absolute top-2 right-2 p-1.5 rounded-full bg-[#DF9F28] text-zinc-950 shadow-xs">
+              <div className="absolute top-2 right-2 p-1.5 rounded-full bg-[#DF9F28] text-[#111111] shadow-xs">
                 <Trophy className="w-3.5 h-3.5" />
               </div>
             </div>
 
             {/* Name & Location */}
-            <h4 className="text-xs sm:text-sm font-semibold text-zinc-900 line-clamp-1">
+            <h4 className="text-xs sm:text-sm font-semibold text-[#111111] line-clamp-1">
               {winner.winnerName}
             </h4>
             <p className="text-[11px] text-[#DF9F28] font-semibold uppercase tracking-wider mt-0.5">
@@ -87,8 +87,8 @@ export default function Winners() {
             </p>
 
             {/* Prize Badge */}
-            <div className="mt-2 pt-2 border-t border-zinc-100 w-full">
-              <p className="text-[11px] text-zinc-500 font-normal line-clamp-1">
+            <div className="mt-2 pt-2 border-t border-[#F1F5F9] w-full">
+              <p className="text-[11px] text-[#555555] font-normal line-clamp-1">
                 Won: {winner.drawCampaign?.prizeName || 'Luxury Prize'}
               </p>
             </div>

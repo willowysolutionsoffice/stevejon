@@ -107,10 +107,10 @@ export default function LoginPage() {
       <Navbar />
 
       <main className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-stone-200/80 overflow-hidden">
+        <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden">
           
           {/* Header Banner */}
-          <div className="p-8 pb-6 border-b border-stone-100 bg-slate-900 text-white text-center relative overflow-hidden">
+          <div className="p-8 pb-6 border-b border-[#061B3A] bg-[#0A192F] text-white text-center relative overflow-hidden">
             <div className="relative w-12 h-12 mx-auto mb-3">
               <Image
                 src="/logo-icon.webp"
@@ -134,14 +134,14 @@ export default function LoginPage() {
           </div>
 
           {/* Switcher */}
-          <div className="grid grid-cols-2 p-1.5 mx-6 mt-6 bg-stone-100 rounded-2xl">
+          <div className="grid grid-cols-2 p-1.5 mx-6 mt-6 bg-[#F8FAFC] rounded-2xl border border-slate-200/80">
             <button
               type="button"
               onClick={() => setMode('signin')}
               className={`py-2 text-xs font-bold rounded-xl transition-all ${
                 mode === 'signin'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-stone-500 hover:text-slate-900'
+                  ? 'bg-white text-[#111111] shadow-xs'
+                  : 'text-[#555555] hover:text-[#111111]'
               }`}
             >
               Sign In
@@ -151,12 +151,12 @@ export default function LoginPage() {
               onClick={() => setMode('signup')}
               className={`py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
                 mode === 'signup'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-stone-500 hover:text-slate-900'
+                  ? 'bg-white text-[#111111] shadow-xs'
+                  : 'text-[#555555] hover:text-[#111111]'
               }`}
             >
               <span>Create Account</span>
-              <span className="px-1.5 py-0.2 bg-amber-100 text-amber-800 text-[9px] font-extrabold rounded-full">
+              <span className="px-1.5 py-0.5 bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/30 text-[9px] font-extrabold rounded-full">
                 +200 Coins
               </span>
             </button>
@@ -181,30 +181,30 @@ export default function LoginPage() {
             {mode === 'signup' && (
               <>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
+                  <label className="block text-xs font-bold text-[#111111] mb-1">Full Name</label>
                   <div className="relative">
-                    <User className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g. Rahul Sharma"
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 text-xs sm:text-sm focus:outline-none focus:border-[#DF9F28]"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm text-[#111111] focus:outline-none focus:border-[#DF9F28]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Phone Number (Optional)</label>
+                  <label className="block text-xs font-bold text-[#111111] mb-1">Phone Number (Optional)</label>
                   <div className="relative">
-                    <Phone className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="+91 98765 43210"
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 text-xs sm:text-sm focus:outline-none focus:border-[#DF9F28]"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm text-[#111111] focus:outline-none focus:border-[#DF9F28]"
                     />
                   </div>
                 </div>
@@ -212,47 +212,47 @@ export default function LoginPage() {
             )}
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
+              <label className="block text-xs font-bold text-[#111111] mb-1">Email Address</label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 text-xs sm:text-sm focus:outline-none focus:border-[#DF9F28]"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm text-[#111111] focus:outline-none focus:border-[#DF9F28]"
                 />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="text-xs font-bold text-slate-700">Password</label>
+                <label className="text-xs font-bold text-[#111111]">Password</label>
                 {mode === 'signin' && (
                   <button
                     type="button"
                     onClick={() => alert('Password reset instructions sent to your email.')}
-                    className="text-[11px] font-semibold text-[#DF9F28] hover:underline"
+                    className="text-[11px] font-semibold text-[#DF9F28] hover:text-[#C6891E] hover:underline"
                   >
                     Forgot password?
                   </button>
                 )}
               </div>
               <div className="relative">
-                <Lock className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-stone-200 text-xs sm:text-sm focus:outline-none focus:border-[#DF9F28]"
+                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm text-[#111111] focus:outline-none focus:border-[#DF9F28]"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="p-1 text-stone-400 hover:text-stone-600 absolute right-3 top-1/2 -translate-y-1/2"
+                  className="p-1 text-slate-400 hover:text-slate-600 absolute right-3 top-1/2 -translate-y-1/2"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -261,12 +261,12 @@ export default function LoginPage() {
             </div>
 
             {mode === 'signin' && (
-              <label className="flex items-center gap-2 text-xs text-stone-600 cursor-pointer select-none">
+              <label className="flex items-center gap-2 text-xs text-[#555555] cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="rounded text-[#DF9F28] focus:ring-[#DF9F28] w-3.5 h-3.5"
+                  className="rounded text-[#DF9F28] focus:ring-[#DF9F28] w-3.5 h-3.5 accent-[#DF9F28]"
                 />
                 <span>Remember my session</span>
               </label>
@@ -275,7 +275,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 rounded-xl bg-[#111111] hover:bg-[#DF9F28] text-white hover:text-slate-950 text-xs font-bold tracking-wider uppercase transition-all shadow-md active:scale-98 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full py-3.5 rounded-xl bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] text-xs font-bold tracking-wider uppercase transition-all shadow-md active:scale-98 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {isLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -288,47 +288,47 @@ export default function LoginPage() {
 
             {/* Social Logins */}
             <div className="pt-2">
-              <div className="relative text-center my-3 before:absolute before:left-0 before:top-1/2 before:w-full before:h-px before:bg-stone-200">
-                <span className="relative bg-white px-3 text-[11px] font-semibold text-stone-400">
+              <div className="relative text-center my-3 before:absolute before:left-0 before:top-1/2 before:w-full before:h-px before:bg-slate-200">
+                <span className="relative bg-white px-3 text-[11px] font-semibold text-slate-400">
                   Or Instant Sign In
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleSocialLogin('Google')}
-                  className="py-2.5 px-3 rounded-xl border border-stone-200 hover:bg-stone-50 text-xs font-bold text-slate-800 transition-colors flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <span className="text-sm font-bold text-rose-500">G</span>
-                  <span>Google</span>
-                </button>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => handleSocialLogin('Google')}
+                className="py-2.5 px-3 rounded-xl border border-slate-200 hover:bg-[#F8FAFC] text-xs font-bold text-[#111111] transition-colors flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span className="text-sm font-bold text-rose-500">G</span>
+                <span>Google</span>
+              </button>
 
-                <button
-                  type="button"
-                  onClick={() => handleSocialLogin('Apple')}
-                  className="py-2.5 px-3 rounded-xl border border-stone-200 hover:bg-stone-50 text-xs font-bold text-slate-800 transition-colors flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <span className="text-sm font-bold text-slate-900"></span>
-                  <span>Apple</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => handleSocialLogin('Apple')}
+                className="py-2.5 px-3 rounded-xl border border-slate-200 hover:bg-[#F8FAFC] text-xs font-bold text-[#111111] transition-colors flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span className="text-sm font-bold text-[#111111]"></span>
+                <span>Apple</span>
+              </button>
             </div>
-          </form>
-
-          {/* Security Footer */}
-          <div className="px-8 py-3.5 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500 font-medium">
-            <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-              <span>256-bit Encrypted Session</span>
-            </div>
-            <span>Official JudesCart Security</span>
           </div>
+        </form>
 
+        {/* Security Footer */}
+        <div className="px-8 py-3.5 bg-[#F8FAFC] border-t border-slate-200 flex items-center justify-between text-[11px] text-[#555555] font-medium">
+          <div className="flex items-center gap-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+            <span>256-bit Encrypted Session</span>
+          </div>
+          <span>Official JudesCart Security</span>
         </div>
-      </main>
 
-      <Footer />
-    </div>
-  );
+      </div>
+    </main>
+
+    <Footer />
+  </div>
+);
 }

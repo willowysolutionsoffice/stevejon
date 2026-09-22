@@ -169,95 +169,95 @@ export default function CheckoutPage() {
           {/* Left Form Column */}
           <div className="lg:col-span-7 space-y-6">
             {/* Step 1: Shipping Address */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/80 shadow-xs">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-sm">
+                <div className="w-8 h-8 rounded-full bg-[#0A192F] text-white flex items-center justify-center font-bold text-sm">
                   1
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-900">Delivery Address</h2>
-                  <p className="text-xs text-stone-500">Where should we deliver your order?</p>
+                  <h2 className="text-lg font-bold text-[#111111]">Delivery Address</h2>
+                  <p className="text-xs text-[#555555]">Where should we deliver your order?</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Full Name *</label>
+                  <label className="block text-xs font-bold text-[#111111] mb-1">Full Name *</label>
                   <input
                     type="text"
                     required
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                     placeholder="e.g. Rahul Sharma"
-                    className="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:outline-none focus:border-[#DF9F28]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-[#111111] focus:outline-none focus:border-[#DF9F28]"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Phone Number *</label>
+                  <label className="block text-xs font-bold text-[#111111] mb-1">Phone Number *</label>
                   <input
                     type="tel"
                     required
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="+91 98765 43210"
-                    className="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:outline-none focus:border-[#DF9F28]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-[#111111] focus:outline-none focus:border-[#DF9F28]"
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Email (for tracking & receipt)</label>
+                  <label className="block text-xs font-bold text-[#111111] mb-1">Email (for tracking & receipt)</label>
                   <input
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="name@domain.com"
-                    className="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:outline-none focus:border-[#DF9F28]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-[#111111] focus:outline-none focus:border-[#DF9F28]"
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Street Address / Flat / Landmark *</label>
+                  <label className="block text-xs font-bold text-[#111111] mb-1">Street Address / Flat / Landmark *</label>
                   <input
                     type="text"
                     required
                     value={formData.address}
                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                     placeholder="House / Apartment no., Street, Area"
-                    className="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:outline-none focus:border-[#DF9F28]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-[#111111] focus:outline-none focus:border-[#DF9F28]"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">City *</label>
+                  <label className="block text-xs font-bold text-[#111111] mb-1">City *</label>
                   <input
                     type="text"
                     required
                     value={formData.city}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                     placeholder="Mumbai / Delhi / Bengaluru"
-                    className="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:outline-none focus:border-[#DF9F28]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-[#111111] focus:outline-none focus:border-[#DF9F28]"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">PIN Code *</label>
+                  <label className="block text-xs font-bold text-[#111111] mb-1">PIN Code *</label>
                   <input
                     type="text"
                     required
                     value={formData.pincode}
                     onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
                     placeholder="e.g. 400001"
-                    className="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:outline-none focus:border-[#DF9F28]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-[#111111] focus:outline-none focus:border-[#DF9F28]"
                   />
                 </div>
               </div>
             </div>
 
             {/* Step 2: Shipping Method */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/80 shadow-xs">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-sm">
+                <div className="w-8 h-8 rounded-full bg-[#0A192F] text-white flex items-center justify-center font-bold text-sm">
                   2
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-900">Delivery Speed</h2>
-                  <p className="text-xs text-stone-500">Choose shipping preference</p>
+                  <h2 className="text-lg font-bold text-[#111111]">Delivery Speed</h2>
+                  <p className="text-xs text-[#555555]">Choose shipping preference</p>
                 </div>
               </div>
 
@@ -266,18 +266,18 @@ export default function CheckoutPage() {
                   onClick={() => setShippingMethod('standard')}
                   className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-start gap-3 ${
                     shippingMethod === 'standard'
-                      ? 'border-[#DF9F28] bg-amber-50/40'
-                      : 'border-stone-200 hover:border-stone-300'
+                      ? 'border-[#DF9F28] bg-[#FEF8EE]'
+                      : 'border-slate-200 hover:border-slate-300'
                   }`}
                 >
                   <div className={`w-4 h-4 rounded-full border-2 mt-0.5 flex items-center justify-center ${
-                    shippingMethod === 'standard' ? 'border-[#DF9F28] bg-[#DF9F28]' : 'border-stone-300'
+                    shippingMethod === 'standard' ? 'border-[#DF9F28] bg-[#DF9F28]' : 'border-slate-300'
                   }`}>
                     {shippingMethod === 'standard' && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-900">Standard Delivery</p>
-                    <p className="text-[11px] text-stone-500 mt-0.5">3-5 Business Days</p>
+                    <p className="text-xs font-bold text-[#111111]">Standard Delivery</p>
+                    <p className="text-[11px] text-[#555555] mt-0.5">3-5 Business Days</p>
                     <p className="text-xs font-bold text-emerald-600 mt-1">
                       {totalPrice > 1999 ? 'FREE' : '₹99'}
                     </p>
@@ -288,33 +288,33 @@ export default function CheckoutPage() {
                   onClick={() => setShippingMethod('express')}
                   className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-start gap-3 ${
                     shippingMethod === 'express'
-                      ? 'border-[#DF9F28] bg-amber-50/40'
-                      : 'border-stone-200 hover:border-stone-300'
+                      ? 'border-[#DF9F28] bg-[#FEF8EE]'
+                      : 'border-slate-200 hover:border-slate-300'
                   }`}
                 >
                   <div className={`w-4 h-4 rounded-full border-2 mt-0.5 flex items-center justify-center ${
-                    shippingMethod === 'express' ? 'border-[#DF9F28] bg-[#DF9F28]' : 'border-stone-300'
+                    shippingMethod === 'express' ? 'border-[#DF9F28] bg-[#DF9F28]' : 'border-slate-300'
                   }`}>
                     {shippingMethod === 'express' && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-900">Express Air Priority</p>
-                    <p className="text-[11px] text-stone-500 mt-0.5">1-2 Business Days</p>
-                    <p className="text-xs font-bold text-slate-900 mt-1">₹199</p>
+                    <p className="text-xs font-bold text-[#111111]">Express Air Priority</p>
+                    <p className="text-[11px] text-[#555555] mt-0.5">1-2 Business Days</p>
+                    <p className="text-xs font-bold text-[#111111] mt-1">₹199</p>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Step 3: Payment Method */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/80 shadow-xs">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-sm">
+                <div className="w-8 h-8 rounded-full bg-[#0A192F] text-white flex items-center justify-center font-bold text-sm">
                   3
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-900">Payment Selection</h2>
-                  <p className="text-xs text-stone-500">Safe & 256-bit encrypted checkout</p>
+                  <h2 className="text-lg font-bold text-[#111111]">Payment Selection</h2>
+                  <p className="text-xs text-[#555555]">Safe & 256-bit encrypted checkout</p>
                 </div>
               </div>
 
@@ -323,44 +323,44 @@ export default function CheckoutPage() {
                   onClick={() => setPaymentMethod('RAZORPAY')}
                   className={`flex items-center justify-between p-4 rounded-2xl border-2 transition-all cursor-pointer ${
                     paymentMethod === 'RAZORPAY'
-                      ? 'border-[#DF9F28] bg-amber-50/40'
-                      : 'border-stone-200 hover:border-stone-300'
+                      ? 'border-[#DF9F28] bg-[#FEF8EE]'
+                      : 'border-slate-200 hover:border-slate-300'
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                      paymentMethod === 'RAZORPAY' ? 'border-[#DF9F28] bg-[#DF9F28]' : 'border-stone-300'
+                      paymentMethod === 'RAZORPAY' ? 'border-[#DF9F28] bg-[#DF9F28]' : 'border-slate-300'
                     }`}>
                       {paymentMethod === 'RAZORPAY' && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-slate-900">Cards / UPI / NetBanking (Razorpay)</p>
-                      <p className="text-[11px] text-stone-500">Google Pay, PhonePe, Paytm, Visa, Mastercard</p>
+                      <p className="text-xs font-bold text-[#111111]">Cards / UPI / NetBanking (Razorpay)</p>
+                      <p className="text-[11px] text-[#555555]">Google Pay, PhonePe, Paytm, Visa, Mastercard</p>
                     </div>
                   </div>
-                  <CreditCard className="w-5 h-5 text-stone-400" />
+                  <CreditCard className="w-5 h-5 text-slate-400" />
                 </label>
 
                 <label
                   onClick={() => setPaymentMethod('COD')}
                   className={`flex items-center justify-between p-4 rounded-2xl border-2 transition-all cursor-pointer ${
                     paymentMethod === 'COD'
-                      ? 'border-[#DF9F28] bg-amber-50/40'
-                      : 'border-stone-200 hover:border-stone-300'
+                      ? 'border-[#DF9F28] bg-[#FEF8EE]'
+                      : 'border-slate-200 hover:border-slate-300'
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                      paymentMethod === 'COD' ? 'border-[#DF9F28] bg-[#DF9F28]' : 'border-stone-300'
+                      paymentMethod === 'COD' ? 'border-[#DF9F28] bg-[#DF9F28]' : 'border-slate-300'
                     }`}>
                       {paymentMethod === 'COD' && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-slate-900">Cash on Delivery (COD)</p>
-                      <p className="text-[11px] text-stone-500">Pay cash or UPI at your doorstep</p>
+                      <p className="text-xs font-bold text-[#111111]">Cash on Delivery (COD)</p>
+                      <p className="text-[11px] text-[#555555]">Pay cash or UPI at your doorstep</p>
                     </div>
                   </div>
-                  <Truck className="w-5 h-5 text-stone-400" />
+                  <Truck className="w-5 h-5 text-slate-400" />
                 </label>
               </div>
             </div>
@@ -368,20 +368,20 @@ export default function CheckoutPage() {
 
           {/* Right Summary Column */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white rounded-3xl p-6 border border-stone-200/80 shadow-xs sticky top-28">
-              <h2 className="text-base font-bold text-slate-900 mb-4 pb-3 border-b border-stone-100">
+            <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs sticky top-28">
+              <h2 className="text-base font-bold text-[#111111] mb-4 pb-3 border-b border-slate-100">
                 Order Summary ({items.length} items)
               </h2>
 
               {/* Items preview */}
               <div className="max-h-60 overflow-y-auto space-y-3 mb-6 pr-1">
                 {items.length === 0 ? (
-                  <p className="text-xs text-stone-400 py-4 text-center">Your bag is empty.</p>
+                  <p className="text-xs text-slate-400 py-4 text-center">Your bag is empty.</p>
                 ) : (
                   items.map((item) => (
                     <div key={item.id} className="flex items-center justify-between gap-3 text-xs">
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="relative w-10 h-10 rounded-lg bg-stone-100 overflow-hidden shrink-0">
+                        <div className="relative w-10 h-10 rounded-lg bg-[#F8FAFC] border border-slate-200 overflow-hidden shrink-0">
                           <Image
                             src={item.image || '/prod_overshirt_1778670536589.png'}
                             alt={item.title || (item as any).name || 'Product'}
@@ -391,11 +391,11 @@ export default function CheckoutPage() {
                           />
                         </div>
                         <div className="min-w-0">
-                          <p className="font-bold text-slate-900 truncate">{item.title || (item as any).name}</p>
-                          <p className="text-stone-500 text-[10px]">Qty: {item.quantity}</p>
+                          <p className="font-bold text-[#111111] truncate">{item.title || (item as any).name}</p>
+                          <p className="text-[#555555] text-[10px]">Qty: {item.quantity}</p>
                         </div>
                       </div>
-                      <span className="font-bold text-slate-900 shrink-0">
+                      <span className="font-bold text-[#111111] shrink-0">
                         ₹{(item.price * item.quantity).toLocaleString('en-IN')}
                       </span>
                     </div>
@@ -406,49 +406,49 @@ export default function CheckoutPage() {
               {/* Coupon Form */}
               <form onSubmit={handleApplyCoupon} className="flex gap-2 mb-6">
                 <div className="relative flex-1">
-                  <Tag className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Tag className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value)}
                     placeholder="Coupon code (WELCOME10)"
-                    className="w-full pl-8 pr-3 py-2 text-xs rounded-xl border border-stone-200 uppercase font-mono focus:outline-none focus:border-[#DF9F28]"
+                    className="w-full pl-8 pr-3 py-2 text-xs rounded-xl border border-slate-200 uppercase font-mono text-[#111111] focus:outline-none focus:border-[#DF9F28]"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-stone-900 hover:bg-[#DF9F28] hover:text-slate-950 text-white text-xs font-bold rounded-xl transition-colors"
+                  className="px-4 py-2 bg-[#0A192F] hover:bg-[#061B3A] text-white text-xs font-bold rounded-xl transition-colors cursor-pointer"
                 >
                   Apply
                 </button>
               </form>
 
               {/* Price Breakdown */}
-              <div className="space-y-2.5 text-xs text-stone-600 border-t border-stone-100 pt-4 mb-6">
+              <div className="space-y-2.5 text-xs text-[#555555] border-t border-slate-100 pt-4 mb-6">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span className="font-semibold text-slate-900">₹{totalPrice.toLocaleString('en-IN')}</span>
+                  <span className="font-semibold text-[#111111]">₹{totalPrice.toLocaleString('en-IN')}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping & Delivery</span>
-                  <span className="font-semibold text-slate-900">
+                  <span className="font-semibold text-[#111111]">
                     {shippingCost === 0 ? <span className="text-emerald-600 font-bold">FREE</span> : `₹${shippingCost}`}
                   </span>
                 </div>
                 {appliedDiscount > 0 && (
-                  <div className="flex justify-between text-emerald-600 font-bold">
+                  <div className="flex justify-between text-[#DF9F28] font-bold">
                     <span>Promo Discount</span>
                     <span>-₹{appliedDiscount.toLocaleString('en-IN')}</span>
                   </div>
                 )}
-                <div className="flex justify-between text-sm font-black text-slate-900 border-t border-stone-100 pt-3">
+                <div className="flex justify-between text-sm font-black text-[#111111] border-t border-slate-100 pt-3">
                   <span>Total Amount</span>
                   <span className="text-[#DF9F28]">₹{finalTotal.toLocaleString('en-IN')}</span>
                 </div>
               </div>
 
               {/* Lucky Draw Badge */}
-              <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200/80 mb-6 flex items-center gap-2.5 text-xs text-amber-950 font-semibold">
+              <div className="p-3 bg-[#FEF8EE] rounded-2xl border border-[#DF9F28]/30 mb-6 flex items-center gap-2.5 text-xs text-[#111111] font-semibold">
                 <Ticket className="w-4 h-4 text-[#DF9F28] shrink-0" />
                 <span>You will earn <span className="font-bold text-[#DF9F28]">{luckyDrawTickets || 1} Lucky Ticket(s)</span> with this order.</span>
               </div>
@@ -458,24 +458,24 @@ export default function CheckoutPage() {
                 type="button"
                 onClick={handlePlaceOrder}
                 disabled={isSubmitting || items.length === 0}
-                className="w-full py-4 rounded-full bg-[#111111] hover:bg-[#DF9F28] text-white hover:text-slate-950 text-sm font-bold tracking-wide transition-all shadow-md active:scale-98 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-4 rounded-full bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] text-sm font-bold tracking-wide transition-all shadow-md active:scale-98 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                <Lock className="w-4 h-4" />
+                <Lock className="w-4 h-4 text-[#111111]" />
                 <span>{isSubmitting ? 'Processing Order...' : `Place Order • ₹${finalTotal.toLocaleString('en-IN')}`}</span>
               </button>
 
               {/* Trust badges */}
-              <div className="grid grid-cols-3 gap-2 mt-6 pt-4 border-t border-stone-100 text-center text-[10px] text-stone-500 font-medium">
+              <div className="grid grid-cols-3 gap-2 mt-6 pt-4 border-t border-slate-100 text-center text-[10px] text-[#555555] font-medium">
                 <div className="flex flex-col items-center">
                   <ShieldCheck className="w-4 h-4 text-emerald-600 mb-1" />
                   <span>256-bit SSL</span>
                 </div>
                 <div className="flex flex-col items-center">
-                  <RotateCcw className="w-4 h-4 text-blue-600 mb-1" />
+                  <RotateCcw className="w-4 h-4 text-[#DF9F28] mb-1" />
                   <span>30-Day Returns</span>
                 </div>
                 <div className="flex flex-col items-center">
-                  <Truck className="w-4 h-4 text-amber-600 mb-1" />
+                  <Truck className="w-4 h-4 text-[#DF9F28] mb-1" />
                   <span>Tracked Parcel</span>
                 </div>
               </div>

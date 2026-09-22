@@ -51,12 +51,12 @@ export default function Categories() {
   return (
     <section className="sj-container space-y-4 sm:space-y-6">
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-zinc-200 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-[#E2E8F0] pb-4">
         <div>
           <span className="text-xs uppercase tracking-wider font-semibold text-[#DF9F28]">
             All Departments
           </span>
-          <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 tracking-tight mt-1">
+          <h2 className="text-xl sm:text-2xl font-bold text-[#111111] tracking-tight mt-1">
             Shop by Department
           </h2>
         </div>
@@ -79,7 +79,7 @@ export default function Categories() {
             <Link
               key={cat.id}
               href={`/product?category=${encodeURIComponent(cat.name)}`}
-              className="group relative aspect-[16/11] rounded-2xl overflow-hidden bg-zinc-100 border border-zinc-200 shadow-xs flex flex-col justify-end p-4 sm:p-6 transition-all duration-200 hover:shadow-md hover:border-zinc-300 focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
+              className="group relative aspect-[16/11] rounded-2xl overflow-hidden bg-slate-100 border border-[#E2E8F0] shadow-xs flex flex-col justify-end p-4 sm:p-6 transition-all duration-200 hover:shadow-md hover:border-[#DF9F28] focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
             >
               {/* Category Background Image */}
               <Image
@@ -90,12 +90,12 @@ export default function Categories() {
                 className="object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
               />
 
-              {/* Gradient Dark Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent pointer-events-none" />
+              {/* Midnight Navy Gradient Dark Overlay (#061B3A) */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#061B3A]/90 via-[#061B3A]/40 to-transparent pointer-events-none" />
 
               {/* Bottom Card Information */}
               <div className="relative z-10 text-white space-y-1">
-                <span className="text-[11px] uppercase tracking-wider text-amber-300 font-semibold block">
+                <span className="text-[11px] uppercase tracking-wider text-[#DF9F28] font-semibold block">
                   {itemCount} Styles
                 </span>
                 

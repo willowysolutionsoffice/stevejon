@@ -1,35 +1,74 @@
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --sj-font-stack: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --sj-font-stack: 'Clash Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
-  /* JudesCart Neutral Palette - Warm Zinc */
-  --sj-bg: #FAFAFA;
-  --sj-bg-alt: #F4F4F5;
+  /* Typography Scale System */
+  --font-display: clamp(56px, 8vw, 96px);
+  --font-display-weight: 800;
+  --font-display-spacing: -0.04em;
+  --font-display-leading: 1.05;
+
+  --font-h1: clamp(40px, 5vw, 64px);
+  --font-h1-weight: 700;
+  --font-h1-spacing: -0.02em;
+  --font-h1-leading: 1.15;
+
+  --font-h2: clamp(28px, 3.5vw, 44px);
+  --font-h2-weight: 600;
+  --font-h2-spacing: -0.02em;
+  --font-h2-leading: 1.25;
+
+  --font-h3: 24px;
+  --font-h3-weight: 600;
+  --font-h3-spacing: -0.01em;
+  --font-h3-leading: 1.35;
+
+  --font-body: 17px;
+  --font-body-weight: 400;
+  --font-body-leading: 1.7;
+
+  --font-small: 14px;
+  --font-small-weight: 400;
+  --font-small-color: #555555;
+
+  /* 60-30-10 Brand Color Architecture */
+  /* Dominant 60%: Off-White / Slate */
+  --sj-bg: #F8FAFC;
+  --sj-bg-alt: #F1F5F9;
   --sj-surface: #FFFFFF;
-  --sj-surface-subtle: #F4F4F5;
-  --sj-ink: #18181B;
-  --sj-ink-muted: #52525B;
-  --sj-ink-light: #71717A;
-  --sj-border: #E4E4E7;
-  --sj-border-light: #F4F4F5;
+  --sj-surface-subtle: #F8FAFC;
   
-  /* JudesCart Brand Palette */
+  /* Secondary 30%: Deep Navy & Midnight Navy */
+  --sj-dark-nav: #0A192F;
+  --sj-dark-surface: #0A192F;
+  --sj-midnight: #061B3A;
+  
+  /* Accent 10%: Brand Gold & Darker Hover */
   --sj-primary: #DF9F28;
   --sj-primary-hover: #C6891E;
-  --sj-primary-light: #FFFBEB;
-  --sj-dark-surface: #111111;
-  --sj-dark-nav: #18181B;
+  --sj-primary-light: #FEF8EE;
   --sj-accent: #DF9F28;
   --sj-gold: #DF9F28;
+  --sj-gold-hover: #C6891E;
   --sj-gold-light: #FEF3C7;
+  
+  /* Typography & Structure */
+  --sj-ink: #111111;
+  --sj-ink-muted: #555555;
+  --sj-ink-light: #888888;
+  --sj-border: #E2E8F0;
+  --sj-border-light: #F1F5F9;
+  
+  /* System States */
   --sj-success: #059669;
   --sj-error: #DC2626;
 }
 
 @theme inline {
-  --font-sans: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-serif: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: 'Clash Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: 'Clash Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
   --color-sj-bg: var(--sj-bg);
   --color-sj-bg-alt: var(--sj-bg-alt);
@@ -45,8 +84,10 @@
   --color-sj-primary-light: var(--sj-primary-light);
   --color-sj-dark-surface: var(--sj-dark-surface);
   --color-sj-dark-nav: var(--sj-dark-nav);
+  --color-sj-midnight: var(--sj-midnight);
   --color-sj-accent: var(--sj-accent);
   --color-sj-gold: var(--sj-gold);
+  --color-sj-gold-hover: var(--sj-gold-hover);
   --color-sj-gold-light: var(--sj-gold-light);
 
   --animate-marquee: marquee 30s linear infinite;
@@ -70,18 +111,73 @@ html {
 body {
   font-family: var(--sj-font-stack);
   font-style: normal;
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 1.5;
+  font-weight: var(--font-body-weight);
+  font-size: var(--font-body);
+  line-height: var(--font-body-leading);
   color: var(--sj-ink);
   background-color: var(--sj-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Typography Scale Classes & Elements */
+.font-display,
+.text-display {
+  font-family: var(--sj-font-stack);
+  font-size: var(--font-display);
+  font-weight: var(--font-display-weight);
+  letter-spacing: var(--font-display-spacing);
+  line-height: var(--font-display-leading);
+}
+
+h1,
+.font-h1,
+.text-h1 {
+  font-family: var(--sj-font-stack);
+  font-size: var(--font-h1);
+  font-weight: var(--font-h1-weight);
+  letter-spacing: var(--font-h1-spacing);
+  line-height: var(--font-h1-leading);
+}
+
+h2,
+.font-h2,
+.text-h2 {
+  font-family: var(--sj-font-stack);
+  font-size: var(--font-h2);
+  font-weight: var(--font-h2-weight);
+  letter-spacing: var(--font-h2-spacing);
+  line-height: var(--font-h2-leading);
+}
+
+h3,
+.font-h3,
+.text-h3 {
+  font-family: var(--sj-font-stack);
+  font-size: var(--font-h3);
+  font-weight: var(--font-h3-weight);
+  letter-spacing: var(--font-h3-spacing);
+  line-height: var(--font-h3-leading);
+}
+
+.font-body,
+.text-body {
+  font-size: var(--font-body);
+  font-weight: var(--font-body-weight);
+  line-height: var(--font-body-leading);
+}
+
+small,
+.font-small,
+.text-small {
+  font-size: var(--font-small);
+  font-weight: var(--font-small-weight);
+  color: var(--font-small-color);
+}
+
 ::selection {
   background-color: #DF9F28;
-  color: #18181B;
+  color: #111111;
 }
 
 /* Accessibility Focus Visible Ring */

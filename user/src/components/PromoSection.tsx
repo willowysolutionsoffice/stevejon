@@ -9,23 +9,23 @@ export default function PromoSection() {
   return (
     <section className="py-16 md:py-24 bg-white border-b border-slate-200/80">
       <div className="sj-container">
-        <div className="relative rounded-3xl overflow-hidden bg-slate-900 text-white p-8 md:p-14 lg:p-16 border border-slate-800 shadow-xl">
+        <div className="relative rounded-3xl overflow-hidden bg-[#0A192F] text-white p-8 md:p-14 lg:p-16 border border-[#061B3A] shadow-xl">
           
           {/* Subtle Background Pattern */}
-          <div className="absolute inset-0 bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:20px_20px] opacity-25 pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(#DF9F28_1px,transparent_1px)] [background-size:20px_20px] opacity-10 pointer-events-none" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
             
             {/* Left Content Column */}
             <div className="lg:col-span-6 space-y-6">
               
-              <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-900/60 border border-blue-700/60 text-blue-300 text-xs font-semibold tracking-widest uppercase">
+              <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#DF9F28]/20 border border-[#DF9F28]/40 text-[#DF9F28] text-xs font-semibold tracking-widest uppercase">
                 <span>THE ATELIER HERITAGE</span>
               </div>
 
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-sans font-extrabold text-white tracking-tight leading-tight">
                 Curated With Intention. <br />
-                <span className="text-blue-400">Crafted To Endure.</span>
+                <span className="text-[#DF9F28]">Crafted To Endure.</span>
               </h2>
 
               <p className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed">
@@ -50,7 +50,7 @@ export default function PromoSection() {
               <div className="pt-4">
                 <Link
                   href="/about"
-                  className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-white text-slate-900 hover:bg-blue-50 text-xs sm:text-sm font-bold tracking-wider uppercase rounded-full transition-all shadow-md group"
+                  className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] text-xs sm:text-sm font-bold tracking-wider uppercase rounded-full transition-all shadow-md group"
                 >
                   <span>Read Our Full Story</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

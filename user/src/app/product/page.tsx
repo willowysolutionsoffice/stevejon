@@ -460,12 +460,12 @@ function ProductContent() {
   }, [allProducts, selectedCategories, selectedPriceRanges, searchQueryParam]);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans flex flex-col justify-between">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#111111] font-sans flex flex-col justify-between">
       <Navbar />
 
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#0A192F] text-white px-5 py-3 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-2.5 border border-slate-700 animate-in fade-in slide-in-from-bottom-2">
+        <div className="fixed bottom-6 right-6 z-50 bg-[#0A192F] text-white px-5 py-3 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-2.5 border border-[#061B3A] animate-in fade-in slide-in-from-bottom-2">
           <Check className="w-4 h-4 text-[#DF9F28]" />
           <span>{toastMessage}</span>
         </div>
@@ -478,7 +478,7 @@ function ProductContent() {
         <main className="flex-1 pb-24">
           {/* Breadcrumbs Row */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <nav className="flex items-center gap-2 text-xs text-slate-400">
+            <nav className="flex items-center gap-2 text-xs text-[#888888]">
               <Link href="/" className="hover:text-[#DF9F28] transition-colors">
                 Home
               </Link>
@@ -503,7 +503,7 @@ function ProductContent() {
                 {selectedProduct.category}
               </button>
               <span>/</span>
-              <span className="text-[#0A192F] font-bold truncate max-w-[240px] sm:max-w-none">
+              <span className="text-[#111111] font-bold truncate max-w-[240px] sm:max-w-none">
                 {selectedProduct.name}
               </span>
             </nav>
@@ -524,9 +524,9 @@ function ProductContent() {
                         key={idx}
                         type="button"
                         onClick={() => setActiveImageIndex(idx)}
-                        className={`relative w-20 h-24 lg:w-20 lg:h-26 rounded-xl overflow-hidden bg-stone-100 shrink-0 border-2 transition-all cursor-pointer ${
+                        className={`relative w-20 h-24 lg:w-20 lg:h-26 rounded-xl overflow-hidden bg-white shrink-0 border-2 transition-all cursor-pointer ${
                           activeImageIndex === idx
-                            ? 'border-[#DF9F28] shadow-md ring-2 ring-amber-100'
+                            ? 'border-[#DF9F28] shadow-md ring-2 ring-[#FEF8EE]'
                             : 'border-slate-200 opacity-70 hover:opacity-100'
                         }`}
                         aria-label={`View image ${idx + 1}`}
@@ -544,7 +544,7 @@ function ProductContent() {
 
                   {/* Main Large Hero Image */}
                   <div
-                    className="relative flex-1 aspect-[3/4] rounded-2xl overflow-hidden bg-stone-100 group border border-slate-200 shadow-sm cursor-crosshair"
+                    className="relative flex-1 aspect-[3/4] rounded-2xl overflow-hidden bg-white group border border-slate-200 shadow-sm cursor-crosshair"
                     onMouseEnter={() => setIsZoomed(true)}
                     onMouseLeave={() => setIsZoomed(false)}
                   >
@@ -560,7 +560,7 @@ function ProductContent() {
                     />
 
                     {/* Floating Zoom Badge */}
-                    <div className="absolute bottom-3 right-3 z-10 px-2.5 py-1 rounded-full bg-white/80 backdrop-blur-md text-stone-700 text-[11px] font-medium border border-stone-200 pointer-events-none flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity shadow-2xs">
+                    <div className="absolute bottom-3 right-3 z-10 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[#555555] text-[11px] font-medium border border-slate-200 pointer-events-none flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity shadow-2xs">
                       <ZoomIn className="w-3.5 h-3.5 text-[#DF9F28]" />
                       <span>Hover to Zoom</span>
                     </div>
@@ -572,7 +572,7 @@ function ProductContent() {
                           e.stopPropagation();
                           setActiveImageIndex((prev) => (prev > 0 ? prev - 1 : currentImages.length - 1));
                         }}
-                        className="p-2 rounded-full bg-white/80 backdrop-blur-md shadow-md text-stone-900 pointer-events-auto hover:bg-white transition-colors"
+                        className="p-2 rounded-full bg-white/90 backdrop-blur-md shadow-md text-[#111111] pointer-events-auto hover:bg-white transition-colors"
                         aria-label="Previous image"
                       >
                         <ChevronLeft className="w-4 h-4" />
@@ -582,7 +582,7 @@ function ProductContent() {
                           e.stopPropagation();
                           setActiveImageIndex((prev) => (prev < currentImages.length - 1 ? prev + 1 : 0));
                         }}
-                        className="p-2 rounded-full bg-white/80 backdrop-blur-md shadow-md text-stone-900 pointer-events-auto hover:bg-white transition-colors"
+                        className="p-2 rounded-full bg-white/90 backdrop-blur-md shadow-md text-[#111111] pointer-events-auto hover:bg-white transition-colors"
                         aria-label="Next image"
                       >
                         <ChevronRight className="w-4 h-4" />
@@ -602,23 +602,23 @@ function ProductContent() {
                     <span className="text-xs uppercase tracking-widest font-bold text-[#DF9F28]">
                       {selectedProduct.category}
                     </span>
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase bg-amber-50 text-amber-900 border border-amber-200">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/30">
                       Limited Edition
                     </span>
                   </div>
 
-                  <h1 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0A192F] leading-tight">
+                  <h1 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#111111] leading-tight">
                     {selectedProduct.name}
                   </h1>
 
                   {/* Price & Star Ratings Row */}
                   <div className="flex items-center gap-4 pt-1">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-2xl sm:text-3xl font-bold text-[#0A192F]">
+                      <span className="text-2xl sm:text-3xl font-bold text-[#111111]">
                         ₹{selectedProduct.price.toLocaleString('en-IN')}
                       </span>
                       {selectedProduct.originalPrice && selectedProduct.originalPrice > selectedProduct.price && (
-                        <span className="text-sm text-slate-400 line-through">
+                        <span className="text-sm text-[#888888] line-through">
                           ₹{selectedProduct.originalPrice.toLocaleString('en-IN')}
                         </span>
                       )}
@@ -627,20 +627,20 @@ function ProductContent() {
                     <span className="text-slate-300">•</span>
 
                     <div className="inline-flex items-center gap-1.5">
-                      <div className="flex items-center gap-0.5 text-amber-400">
+                      <div className="flex items-center gap-0.5 text-[#DF9F28]">
                         {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                          <Star key={i} className="w-3.5 h-3.5 fill-[#DF9F28] text-[#DF9F28]" />
                         ))}
                       </div>
-                      <span className="text-xs font-bold text-stone-700">{selectedProduct.rating || 4.9}</span>
-                      <span className="text-xs text-stone-400">({selectedProduct.reviewsCount || 19})</span>
+                      <span className="text-xs font-bold text-[#111111]">{selectedProduct.rating || 4.9}</span>
+                      <span className="text-xs text-[#888888]">({selectedProduct.reviewsCount || 19})</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Material Intro & Description */}
-                <div className="space-y-2 text-xs sm:text-sm text-slate-600 leading-relaxed pt-1 border-t border-slate-100">
-                  <p className="font-semibold text-slate-900">
+                <div className="space-y-2 text-xs sm:text-sm text-[#555555] leading-relaxed pt-1 border-t border-slate-200">
+                  <p className="font-semibold text-[#111111]">
                     100% virgin Melton wool with cupro lining
                   </p>
                   <p>
@@ -650,9 +650,9 @@ function ProductContent() {
                 </div>
 
                 {/* JUDESCART LUCKY DRAW REWARDS CARD */}
-                <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-50/90 via-white to-amber-50/40 border border-[#DF9F28]/40 shadow-xs space-y-2.5">
+                <div className="p-4 rounded-2xl bg-[#FEF8EE] border border-[#DF9F28]/30 shadow-xs space-y-2.5">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-xs font-black text-[#0A192F] uppercase tracking-wider">
+                    <div className="flex items-center gap-1.5 text-xs font-black text-[#111111] uppercase tracking-wider">
                       <Trophy className="w-4 h-4 text-[#DF9F28]" />
                       <span>JudesCart Lucky Draw Rewards</span>
                     </div>
@@ -662,23 +662,23 @@ function ProductContent() {
                   </div>
 
                   <div className="space-y-1.5 text-xs">
-                    <div className="flex items-start gap-2 p-2 rounded-xl bg-[#DF9F28]/10 border border-[#DF9F28]/30 text-amber-950">
+                    <div className="flex items-start gap-2 p-2 rounded-xl bg-white border border-[#DF9F28]/30 text-[#111111]">
                       <span className="text-base leading-none">🎟️</span>
                       <div>
                         <strong className="block font-bold">Qualifies for Platinum Draw</strong>
-                        <span className="text-[11px] text-amber-800">
+                        <span className="text-[11px] text-[#555555]">
                           This purchase automatically generates a Platinum Ticket for the monthly luxury gadget draw.
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-start gap-2 p-2.5 rounded-xl bg-amber-50/80 border border-[#DF9F28]/40 text-[#0A192F]">
+                    <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white border border-[#DF9F28]/30 text-[#111111]">
                       <Crown className="w-4 h-4 text-[#DF9F28] mt-0.5 shrink-0" />
                       <div>
-                        <strong className="block font-extrabold text-[#0A192F]">
+                        <strong className="block font-extrabold text-[#111111]">
                           Official Brand JUDES: Mega Bumper Draw Token!
                         </strong>
-                        <span className="text-[11px] text-slate-700">
+                        <span className="text-[11px] text-[#555555]">
                           Includes automatic entry into the 6–12 month Grand Bumper Draw for luxury vehicles &amp; ₹5,00,000 cash!
                         </span>
                       </div>
@@ -687,13 +687,13 @@ function ProductContent() {
                 </div>
 
                 {/* Color & Size Selectors */}
-                <div className="pt-2 border-t border-slate-100 space-y-5">
+                <div className="pt-2 border-t border-slate-200 space-y-5">
                   
                   {/* Color Selector */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="font-semibold uppercase tracking-wider text-stone-900">
-                        Color: <span className="font-normal text-stone-600">{selectedColor.name}</span>
+                      <span className="font-semibold uppercase tracking-wider text-[#111111]">
+                        Color: <span className="font-normal text-[#555555]">{selectedColor.name}</span>
                       </span>
                     </div>
                     <div className="flex items-center gap-3">
@@ -722,9 +722,9 @@ function ProductContent() {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold uppercase tracking-wider text-slate-900">Size:</span>
-                        <span className="flex items-center gap-1 text-[11px] text-amber-700 font-medium">
-                          <AlertCircle className="w-3 h-3 text-amber-600" />
+                        <span className="font-semibold uppercase tracking-wider text-[#111111]">Size:</span>
+                        <span className="flex items-center gap-1 text-[11px] text-[#DF9F28] font-bold">
+                          <AlertCircle className="w-3 h-3 text-[#DF9F28]" />
                           Only 2 remaining
                         </span>
                       </div>
@@ -747,10 +747,10 @@ function ProductContent() {
                           onClick={() => setSelectedSize(sz.label)}
                           className={`py-3 px-2 rounded-xl text-xs font-semibold uppercase tracking-wider border transition-all relative flex flex-col items-center justify-center cursor-pointer ${
                             sz.disabled
-                              ? 'border-slate-200 bg-slate-100/60 text-slate-400 cursor-not-allowed line-through'
+                              ? 'border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed line-through'
                               : selectedSize === sz.label
                               ? 'bg-[#0A192F] text-white border-[#0A192F] shadow-sm'
-                              : 'border-slate-200 text-slate-800 hover:border-[#DF9F28] hover:text-[#DF9F28] bg-white'
+                              : 'border-slate-200 text-[#111111] hover:border-[#DF9F28] hover:text-[#DF9F28] bg-white'
                           }`}
                         >
                           <span>{sz.label}</span>
@@ -764,7 +764,7 @@ function ProductContent() {
 
                   {/* Quantity Stepper */}
                   <div className="flex items-center gap-4 pt-1">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-900">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-[#111111]">
                       Quantity:
                     </span>
                     <div className="flex items-center border border-slate-200 rounded-full bg-white px-2 py-1 shadow-2xs">
@@ -772,17 +772,17 @@ function ProductContent() {
                         type="button"
                         disabled={quantity <= 1}
                         onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                        className="w-7 h-7 flex items-center justify-center rounded-full text-slate-600 hover:bg-amber-50 hover:text-[#DF9F28] disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-sm font-semibold cursor-pointer"
+                        className="w-7 h-7 flex items-center justify-center rounded-full text-[#555555] hover:bg-[#FEF8EE] hover:text-[#DF9F28] disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-sm font-semibold cursor-pointer"
                       >
                         -
                       </button>
-                      <span className="w-8 text-center text-xs font-bold text-slate-900 font-mono">
+                      <span className="w-8 text-center text-xs font-bold text-[#111111] font-mono">
                         {quantity}
                       </span>
                       <button
                         type="button"
                         onClick={() => setQuantity((q) => q + 1)}
-                        className="w-7 h-7 flex items-center justify-center rounded-full text-slate-600 hover:bg-amber-50 hover:text-[#DF9F28] transition-colors text-sm font-semibold cursor-pointer"
+                        className="w-7 h-7 flex items-center justify-center rounded-full text-[#555555] hover:bg-[#FEF8EE] hover:text-[#DF9F28] transition-colors text-sm font-semibold cursor-pointer"
                       >
                         +
                       </button>
@@ -796,9 +796,9 @@ function ProductContent() {
                   <div className="flex items-center gap-3">
                     <button
                       onClick={handleAddToCart}
-                      className="flex-1 py-3.5 px-6 rounded-xl bg-[#DF9F28] hover:bg-[#C6891E] text-white font-bold text-sm uppercase tracking-wider shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                      className="flex-1 py-3.5 px-6 rounded-xl bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] font-bold text-sm uppercase tracking-wider shadow-lg shadow-[#DF9F28]/20 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
                     >
-                      <ShoppingBag className="w-4 h-4" />
+                      <ShoppingBag className="w-4 h-4 text-[#111111]" />
                       <span>Add to Bag • ₹{(selectedProduct.price * quantity).toLocaleString('en-IN')}</span>
                     </button>
 
@@ -806,17 +806,17 @@ function ProductContent() {
                     <button
                       type="button"
                       onClick={handleWishlistToggle}
-                      className="p-3.5 rounded-xl border border-slate-200 hover:border-[#DF9F28] transition-colors shadow-2xs text-slate-700 hover:bg-amber-50/50 cursor-pointer"
+                      className="p-3.5 rounded-xl border border-slate-200 hover:border-[#DF9F28] transition-colors shadow-2xs text-[#111111] hover:bg-[#FEF8EE] cursor-pointer"
                       aria-label="Save to wishlist"
                     >
-                      <Heart className={`w-5 h-5 ${isFavorited ? 'fill-rose-600 text-rose-600' : ''}`} />
+                      <Heart className={`w-5 h-5 ${isFavorited ? 'fill-[#DF9F28] text-[#DF9F28]' : ''}`} />
                     </button>
 
                     {/* Share Button */}
                     <button
                       type="button"
                       onClick={handleShare}
-                      className="p-3.5 rounded-xl border border-slate-200 hover:border-[#DF9F28] transition-colors shadow-2xs text-slate-700 hover:bg-amber-50/50 cursor-pointer"
+                      className="p-3.5 rounded-xl border border-slate-200 hover:border-[#DF9F28] transition-colors shadow-2xs text-[#111111] hover:bg-[#FEF8EE] cursor-pointer"
                       aria-label="Share product"
                     >
                       <Share2 className="w-5 h-5" />
@@ -826,7 +826,7 @@ function ProductContent() {
                     <button
                       type="button"
                       onClick={() => showToast('Added to product comparison list')}
-                      className="p-3.5 rounded-xl border border-slate-200 hover:border-[#DF9F28] transition-colors shadow-2xs text-slate-700 hover:bg-amber-50/50 cursor-pointer"
+                      className="p-3.5 rounded-xl border border-slate-200 hover:border-[#DF9F28] transition-colors shadow-2xs text-[#111111] hover:bg-[#FEF8EE] cursor-pointer"
                       aria-label="Compare product"
                     >
                       <Scale className="w-5 h-5" />
@@ -835,7 +835,7 @@ function ProductContent() {
 
                   <button
                     onClick={handleBuyNow}
-                    className="w-full py-3 px-6 rounded-xl bg-[#0A192F] hover:bg-black text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                    className="w-full py-3.5 px-6 rounded-xl bg-[#0A192F] hover:bg-[#061B3A] text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-98"
                   >
                     <span>Instant Checkout — Buy Now</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -843,24 +843,24 @@ function ProductContent() {
                 </div>
 
                 {/* Trust Badges Strip */}
-                <div className="grid grid-cols-3 gap-2 p-3.5 rounded-xl bg-amber-50/50 border border-amber-100 text-[11px] text-slate-700 text-center">
+                <div className="grid grid-cols-3 gap-2 p-3.5 rounded-xl bg-[#FEF8EE] border border-[#DF9F28]/20 text-[11px] text-[#555555] text-center">
                   <div className="flex flex-col items-center gap-1">
                     <Truck className="w-4 h-4 text-[#DF9F28]" />
-                    <span className="font-medium">Free Express Delivery</span>
+                    <span className="font-semibold text-[#111111]">Free Express Delivery</span>
                   </div>
                   <div className="flex flex-col items-center gap-1">
                     <RotateCcw className="w-4 h-4 text-[#DF9F28]" />
-                    <span className="font-medium">30-Day Easy Returns</span>
+                    <span className="font-semibold text-[#111111]">30-Day Easy Returns</span>
                   </div>
                   <div className="flex flex-col items-center gap-1">
                     <ShieldCheck className="w-4 h-4 text-[#DF9F28]" />
-                    <span className="font-medium">Buyer Protection</span>
+                    <span className="font-semibold text-[#111111]">Buyer Protection</span>
                   </div>
                 </div>
 
                 {/* Collapsible Accordions */}
                 <div className="pt-2">
-                  <div className="divide-y divide-stone-200 border-t border-b border-stone-200">
+                  <div className="divide-y divide-slate-200 border-t border-b border-slate-200">
                     
                     {/* Accordion 1: Details & Craftsmanship */}
                     <div className="py-1">
@@ -870,21 +870,21 @@ function ProductContent() {
                         className="flex items-center justify-between w-full py-4 text-left group cursor-pointer"
                         aria-expanded={openAccordions.craftsmanship}
                       >
-                        <span className="text-sm font-semibold text-[#0A192F] group-hover:text-[#DF9F28] transition-colors">
+                        <span className="text-sm font-semibold text-[#111111] group-hover:text-[#DF9F28] transition-colors">
                           Details &amp; Craftsmanship
                         </span>
                         <ChevronDown
-                          className={`w-4 h-4 text-slate-400 group-hover:text-[#DF9F28] transition-transform duration-200 ${
+                          className={`w-4 h-4 text-[#888888] group-hover:text-[#DF9F28] transition-transform duration-200 ${
                             openAccordions.craftsmanship ? 'rotate-180 text-[#DF9F28]' : ''
                           }`}
                         />
                       </button>
                       {openAccordions.craftsmanship && (
-                        <div className="pb-5 pt-1 text-xs text-stone-600 leading-relaxed space-y-2.5 animate-in fade-in-50 duration-150">
-                          <p><strong className="text-stone-900">Materials:</strong> 100% Heavy Virgin Melton Wool (650g/m²), 100% Bemberg Cupro lining</p>
-                          <p><strong className="text-stone-900">Provenance:</strong> Crafted with Master Tailoring in Lyon, France</p>
-                          <p><strong className="text-stone-900">Care Instructions:</strong> Specialist dry clean only. Steam gently.</p>
-                          <p><strong className="text-stone-900">Environmental Integrity:</strong> Responsible Wool Standard (RWS) certified ethical shearing.</p>
+                        <div className="pb-5 pt-1 text-xs text-[#555555] leading-relaxed space-y-2.5 animate-in fade-in-50 duration-150">
+                          <p><strong className="text-[#111111]">Materials:</strong> 100% Heavy Virgin Melton Wool (650g/m²), 100% Bemberg Cupro lining</p>
+                          <p><strong className="text-[#111111]">Provenance:</strong> Crafted with Master Tailoring in Lyon, France</p>
+                          <p><strong className="text-[#111111]">Care Instructions:</strong> Specialist dry clean only. Steam gently.</p>
+                          <p><strong className="text-[#111111]">Environmental Integrity:</strong> Responsible Wool Standard (RWS) certified ethical shearing.</p>
                         </div>
                       )}
                     </div>
@@ -897,17 +897,17 @@ function ProductContent() {
                         className="flex items-center justify-between w-full py-4 text-left group cursor-pointer"
                         aria-expanded={openAccordions.shipping}
                       >
-                        <span className="text-sm font-semibold text-[#0A192F] group-hover:text-[#DF9F28] transition-colors">
+                        <span className="text-sm font-semibold text-[#111111] group-hover:text-[#DF9F28] transition-colors">
                           Complimentary Shipping &amp; Returns
                         </span>
                         <ChevronDown
-                          className={`w-4 h-4 text-slate-400 group-hover:text-[#DF9F28] transition-transform duration-200 ${
+                          className={`w-4 h-4 text-[#888888] group-hover:text-[#DF9F28] transition-transform duration-200 ${
                             openAccordions.shipping ? 'rotate-180 text-[#DF9F28]' : ''
                           }`}
                         />
                       </button>
                       {openAccordions.shipping && (
-                        <div className="pb-5 pt-1 text-xs text-stone-600 leading-relaxed space-y-2 animate-in fade-in-50 duration-150">
+                        <div className="pb-5 pt-1 text-xs text-[#555555] leading-relaxed space-y-2 animate-in fade-in-50 duration-150">
                           <p>Complimentary express courier shipping across India on all verified customer orders above ₹999.</p>
                           <p>Dispatch occurs within 24–48 business hours with live end-to-end SMS tracking updates.</p>
                           <p>Hassle-free 30-day exchange window for sizing and silhouette tailoring preferences.</p>
@@ -923,27 +923,27 @@ function ProductContent() {
                         className="flex items-center justify-between w-full py-4 text-left group cursor-pointer"
                         aria-expanded={openAccordions.reviews}
                       >
-                        <span className="text-sm font-semibold text-[#0A192F] group-hover:text-[#DF9F28] transition-colors">
+                        <span className="text-sm font-semibold text-[#111111] group-hover:text-[#DF9F28] transition-colors">
                           Client Reviews ({selectedProduct.reviewsCount || 19})
                         </span>
                         <ChevronDown
-                          className={`w-4 h-4 text-slate-400 group-hover:text-[#DF9F28] transition-transform duration-200 ${
+                          className={`w-4 h-4 text-[#888888] group-hover:text-[#DF9F28] transition-transform duration-200 ${
                             openAccordions.reviews ? 'rotate-180 text-[#DF9F28]' : ''
                           }`}
                         />
                       </button>
                       {openAccordions.reviews && (
-                        <div className="pb-5 pt-1 text-xs text-stone-600 leading-relaxed space-y-3 animate-in fade-in-50 duration-150">
-                          <div className="p-3 bg-white rounded-xl border border-stone-200 flex items-center gap-3">
-                            <div className="flex items-center gap-1 text-amber-400">
+                        <div className="pb-5 pt-1 text-xs text-[#555555] leading-relaxed space-y-3 animate-in fade-in-50 duration-150">
+                          <div className="p-3 bg-white rounded-xl border border-slate-200 flex items-center gap-3">
+                            <div className="flex items-center gap-1 text-[#DF9F28]">
                               {[...Array(5)].map((_, i) => (
-                                <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
+                                <Star key={i} className="w-3.5 h-3.5 fill-[#DF9F28]" />
                               ))}
                             </div>
-                            <span className="font-bold text-slate-900">4.9 / 5.0</span>
-                            <span className="text-slate-400">100% Verified Buyer Rating</span>
+                            <span className="font-bold text-[#111111]">4.9 / 5.0</span>
+                            <span className="text-[#888888]">100% Verified Buyer Rating</span>
                           </div>
-                          <p className="italic text-slate-500">
+                          <p className="italic text-[#555555]">
                             "The fabric weight, drafting, and drape exceed expectation. Fits true to size with effortless elegance." — Rajesh K.
                           </p>
                         </div>
@@ -970,13 +970,13 @@ function ProductContent() {
                     <Tag className="w-3.5 h-3.5" />
                     <span>Curated Bundle Discount</span>
                   </div>
-                  <h3 className="font-sans text-xl font-extrabold text-[#0A192F] mt-0.5">
+                  <h3 className="font-sans text-xl font-extrabold text-[#111111] mt-0.5">
                     Frequently Bought Together
                   </h3>
                 </div>
 
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200">
-                  <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FEF8EE] text-[#DF9F28] text-xs font-bold border border-[#DF9F28]/30">
+                  <Sparkles className="w-3.5 h-3.5 text-[#DF9F28]" />
                   <span>Save 15% on this combined bundle</span>
                 </div>
               </div>
@@ -987,8 +987,8 @@ function ProductContent() {
                 <div className="lg:col-span-8 flex flex-wrap items-center gap-3 sm:gap-4">
                   
                   {/* Item 1: Main Product */}
-                  <div className="relative p-3 rounded-2xl border border-[#DF9F28] bg-amber-50/20 shadow-xs flex flex-col items-center w-36 sm:w-44 text-center group">
-                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-slate-100 mb-2.5">
+                  <div className="relative p-3 rounded-2xl border-2 border-[#DF9F28] bg-[#FEF8EE]/50 shadow-xs flex flex-col items-center w-36 sm:w-44 text-center group">
+                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-white mb-2.5">
                       <Image
                         src={selectedProduct.image}
                         alt={selectedProduct.name}
@@ -1001,13 +1001,13 @@ function ProductContent() {
                         type="checkbox"
                         checked
                         disabled
-                        className="rounded border-slate-300 text-[#DF9F28] focus:ring-[#DF9F28] cursor-pointer"
+                        className="rounded border-slate-300 text-[#DF9F28] focus:ring-[#DF9F28] accent-[#DF9F28] cursor-pointer"
                       />
-                      <span className="text-[10px] uppercase font-bold text-slate-500 truncate">
+                      <span className="text-[10px] uppercase font-bold text-[#555555] truncate">
                         This Item
                       </span>
                     </div>
-                    <h4 className="text-xs font-bold text-slate-800 line-clamp-1 w-full">
+                    <h4 className="text-xs font-bold text-[#111111] line-clamp-1 w-full">
                       {selectedProduct.name}
                     </h4>
                     <span className="text-xs font-black text-[#DF9F28] mt-0.5">
@@ -1024,11 +1024,11 @@ function ProductContent() {
                     onClick={() => setBundleAddons((p) => ({ ...p, 1: !p[1] }))}
                     className={`relative p-3 rounded-2xl border transition-all cursor-pointer flex flex-col items-center w-36 sm:w-44 text-center group ${
                       bundleAddons[1]
-                        ? 'border-[#DF9F28] bg-amber-50/20 shadow-xs'
+                        ? 'border-2 border-[#DF9F28] bg-[#FEF8EE]/50 shadow-xs'
                         : 'border-slate-200 bg-white opacity-60'
                     }`}
                   >
-                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-slate-100 mb-2.5">
+                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-white mb-2.5">
                       <Image
                         src={bundleAddon1.image}
                         alt={bundleAddon1.name}
@@ -1041,13 +1041,13 @@ function ProductContent() {
                         type="checkbox"
                         checked={bundleAddons[1]}
                         onChange={() => {}}
-                        className="rounded border-slate-300 text-[#DF9F28] focus:ring-[#DF9F28] cursor-pointer"
+                        className="rounded border-slate-300 text-[#DF9F28] focus:ring-[#DF9F28] accent-[#DF9F28] cursor-pointer"
                       />
-                      <span className="text-[10px] uppercase font-bold text-slate-500 truncate">
+                      <span className="text-[10px] uppercase font-bold text-[#555555] truncate">
                         Add-on
                       </span>
                     </div>
-                    <h4 className="text-xs font-bold text-slate-800 line-clamp-1 w-full">
+                    <h4 className="text-xs font-bold text-[#111111] line-clamp-1 w-full">
                       {bundleAddon1.name}
                     </h4>
                     <span className="text-xs font-black text-[#DF9F28] mt-0.5">
@@ -1064,11 +1064,11 @@ function ProductContent() {
                     onClick={() => setBundleAddons((p) => ({ ...p, 2: !p[2] }))}
                     className={`relative p-3 rounded-2xl border transition-all cursor-pointer flex flex-col items-center w-36 sm:w-44 text-center group ${
                       bundleAddons[2]
-                        ? 'border-[#DF9F28] bg-amber-50/20 shadow-xs'
+                        ? 'border-2 border-[#DF9F28] bg-[#FEF8EE]/50 shadow-xs'
                         : 'border-slate-200 bg-white opacity-60'
                     }`}
                   >
-                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-slate-100 mb-2.5">
+                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-white mb-2.5">
                       <Image
                         src={bundleAddon2.image}
                         alt={bundleAddon2.name}
@@ -1081,13 +1081,13 @@ function ProductContent() {
                         type="checkbox"
                         checked={bundleAddons[2]}
                         onChange={() => {}}
-                        className="rounded border-slate-300 text-[#DF9F28] focus:ring-[#DF9F28] cursor-pointer"
+                        className="rounded border-slate-300 text-[#DF9F28] focus:ring-[#DF9F28] accent-[#DF9F28] cursor-pointer"
                       />
-                      <span className="text-[10px] uppercase font-bold text-slate-500 truncate">
+                      <span className="text-[10px] uppercase font-bold text-[#555555] truncate">
                         Add-on
                       </span>
                     </div>
-                    <h4 className="text-xs font-bold text-slate-800 line-clamp-1 w-full">
+                    <h4 className="text-xs font-bold text-[#111111] line-clamp-1 w-full">
                       {bundleAddon2.name}
                     </h4>
                     <span className="text-xs font-black text-[#DF9F28] mt-0.5">
@@ -1098,21 +1098,21 @@ function ProductContent() {
                 </div>
 
                 {/* Bundle Summary & CTA */}
-                <div className="lg:col-span-4 p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4">
-                  <div className="space-y-1.5 text-xs text-slate-600">
+                <div className="lg:col-span-4 p-5 rounded-2xl bg-[#F8FAFC] border border-slate-200 space-y-4">
+                  <div className="space-y-1.5 text-xs text-[#555555]">
                     <div className="flex justify-between">
                       <span>Selected ({bundleCount} items):</span>
-                      <span className="font-semibold text-slate-900">
+                      <span className="font-semibold text-[#111111]">
                         ₹{bundleTotalRaw.toLocaleString('en-IN')}
                       </span>
                     </div>
-                    <div className="flex justify-between text-emerald-800 font-bold">
+                    <div className="flex justify-between text-[#DF9F28] font-bold">
                       <span>15% Bundle Savings:</span>
                       <span>-₹{bundleDiscount.toLocaleString('en-IN')}</span>
                     </div>
                     <div className="pt-2 border-t border-slate-200 flex justify-between items-baseline">
-                      <span className="font-bold text-slate-900">Total Price:</span>
-                      <span className="text-xl font-black text-[#DF9F28]">
+                      <span className="font-bold text-[#111111]">Total Price:</span>
+                      <span className="text-xl font-black text-[#111111]">
                         ₹{bundleFinalPrice.toLocaleString('en-IN')}
                       </span>
                     </div>
@@ -1121,9 +1121,9 @@ function ProductContent() {
                   <button
                     type="button"
                     onClick={handleAddBundleToCart}
-                    className="w-full py-3 px-4 rounded-xl bg-[#DF9F28] hover:bg-[#C6891E] text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                    className="w-full py-3.5 px-4 rounded-xl bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] text-xs font-bold uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-98"
                   >
-                    <ShoppingBag className="w-4 h-4" />
+                    <ShoppingBag className="w-4 h-4 text-[#111111]" />
                     <span>Add {bundleCount} Items To Bag</span>
                   </button>
                 </div>
@@ -1142,7 +1142,7 @@ function ProductContent() {
                 <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#DF9F28]">
                   Curated For You
                 </span>
-                <h2 className="font-sans text-2xl sm:text-3xl font-extrabold text-[#0A192F]">
+                <h2 className="font-sans text-2xl sm:text-3xl font-extrabold text-[#111111]">
                   Related &amp; Recommended Products
                 </h2>
               </div>
@@ -1176,7 +1176,7 @@ function ProductContent() {
           <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-3 shadow-2xl animate-in slide-in-from-bottom-2 duration-200">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="relative w-11 h-13 rounded-lg overflow-hidden bg-slate-100 shrink-0 border border-slate-200">
+                <div className="relative w-11 h-13 rounded-lg overflow-hidden bg-white shrink-0 border border-slate-200">
                   <Image
                     src={activeImageSrc}
                     alt={selectedProduct.name}
@@ -1185,11 +1185,11 @@ function ProductContent() {
                   />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs font-sans font-bold text-slate-900 truncate">
+                  <p className="text-xs font-sans font-bold text-[#111111] truncate">
                     {selectedProduct.name}
                   </p>
-                  <div className="flex items-center gap-2 text-[11px] text-slate-500">
-                    <span className="font-bold text-[#0A192F]">
+                  <div className="flex items-center gap-2 text-[11px] text-[#555555]">
+                    <span className="font-bold text-[#111111]">
                       ₹{selectedProduct.price.toLocaleString('en-IN')}
                     </span>
                     <span>•</span>
@@ -1201,7 +1201,7 @@ function ProductContent() {
               <button
                 type="button"
                 onClick={handleAddToCart}
-                className="px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md flex items-center gap-1.5 shrink-0 active:scale-95 bg-[#DF9F28] hover:bg-[#C6891E] text-white shadow-amber-500/20"
+                className="px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md flex items-center gap-1.5 shrink-0 active:scale-95 bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] shadow-[#DF9F28]/20"
               >
                 <ShoppingBag className="w-3.5 h-3.5" />
                 <span>Add to Bag</span>
@@ -1222,10 +1222,10 @@ function ProductContent() {
               <span className="text-xs font-bold tracking-[0.2em] text-[#DF9F28] uppercase">
                 JudesCart Catalog
               </span>
-              <h1 className="text-2xl sm:text-4xl font-sans font-extrabold text-slate-900 tracking-tight">
+              <h1 className="text-2xl sm:text-4xl font-sans font-extrabold text-[#111111] tracking-tight">
                 All Collections &amp; Apparel
               </h1>
-              <p className="text-xs sm:text-sm text-slate-500">
+              <p className="text-xs sm:text-sm text-[#555555]">
                 Showing {filteredProducts.length} curated products
               </p>
             </div>
@@ -1236,23 +1236,23 @@ function ProductContent() {
                 <button
                   type="button"
                   onClick={() => setShowMobileFilters(!showMobileFilters)}
-                  className="lg:hidden inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 text-slate-800 text-xs font-bold hover:bg-slate-200 transition-colors"
+                  className="lg:hidden inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0A192F] text-white text-xs font-bold hover:bg-[#061B3A] transition-colors"
                 >
                   <SlidersHorizontal className="w-4 h-4 text-[#DF9F28]" />
                   <span>Filters</span>
                 </button>
 
-                <p className="text-xs text-slate-500 hidden sm:block">
+                <p className="text-xs text-[#555555] hidden sm:block">
                   Filter by Category &amp; Price using the sidebar
                 </p>
               </div>
 
               <div className="flex items-center gap-2 self-end sm:self-auto">
-                <span className="text-xs text-slate-500 font-medium">Sort By:</span>
+                <span className="text-xs text-[#555555] font-medium">Sort By:</span>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="text-xs font-bold text-slate-800 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none focus:border-[#DF9F28]"
+                  className="text-xs font-bold text-[#111111] bg-[#F8FAFC] border border-slate-200 rounded-xl px-3 py-2 outline-none focus:border-[#DF9F28]"
                 >
                   <option value="featured">Featured</option>
                   <option value="price-low">Price: Low to High</option>
@@ -1270,7 +1270,7 @@ function ProductContent() {
                 <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-6">
                   
                   <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <span className="text-xs font-extrabold uppercase tracking-wider text-slate-900">
+                    <span className="text-xs font-extrabold uppercase tracking-wider text-[#111111]">
                       Filters
                     </span>
                     {(selectedCategories.length > 0 || selectedPriceRanges.length > 0) && (
@@ -1288,7 +1288,7 @@ function ProductContent() {
 
                   {/* Categories Filter */}
                   <div className="space-y-2.5">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#888888] block">
                       Category
                     </span>
                     <div className="space-y-1.5">
@@ -1297,8 +1297,8 @@ function ProductContent() {
                         onClick={() => setSelectedCategories([])}
                         className={`w-full text-left px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                           selectedCategories.length === 0
-                            ? 'bg-amber-50 text-[#DF9F28] font-bold'
-                            : 'text-slate-600 hover:bg-slate-50'
+                            ? 'bg-[#FEF8EE] text-[#DF9F28] font-bold'
+                            : 'text-[#555555] hover:bg-[#F8FAFC]'
                         }`}
                       >
                         All Categories
@@ -1316,8 +1316,8 @@ function ProductContent() {
                             }}
                             className={`w-full text-left px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center justify-between ${
                               isChecked
-                                ? 'bg-amber-50 text-[#DF9F28] font-bold'
-                                : 'text-slate-600 hover:bg-slate-50'
+                                ? 'bg-[#FEF8EE] text-[#DF9F28] font-bold'
+                                : 'text-[#555555] hover:bg-[#F8FAFC]'
                             }`}
                           >
                             <span>{cat.name}</span>
@@ -1330,7 +1330,7 @@ function ProductContent() {
 
                   {/* Price Ranges Filter */}
                   <div className="space-y-2.5 pt-2 border-t border-slate-100">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#888888] block">
                       Price Range
                     </span>
                     <div className="space-y-2">
@@ -1339,7 +1339,7 @@ function ProductContent() {
                         return (
                           <label
                             key={pr.value}
-                            className="flex items-center gap-2.5 text-xs text-slate-700 cursor-pointer select-none"
+                            className="flex items-center gap-2.5 text-xs text-[#555555] cursor-pointer select-none"
                           >
                             <input
                               type="checkbox"
@@ -1349,7 +1349,7 @@ function ProductContent() {
                                   isChecked ? prev.filter((v) => v !== pr.value) : [...prev, pr.value]
                                 );
                               }}
-                              className="rounded border-slate-300 text-[#DF9F28] focus:ring-[#DF9F28]"
+                              className="rounded border-slate-300 text-[#DF9F28] focus:ring-[#DF9F28] accent-[#DF9F28]"
                             />
                             <span>{pr.label}</span>
                           </label>
@@ -1365,13 +1365,13 @@ function ProductContent() {
               <div className="lg:col-span-9">
                 {filteredProducts.length === 0 ? (
                   <div className="py-20 text-center bg-white rounded-3xl border border-slate-200 p-8 space-y-4">
-                    <div className="w-16 h-16 rounded-full bg-amber-50 text-[#DF9F28] flex items-center justify-center mx-auto">
+                    <div className="w-16 h-16 rounded-full bg-[#FEF8EE] text-[#DF9F28] flex items-center justify-center mx-auto">
                       <ShoppingBag className="w-8 h-8" />
                     </div>
-                    <h3 className="font-sans text-xl font-bold text-slate-900">
+                    <h3 className="font-sans text-xl font-bold text-[#111111]">
                       No products matched your criteria
                     </h3>
-                    <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                    <p className="text-xs text-[#555555] max-w-sm mx-auto">
                       Try clearing filters or search terms to discover more items in our luxury catalog.
                     </p>
                     <button
@@ -1380,7 +1380,7 @@ function ProductContent() {
                         setSelectedPriceRanges([]);
                         router.push('/product');
                       }}
-                      className="px-6 py-2.5 rounded-full bg-[#DF9F28] hover:bg-[#C6891E] text-white text-xs font-bold tracking-wider uppercase transition-all shadow-md"
+                      className="px-6 py-2.5 rounded-full bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] text-xs font-bold tracking-wider uppercase transition-all shadow-md"
                     >
                       Clear All Filters
                     </button>

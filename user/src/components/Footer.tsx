@@ -29,75 +29,75 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#111111] text-zinc-300 pt-14 pb-12 border-t border-zinc-800">
+    <footer className="bg-[#0A192F] text-slate-300 pt-14 pb-12 border-t border-[#061B3A]">
       {/* Top 5-Item Feature Trust Strip */}
-      <div className="sj-container pb-12 border-b border-zinc-800">
+      <div className="sj-container pb-12 border-b border-[#061B3A]">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-5">
-          <div className="flex items-start gap-3 p-4 rounded-xl bg-zinc-900/80 border border-zinc-800">
-            <div className="p-2 rounded-lg bg-zinc-800 text-[#DF9F28] shrink-0">
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-[#061B3A] border border-white/5">
+            <div className="p-2 rounded-lg bg-[#0A192F] text-[#DF9F28] shrink-0 border border-white/5">
               <Truck className="w-4 h-4" />
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-white">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-[#F8FAFC]">
                 Express Delivery
               </h4>
-              <p className="text-xs text-zinc-400 mt-0.5 leading-normal">
+              <p className="text-xs text-slate-300 mt-0.5 leading-normal">
                 Insured express dispatch across 26,000+ pin codes.
               </p>
             </div>
           </div>
 
-          <div className="flex items-start gap-3 p-4 rounded-xl bg-zinc-900/80 border border-zinc-800">
-            <div className="p-2 rounded-lg bg-zinc-800 text-[#DF9F28] shrink-0">
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-[#061B3A] border border-white/5">
+            <div className="p-2 rounded-lg bg-[#0A192F] text-[#DF9F28] shrink-0 border border-white/5">
               <RotateCcw className="w-4 h-4" />
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-white">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-[#F8FAFC]">
                 30-Day Returns
               </h4>
-              <p className="text-xs text-zinc-400 mt-0.5 leading-normal">
+              <p className="text-xs text-slate-300 mt-0.5 leading-normal">
                 Doorstep pickup with instant refunds or size exchanges.
               </p>
             </div>
           </div>
 
-          <div className="flex items-start gap-3 p-4 rounded-xl bg-zinc-900/80 border border-zinc-800">
-            <div className="p-2 rounded-lg bg-zinc-800 text-[#DF9F28] shrink-0">
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-[#061B3A] border border-white/5">
+            <div className="p-2 rounded-lg bg-[#0A192F] text-[#DF9F28] shrink-0 border border-white/5">
               <Award className="w-4 h-4" />
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-white">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-[#F8FAFC]">
                 Brand Warranty
               </h4>
-              <p className="text-xs text-zinc-400 mt-0.5 leading-normal">
+              <p className="text-xs text-slate-300 mt-0.5 leading-normal">
                 100% authentic products with standard manufacturer warranty.
               </p>
             </div>
           </div>
 
-          <div className="flex items-start gap-3 p-4 rounded-xl bg-zinc-900/80 border border-zinc-800">
-            <div className="p-2 rounded-lg bg-zinc-800 text-[#DF9F28] shrink-0">
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-[#061B3A] border border-white/5">
+            <div className="p-2 rounded-lg bg-[#0A192F] text-[#DF9F28] shrink-0 border border-white/5">
               <ShieldCheck className="w-4 h-4" />
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-white">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-[#F8FAFC]">
                 Secure Checkout
               </h4>
-              <p className="text-xs text-zinc-400 mt-0.5 leading-normal">
+              <p className="text-xs text-slate-300 mt-0.5 leading-normal">
                 256-bit encrypted Razorpay, UPI & card processing.
               </p>
             </div>
           </div>
 
-          <div className="flex items-start gap-3 p-4 rounded-xl bg-zinc-900/80 border border-zinc-800">
-            <div className="p-2 rounded-lg bg-zinc-800 text-[#DF9F28] shrink-0">
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-[#061B3A] border border-white/5">
+            <div className="p-2 rounded-lg bg-[#0A192F] text-[#DF9F28] shrink-0 border border-white/5">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-white">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-[#F8FAFC]">
                 Weekly Lucky Draw
               </h4>
-              <p className="text-xs text-zinc-400 mt-0.5 leading-normal">
+              <p className="text-xs text-slate-300 mt-0.5 leading-normal">
                 Every verified purchase earns entry tickets to prize draws.
               </p>
             </div>
@@ -125,19 +125,19 @@ export default function Footer() {
                 <span className="text-xl font-bold tracking-tight text-white leading-none">
                   Judes<span className="text-[#DF9F28]">Cart</span>
                 </span>
-                <span className="text-[9px] tracking-[0.2em] font-semibold text-zinc-400 uppercase mt-0.5">
+                <span className="text-[9px] tracking-[0.2em] font-semibold text-slate-400 uppercase mt-0.5">
                   Shop More. Live Better.
                 </span>
               </div>
             </Link>
             
-            <p className="text-xs text-zinc-400 leading-relaxed max-w-sm">
+            <p className="text-xs text-slate-300 leading-relaxed max-w-sm">
               Discover top-rated electronics, tech gear, premium apparel, footwear, leather goods, smart home essentials, and beauty items with transparent weekly lucky draw rewards.
             </p>
 
             {/* Newsletter Subscription */}
             <div className="pt-1">
-              <p className="text-xs font-semibold text-white mb-2 flex items-center gap-1.5">
+              <p className="text-xs font-semibold text-[#F8FAFC] mb-2 flex items-center gap-1.5">
                 <Mail className="w-3.5 h-3.5 text-[#DF9F28]" />
                 <span>Insider VIP Newsletter</span>
               </p>
@@ -154,11 +154,11 @@ export default function Footer() {
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
                     placeholder="Enter your email"
-                    className="flex-1 bg-zinc-900 border border-zinc-800 text-xs px-3.5 py-2.5 rounded-xl text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#DF9F28]"
+                    className="flex-1 bg-[#061B3A] border border-white/10 text-xs px-3.5 py-2.5 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-[#DF9F28]"
                   />
                   <button
                     type="submit"
-                    className="px-4 py-2.5 bg-[#DF9F28] hover:bg-amber-400 text-zinc-950 text-xs font-semibold rounded-xl transition-colors shrink-0 cursor-pointer"
+                    className="px-4 py-2.5 bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] text-xs font-bold rounded-xl transition-colors shrink-0 cursor-pointer active:scale-95"
                   >
                     Join
                   </button>
@@ -166,7 +166,7 @@ export default function Footer() {
               )}
             </div>
 
-            <div className="flex items-center gap-2 text-[11px] text-zinc-400 pt-1">
+            <div className="flex items-center gap-2 text-[11px] text-slate-400 pt-1">
               <Lock className="w-3.5 h-3.5 text-[#DF9F28]" />
               <span>PCI-DSS Compliant • 256-Bit SSL Protection</span>
             </div>
@@ -174,42 +174,42 @@ export default function Footer() {
 
           {/* Column 1: All Departments */}
           <div className="lg:col-span-3">
-            <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-3.5">
+            <h4 className="text-xs font-semibold text-[#F8FAFC] uppercase tracking-wider mb-3.5">
               All Departments
             </h4>
-            <ul className="space-y-2 text-xs text-zinc-400">
+            <ul className="space-y-2 text-xs text-slate-300">
               <li>
-                <Link href="/product" className="hover:text-white transition-colors">
+                <Link href="/product" className="hover:text-[#DF9F28] transition-colors">
                   All Products Catalog
                 </Link>
               </li>
               <li>
-                <Link href="/product?category=electronics" className="hover:text-white transition-colors">
+                <Link href="/product?category=electronics" className="hover:text-[#DF9F28] transition-colors">
                   Electronics &amp; Tech Gear
                 </Link>
               </li>
               <li>
-                <Link href="/product?category=apparel" className="hover:text-white transition-colors">
+                <Link href="/product?category=apparel" className="hover:text-[#DF9F28] transition-colors">
                   Fashion &amp; Apparel
                 </Link>
               </li>
               <li>
-                <Link href="/product?category=footwear" className="hover:text-white transition-colors">
+                <Link href="/product?category=footwear" className="hover:text-[#DF9F28] transition-colors">
                   Footwear &amp; Sneakers
                 </Link>
               </li>
               <li>
-                <Link href="/product?category=leather" className="hover:text-white transition-colors">
+                <Link href="/product?category=leather" className="hover:text-[#DF9F28] transition-colors">
                   Leather Goods &amp; Bags
                 </Link>
               </li>
               <li>
-                <Link href="/product?category=home" className="hover:text-white transition-colors">
+                <Link href="/product?category=home" className="hover:text-[#DF9F28] transition-colors">
                   Home &amp; Living
                 </Link>
               </li>
               <li>
-                <Link href="/product?category=beauty" className="hover:text-white transition-colors">
+                <Link href="/product?category=beauty" className="hover:text-[#DF9F28] transition-colors">
                   Beauty &amp; Personal Care
                 </Link>
               </li>
@@ -218,42 +218,42 @@ export default function Footer() {
 
           {/* Column 2: Customer Care */}
           <div className="lg:col-span-3">
-            <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-3.5">
+            <h4 className="text-xs font-semibold text-[#F8FAFC] uppercase tracking-wider mb-3.5">
               Customer Care
             </h4>
-            <ul className="space-y-2 text-xs text-zinc-400">
+            <ul className="space-y-2 text-xs text-slate-300">
               <li>
-                <Link href="/track-order" className="hover:text-white transition-colors">
+                <Link href="/track-order" className="hover:text-[#DF9F28] transition-colors">
                   Track Order
                 </Link>
               </li>
               <li>
-                <Link href="/shipping" className="hover:text-white transition-colors">
+                <Link href="/shipping" className="hover:text-[#DF9F28] transition-colors">
                   Shipping &amp; Delivery
                 </Link>
               </li>
               <li>
-                <Link href="/returns" className="hover:text-white transition-colors">
+                <Link href="/returns" className="hover:text-[#DF9F28] transition-colors">
                   Returns &amp; Refunds
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="hover:text-white transition-colors">
+                <Link href="/faq" className="hover:text-[#DF9F28] transition-colors">
                   Help / FAQ
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-white transition-colors">
+                <Link href="/contact" className="hover:text-[#DF9F28] transition-colors">
                   Customer Support Concierge
                 </Link>
               </li>
               <li>
-                <Link href="/orders" className="hover:text-white transition-colors">
+                <Link href="/orders" className="hover:text-[#DF9F28] transition-colors">
                   My Orders History
                 </Link>
               </li>
               <li>
-                <Link href="/profile" className="hover:text-white transition-colors">
+                <Link href="/profile" className="hover:text-[#DF9F28] transition-colors">
                   Account Settings
                 </Link>
               </li>
@@ -262,27 +262,27 @@ export default function Footer() {
 
           {/* Column 3: Rewards & Apps */}
           <div className="lg:col-span-2">
-            <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-3.5">
+            <h4 className="text-xs font-semibold text-[#F8FAFC] uppercase tracking-wider mb-3.5">
               Rewards &amp; App
             </h4>
-            <ul className="space-y-2 text-xs text-zinc-400">
+            <ul className="space-y-2 text-xs text-slate-300">
               <li>
-                <Link href="/lucky-draw" className="hover:text-white transition-colors">
+                <Link href="/lucky-draw" className="hover:text-[#DF9F28] transition-colors">
                   Weekly Live Draw
                 </Link>
               </li>
               <li>
-                <Link href="/lucky-draw#bumper-draw" className="hover:text-white transition-colors">
+                <Link href="/lucky-draw#bumper-draw" className="hover:text-[#DF9F28] transition-colors">
                   Bumper Jackpot
                 </Link>
               </li>
               <li>
-                <Link href="/lucky-draw#winners" className="hover:text-white transition-colors">
+                <Link href="/lucky-draw#winners" className="hover:text-[#DF9F28] transition-colors">
                   Verified Winners
                 </Link>
               </li>
               <li>
-                <Link href="/lucky-draw#rules" className="hover:text-white transition-colors">
+                <Link href="/lucky-draw#rules" className="hover:text-[#DF9F28] transition-colors">
                   Draw Rules
                 </Link>
               </li>
@@ -298,24 +298,24 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar: Copyright, Legal Links & Payment Badges */}
-        <div className="mt-10 pt-6 border-t border-zinc-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+        <div className="mt-10 pt-6 border-t border-[#061B3A] flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <p>© {new Date().getFullYear()} JudesCart. All rights reserved.</p>
             <span className="hidden sm:inline">•</span>
-            <Link href="/privacy" className="hover:text-zinc-300 transition-colors">
+            <Link href="/privacy" className="hover:text-[#DF9F28] transition-colors">
               Privacy Policy
             </Link>
             <span>•</span>
-            <Link href="/terms" className="hover:text-zinc-300 transition-colors">
+            <Link href="/terms" className="hover:text-[#DF9F28] transition-colors">
               Terms of Service
             </Link>
             <span>•</span>
-            <Link href="/accessibility" className="hover:text-zinc-300 transition-colors">
+            <Link href="/accessibility" className="hover:text-[#DF9F28] transition-colors">
               Accessibility
             </Link>
           </div>
 
-          <div className="flex items-center gap-3 text-zinc-400 text-[11px]">
+          <div className="flex items-center gap-3 text-slate-400 text-[11px]">
             <span className="hover:text-white transition-colors">Razorpay</span>
             <span>•</span>
             <span className="hover:text-white transition-colors">UPI</span>

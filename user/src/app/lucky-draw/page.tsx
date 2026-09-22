@@ -118,15 +118,15 @@ export default function LuckyDrawPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col justify-between">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#111111] font-sans flex flex-col justify-between">
       <Navbar />
 
       <main className="flex-1">
         {/* ========================================================================= */}
         {/* 1. HERO SECTION WITH LIVE COUNTDOWN & GRAND PRIZE */}
         {/* ========================================================================= */}
-        <section className="relative bg-[#111111] text-white py-16 md:py-24 overflow-hidden border-b border-stone-800">
-          <div className="absolute inset-0 bg-radial from-amber-950/20 via-black/80 to-[#111111] pointer-events-none" />
+        <section className="relative bg-[#0A192F] text-white py-16 md:py-24 overflow-hidden border-b border-[#061B3A]">
+          <div className="absolute inset-0 bg-radial from-[#DF9F28]/10 via-[#061B3A]/85 to-[#0A192F] pointer-events-none" />
           <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#DF9F28]/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="sj-container relative z-10">
@@ -141,18 +141,18 @@ export default function LuckyDrawPage() {
 
                 <h1 className="text-3xl sm:text-5xl lg:text-6xl font-sans font-extrabold text-white tracking-tight leading-tight">
                   The JudesCart <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-[#DF9F28] to-white">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#DF9F28] via-amber-200 to-white">
                     Weekly Grand Draw
                   </span>
                 </h1>
 
-                <p className="text-stone-300 text-xs sm:text-sm md:text-base leading-relaxed max-w-xl">
+                <p className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed max-w-xl">
                   Every order placed on JudesCart automatically enters our weekly verified prize draw. Win signature bespoke garments, handcrafted leather goods, and exclusive gift rewards.
                 </p>
 
                 {/* Live Countdown Timer */}
                 <div className="space-y-3 pt-2">
-                  <div className="flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-stone-300">
+                  <div className="flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-slate-300">
                     <Clock className="w-4 h-4 text-[#DF9F28]" />
                     <span>Next Live Draw Countdown:</span>
                   </div>
@@ -166,12 +166,12 @@ export default function LuckyDrawPage() {
                     ].map((t, i) => (
                       <div
                         key={i}
-                        className="bg-stone-900/90 border border-stone-800 rounded-2xl p-3 text-center shadow-lg"
+                        className="bg-[#061B3A]/90 border border-white/10 rounded-2xl p-3 text-center shadow-lg"
                       >
                         <span className="block text-2xl sm:text-3xl font-bold font-mono text-white">
                           {pad(t.val)}
                         </span>
-                        <span className="block text-[10px] uppercase tracking-wider text-stone-400 mt-1">
+                        <span className="block text-[10px] uppercase tracking-wider text-slate-400 mt-1">
                           {t.label}
                         </span>
                       </div>
@@ -183,9 +183,9 @@ export default function LuckyDrawPage() {
                 <div className="flex flex-wrap items-center gap-4 pt-4">
                   <Link
                     href="/product"
-                    className="px-7 py-3.5 bg-[#DF9F28] hover:bg-[#C6891E] text-white font-bold text-xs sm:text-sm tracking-wider uppercase rounded-full shadow-lg shadow-amber-500/20 transition-all flex items-center gap-2"
+                    className="px-7 py-3.5 bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] font-bold text-xs sm:text-sm tracking-wider uppercase rounded-full shadow-lg shadow-[#DF9F28]/20 transition-all flex items-center gap-2 cursor-pointer"
                   >
-                    <ShoppingBag className="w-4 h-4" />
+                    <ShoppingBag className="w-4 h-4 text-[#111111]" />
                     <span>Shop Eligible Products</span>
                   </Link>
 
@@ -201,20 +201,20 @@ export default function LuckyDrawPage() {
 
               {/* Right Column: Grand Prize Showcase */}
               <div className="lg:col-span-5 relative">
-                <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-stone-950 border border-stone-800 shadow-2xl p-6 sm:p-8 flex flex-col justify-between group">
+                <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-[#061B3A] border border-white/10 shadow-2xl p-6 sm:p-8 flex flex-col justify-between group">
                   <Image
                     src={activeCampaign.prizeImage || '/prod_overshirt_1778670536589.png'}
                     alt={activeCampaign.prizeName}
                     fill
                     className="object-cover object-center opacity-40 group-hover:scale-105 transition-transform duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/60 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#061B3A] via-[#061B3A]/60 to-transparent" />
 
                   <div className="relative z-10 flex justify-between items-start">
                     <span className="px-3 py-1 rounded-full bg-[#DF9F28]/20 border border-[#DF9F28]/40 text-[#DF9F28] text-[10px] font-bold tracking-widest uppercase">
                       THIS WEEK&apos;S REWARD
                     </span>
-                    <span className="text-xs text-stone-300 font-semibold">
+                    <span className="text-xs text-slate-300 font-semibold">
                       {activeCampaign.winnerCount} Lucky Winner(s)
                     </span>
                   </div>
@@ -241,17 +241,17 @@ export default function LuckyDrawPage() {
         {/* ========================================================================= */}
         {/* 2. HOW IT WORKS: 3-STEP EXPLANATION */}
         {/* ========================================================================= */}
-        <section className="py-16 md:py-24 bg-white border-b border-stone-200">
+        <section className="py-16 md:py-24 bg-white border-b border-slate-200">
           <div className="sj-container space-y-12">
             
             <div className="text-center max-w-xl mx-auto space-y-2">
               <span className="text-xs font-bold tracking-[0.2em] text-[#DF9F28] uppercase">
                 SIMPLE & TRANSPARENT
               </span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-stone-900 tracking-tight">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-[#111111] tracking-tight">
                 How It Works
               </h2>
-              <p className="text-xs sm:text-sm text-stone-500">
+              <p className="text-xs sm:text-sm text-[#555555]">
                 Participating in JudesCart lucky draw campaigns takes zero extra effort.
               </p>
             </div>
@@ -281,18 +281,18 @@ export default function LuckyDrawPage() {
                 return (
                   <div
                     key={idx}
-                    className="p-8 rounded-3xl bg-stone-50 border border-stone-200 hover:border-[#DF9F28]/40 hover:shadow-md transition-all relative group"
+                    className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-200 hover:border-[#DF9F28]/50 hover:shadow-md transition-all relative group"
                   >
-                    <span className="text-4xl font-sans font-extrabold text-stone-200 group-hover:text-[#DF9F28]/30 transition-colors absolute top-6 right-6">
+                    <span className="text-4xl font-sans font-extrabold text-slate-200 group-hover:text-[#DF9F28]/30 transition-colors absolute top-6 right-6">
                       {item.step}
                     </span>
-                    <div className="w-12 h-12 rounded-2xl bg-amber-50 text-[#DF9F28] border border-amber-200 flex items-center justify-center mb-6">
+                    <div className="w-12 h-12 rounded-2xl bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/20 flex items-center justify-center mb-6">
                       <Icon className="w-6 h-6" />
                     </div>
-                    <h3 className="text-base font-bold text-stone-900 uppercase tracking-wider mb-2">
+                    <h3 className="text-base font-bold text-[#111111] uppercase tracking-wider mb-2">
                       {item.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-[#555555] leading-relaxed">
                       {item.desc}
                     </p>
                   </div>
@@ -306,7 +306,7 @@ export default function LuckyDrawPage() {
         {/* ========================================================================= */}
         {/* 3. ACTIVE & UPCOMING CAMPAIGNS LIST */}
         {/* ========================================================================= */}
-        <section className="py-16 md:py-24 bg-stone-50 border-b border-stone-200/80">
+        <section className="py-16 md:py-24 bg-[#F8FAFC] border-b border-slate-200">
           <div className="sj-container space-y-10">
             
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -314,10 +314,10 @@ export default function LuckyDrawPage() {
                 <span className="text-xs font-bold tracking-[0.2em] text-[#DF9F28] uppercase">
                   ACTIVE SCHEDULE
                 </span>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-stone-900 tracking-tight">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-[#111111] tracking-tight">
                   Campaign Schedule
                 </h2>
-                <p className="text-xs sm:text-sm text-stone-500">
+                <p className="text-xs sm:text-sm text-[#555555]">
                   Explore current campaigns and prizes up for grabs this month.
                 </p>
               </div>
@@ -327,9 +327,9 @@ export default function LuckyDrawPage() {
               {campaigns.map((camp) => (
                 <div
                   key={camp.id}
-                  className="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+                  className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
                 >
-                  <div className="relative aspect-[16/10] w-full bg-stone-900">
+                  <div className="relative aspect-[16/10] w-full bg-[#0A192F]">
                     <Image
                       src={camp.prizeImage || '/prod_overshirt_1778670536589.png'}
                       alt={camp.prizeName}
@@ -340,7 +340,7 @@ export default function LuckyDrawPage() {
                       <span className={`px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase shadow-xs ${
                         camp.status === 'ACTIVE'
                           ? 'bg-emerald-500 text-white'
-                          : 'bg-stone-700 text-stone-300'
+                          : 'bg-[#0A192F] text-slate-300'
                       }`}>
                         {camp.status}
                       </span>
@@ -349,18 +349,18 @@ export default function LuckyDrawPage() {
 
                   <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
                     <div className="space-y-1">
-                      <h3 className="text-base font-bold text-stone-900">{camp.name}</h3>
+                      <h3 className="text-base font-bold text-[#111111]">{camp.name}</h3>
                       <p className="text-xs font-semibold text-[#DF9F28] uppercase tracking-wider">
                         Prize: {camp.prizeName}
                       </p>
                     </div>
 
-                    <div className="pt-3 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500">
+                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-[#555555]">
                       <div className="flex items-center gap-1.5">
-                        <Calendar className="w-4 h-4 text-stone-400" />
+                        <Calendar className="w-4 h-4 text-[#888888]" />
                         <span>Draw: {new Date(camp.endDate).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}</span>
                       </div>
-                      <span className="font-semibold text-stone-700">{camp.winnerCount} Winner(s)</span>
+                      <span className="font-semibold text-[#111111]">{camp.winnerCount} Winner(s)</span>
                     </div>
                   </div>
                 </div>
@@ -380,10 +380,10 @@ export default function LuckyDrawPage() {
                 <span className="text-xs font-bold tracking-[0.2em] text-[#DF9F28] uppercase">
                   COMMUNITY RECOGNITION
                 </span>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-stone-900 tracking-tight">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-[#111111] tracking-tight">
                   Past Draw Winners
                 </h2>
-                <p className="text-xs sm:text-sm text-stone-500">
+                <p className="text-xs sm:text-sm text-[#555555]">
                   Real customers who took home signature JudesCart prizes.
                 </p>
               </div>
@@ -392,9 +392,9 @@ export default function LuckyDrawPage() {
                 {winners.map((winner, idx) => (
                   <div
                     key={winner.id || idx}
-                    className="bg-stone-50 rounded-2xl border border-stone-200 p-4 text-center space-y-3"
+                    className="bg-[#F8FAFC] rounded-2xl border border-slate-200 p-4 text-center space-y-3 hover:border-[#DF9F28]/40 transition-colors"
                   >
-                    <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-stone-200">
+                    <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-slate-200">
                       <Image
                         src={winner.winnerImage || '/winner_man.jpg'}
                         alt={winner.winnerName}
@@ -403,9 +403,9 @@ export default function LuckyDrawPage() {
                       />
                     </div>
                     <div>
-                      <h4 className="text-sm font-bold text-stone-900">{winner.winnerName}</h4>
+                      <h4 className="text-sm font-bold text-[#111111]">{winner.winnerName}</h4>
                       <p className="text-xs text-[#DF9F28] font-semibold">{winner.winnerPlace}</p>
-                      <p className="text-[11px] text-stone-400 mt-1">
+                      <p className="text-[11px] text-[#888888] mt-1">
                         {winner.drawCampaign?.prizeName || 'Signature Prize'}
                       </p>
                     </div>

@@ -49,7 +49,7 @@ export default function FAQPage() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col justify-between">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#111111] font-sans flex flex-col justify-between">
       <Navbar />
 
       <main className="flex-1 py-12 md:py-20">
@@ -57,14 +57,14 @@ export default function FAQPage() {
           
           {/* Header */}
           <div className="text-center space-y-3">
-            <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-[0.2em] text-blue-600 uppercase">
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-[0.2em] text-[#DF9F28] uppercase">
               <HelpCircle className="w-3.5 h-3.5" />
               <span>SUPPORT & CONCIERGE</span>
             </span>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-slate-900 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-sans font-extrabold text-[#111111] tracking-tight">
               Frequently Asked Questions
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
+            <p className="text-xs sm:text-sm text-[#555555] max-w-md mx-auto">
               Find answers regarding our standards, shipping timelines, returns, and weekly lucky draws.
             </p>
 
@@ -76,9 +76,9 @@ export default function FAQPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search questions..."
-                  className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 shadow-xs"
+                  className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-xs text-[#111111] placeholder:text-[#888888] focus:outline-none focus:border-[#DF9F28] shadow-xs"
                 />
-                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-[#888888] absolute left-3.5 top-1/2 -translate-y-1/2" />
               </div>
             </div>
           </div>
@@ -94,27 +94,27 @@ export default function FAQPage() {
                 >
                   <button
                     onClick={() => setOpenIndex(isOpen ? null : idx)}
-                    className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors"
+                    className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 hover:bg-[#F8FAFC] transition-colors cursor-pointer"
                   >
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 block mb-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#DF9F28] block mb-1">
                         {faq.category}
                       </span>
-                      <h3 className="text-sm sm:text-base font-bold text-slate-900">
+                      <h3 className="text-sm sm:text-base font-bold text-[#111111]">
                         {faq.question}
                       </h3>
                     </div>
-                    <div className="p-1 rounded-full text-slate-400">
+                    <div className="p-1 rounded-full text-[#888888]">
                       <ChevronDown
                         className={`w-5 h-5 transition-transform duration-200 ${
-                          isOpen ? 'rotate-180 text-blue-600' : ''
+                          isOpen ? 'rotate-180 text-[#DF9F28]' : ''
                         }`}
                       />
                     </div>
                   </button>
 
                   {isOpen && (
-                    <div className="px-5 sm:px-6 pb-6 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
+                    <div className="px-5 sm:px-6 pb-6 text-xs sm:text-sm text-[#555555] leading-relaxed border-t border-slate-100 pt-4">
                       {faq.answer}
                     </div>
                   )}
@@ -124,19 +124,19 @@ export default function FAQPage() {
           </div>
 
           {/* Contact Concierge Box */}
-          <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-10 text-center space-y-4 shadow-xl border border-slate-800">
-            <h3 className="text-xl font-serif font-bold text-white">Still Have Questions?</h3>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-sm mx-auto">
+          <div className="bg-[#0A192F] text-white rounded-3xl p-8 sm:p-10 text-center space-y-4 shadow-xl border border-[#061B3A]">
+            <h3 className="text-xl font-sans font-bold text-white">Still Have Questions?</h3>
+            <p className="text-xs sm:text-sm text-slate-300 max-w-sm mx-auto">
               Our concierge team is available to assist you with orders, styling, or delivery queries.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4 pt-2 text-xs">
-              <span className="flex items-center gap-1.5 text-slate-300">
-                <Mail className="w-4 h-4 text-blue-400" />
+              <span className="flex items-center gap-1.5 text-slate-200">
+                <Mail className="w-4 h-4 text-[#DF9F28]" />
                 <span>support@judescart.com</span>
               </span>
               <span className="text-slate-600">•</span>
-              <span className="flex items-center gap-1.5 text-slate-300">
-                <Phone className="w-4 h-4 text-blue-400" />
+              <span className="flex items-center gap-1.5 text-slate-200">
+                <Phone className="w-4 h-4 text-[#DF9F28]" />
                 <span>+91 98765 43210</span>
               </span>
             </div>

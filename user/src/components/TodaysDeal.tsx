@@ -67,66 +67,66 @@ export default function TodaysDeal() {
 
   return (
     <section className="py-12 px-4 md:px-8 max-w-7xl mx-auto">
-      <div className="bg-white rounded-[2rem] border border-gray-100/80 shadow-[0_15px_50px_rgba(0,0,0,0.02)] overflow-hidden p-6 md:p-12 flex flex-col lg:flex-row items-stretch gap-8 min-h-[480px]">
+      <div className="bg-white rounded-[2rem] border border-[#E2E8F0] shadow-xs overflow-hidden p-6 md:p-12 flex flex-col lg:flex-row items-stretch gap-8 min-h-[480px]">
         {/* Deal info & Countdown */}
         <div className="flex-1 flex flex-col justify-center items-center text-center p-4 lg:p-8 min-w-[280px]">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold tracking-tight uppercase text-[#061B3A] mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold tracking-tight uppercase text-[#111111] mb-4">
             Today&apos;s Deal
           </h2>
-          <p className="text-gray-500 text-xs md:text-sm tracking-[0.15em] uppercase mb-10">
-            Grab the chance, <span className="text-[#061B3A] font-semibold">Get 50% OFF.</span>
+          <p className="text-[#555555] text-xs md:text-sm tracking-[0.15em] uppercase mb-10">
+            Grab the chance, <span className="text-[#DF9F28] font-bold">Get 50% OFF.</span>
           </p>
 
           {/* Countdown digits */}
           <div className="flex items-center justify-center gap-4 md:gap-6 mb-10">
             <div className="flex flex-col items-center">
-              <span className="text-4xl md:text-5xl lg:text-6xl font-sans font-extrabold text-[#061B3A] tracking-tight tabular-nums min-w-[3rem] md:min-w-[4rem]">
+              <span className="text-4xl md:text-5xl lg:text-6xl font-sans font-extrabold text-[#0A192F] tracking-tight tabular-nums min-w-[3rem] md:min-w-[4rem]">
                 {timeLeft.hours}
               </span>
-              <span className="text-[0.65rem] md:text-xs tracking-[0.2em] font-medium text-gray-400 uppercase mt-2">Hours</span>
+              <span className="text-[0.65rem] md:text-xs tracking-[0.2em] font-medium text-[#888888] uppercase mt-2">Hours</span>
             </div>
             
-            <span className="text-2xl md:text-3xl font-light text-[#061B3A]/30 -mt-6">:</span>
+            <span className="text-2xl md:text-3xl font-light text-[#0A192F]/30 -mt-6">:</span>
 
             <div className="flex flex-col items-center">
-              <span className="text-4xl md:text-5xl lg:text-6xl font-sans font-extrabold text-[#061B3A] tracking-tight tabular-nums min-w-[3rem] md:min-w-[4rem]">
+              <span className="text-4xl md:text-5xl lg:text-6xl font-sans font-extrabold text-[#0A192F] tracking-tight tabular-nums min-w-[3rem] md:min-w-[4rem]">
                 {timeLeft.minutes}
               </span>
-              <span className="text-[0.65rem] md:text-xs tracking-[0.2em] font-medium text-gray-400 uppercase mt-2">Minutes</span>
+              <span className="text-[0.65rem] md:text-xs tracking-[0.2em] font-medium text-[#888888] uppercase mt-2">Minutes</span>
             </div>
 
-            <span className="text-2xl md:text-3xl font-light text-[#061B3A]/30 -mt-6">:</span>
+            <span className="text-2xl md:text-3xl font-light text-[#0A192F]/30 -mt-6">:</span>
 
             <div className="flex flex-col items-center">
-              <span className="text-4xl md:text-5xl lg:text-6xl font-sans font-extrabold text-[#061B3A] tracking-tight tabular-nums min-w-[3rem] md:min-w-[4rem]">
+              <span className="text-4xl md:text-5xl lg:text-6xl font-sans font-extrabold text-[#DF9F28] tracking-tight tabular-nums min-w-[3rem] md:min-w-[4rem]">
                 {timeLeft.seconds}
               </span>
-              <span className="text-[0.65rem] md:text-xs tracking-[0.2em] font-medium text-gray-400 uppercase mt-2">Seconds</span>
+              <span className="text-[0.65rem] md:text-xs tracking-[0.2em] font-medium text-[#DF9F28] uppercase mt-2">Seconds</span>
             </div>
           </div>
 
-          <Link href="/product" className="bg-[#061B3A] hover:bg-black text-white font-medium text-xs tracking-[0.2em] uppercase px-10 py-4 rounded-full inline-flex items-center gap-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-black/5 group cursor-pointer">
+          <Link href="/product" className="bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] font-bold text-xs tracking-[0.2em] uppercase px-10 py-4 rounded-xl inline-flex items-center gap-2.5 transition-all duration-200 shadow-sm active:scale-95 group cursor-pointer focus-visible:ring-2 focus-visible:ring-[#DF9F28]">
             Shop Now
-            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+            <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1 text-[#111111]" />
           </Link>
         </div>
 
         {/* Dynamic Deal Cards */}
         {dealProducts.map((prod) => (
-          <Link key={prod.id} href={`/product?id=${prod.id}`} className="w-full lg:w-[28%] relative rounded-2xl overflow-hidden aspect-[3/4] group cursor-pointer shadow-sm hover:shadow-md transition-shadow bg-[#E7F2FF] block">
+          <Link key={prod.id} href={`/product?id=${prod.id}`} className="w-full lg:w-[28%] relative rounded-2xl overflow-hidden aspect-[3/4] group cursor-pointer shadow-xs hover:shadow-md transition-shadow bg-[#F8FAFC] border border-[#E2E8F0] block">
             <Image
               src={prod.image}
               alt={`Today's Deal - ${prod.name}`}
               fill
               sizes="(max-width: 1024px) 100vw, 28vw"
-              className="object-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-105 p-6"
+              className="object-cover transition-transform duration-700 group-hover:scale-105 p-6"
               priority
             />
             {/* Subtle overlay gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-85 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-[#061B3A]/80 via-transparent to-transparent opacity-85 group-hover:opacity-100 transition-opacity duration-300"></div>
             {/* Link at the bottom */}
             <div className="absolute bottom-6 left-0 right-0 text-center z-10">
-              <span className="text-white text-[0.65rem] md:text-xs tracking-[0.2em] uppercase font-medium underline underline-offset-4 decoration-white/70 group-hover:decoration-white transition-all">
+              <span className="text-white text-[0.65rem] md:text-xs tracking-[0.2em] uppercase font-semibold underline underline-offset-4 decoration-white/70 group-hover:decoration-white transition-all">
                 {prod.name}
               </span>
             </div>
@@ -135,7 +135,7 @@ export default function TodaysDeal() {
 
         {/* Fallbacks if dealProducts count is less than 2 */}
         {dealProducts.length === 0 && [1, 2].map((i) => (
-          <div key={i} className="w-full lg:w-[28%] rounded-2xl bg-gray-100 animate-pulse aspect-[3/4]"></div>
+          <div key={i} className="w-full lg:w-[28%] rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] animate-pulse aspect-[3/4]"></div>
         ))}
       </div>
     </section>

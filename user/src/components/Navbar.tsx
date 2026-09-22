@@ -323,9 +323,9 @@ export default function Navbar() {
     <>
       <header
         ref={headerRef}
-        className="sticky top-0 z-40 w-full bg-white/98 backdrop-blur-md border-b border-zinc-200 shadow-xs transition-all duration-200"
+        className="sticky top-0 z-40 w-full bg-[#F8FAFC]/98 backdrop-blur-md border-b border-[#E2E8F0] shadow-xs transition-all duration-200"
       >
-        {/* 1. Main Header Row (Tier 1 - Refined & Balanced Height) */}
+        {/* 1. Main Header Row (Tier 1 - Dominant 60% #F8FAFC Foundation) */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-18 sm:h-20 gap-3 sm:gap-6">
             
@@ -343,10 +343,10 @@ export default function Navbar() {
                   />
                 </div>
                 <div className="hidden sm:flex flex-col ml-2.5">
-                  <span className="text-xl sm:text-[22px] font-bold tracking-tight text-zinc-950 group-hover:text-[#DF9F28] transition-colors leading-none">
+                  <span className="text-xl sm:text-[22px] font-bold tracking-tight text-[#111111] group-hover:text-[#DF9F28] transition-colors leading-none">
                     Judes<span className="text-[#DF9F28]">Cart</span>
                   </span>
-                  <span className="text-[10px] tracking-[0.22em] font-semibold text-zinc-400 uppercase mt-0.5">
+                  <span className="text-[10px] tracking-[0.22em] font-semibold text-[#888888] uppercase mt-0.5">
                     Shop More. Live Better.
                   </span>
                 </div>
@@ -356,7 +356,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="p-2 text-zinc-700 hover:text-[#DF9F28] hover:bg-zinc-100 rounded-xl transition-colors shrink-0 cursor-pointer lg:hidden focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
+                className="p-2 text-[#555555] hover:text-[#DF9F28] hover:bg-slate-200/60 rounded-xl transition-colors shrink-0 cursor-pointer lg:hidden focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
                 aria-label="Toggle navigation menu"
                 title="Menu & Options"
               >
@@ -367,7 +367,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
-                className="md:hidden p-2 text-zinc-700 hover:text-[#DF9F28] hover:bg-zinc-100 rounded-xl transition-colors shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
+                className="md:hidden p-2 text-[#555555] hover:text-[#DF9F28] hover:bg-slate-200/60 rounded-xl transition-colors shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
                 aria-label="Search catalog"
                 title="Search"
               >
@@ -380,14 +380,14 @@ export default function Navbar() {
                   onClick={() => setIsSearchModalOpen(true)} 
                   className="w-full relative cursor-pointer"
                 >
-                  <div className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs text-zinc-500 bg-zinc-100/90 hover:bg-zinc-100 hover:text-zinc-900 border border-zinc-200/90 transition-all duration-150 group">
+                  <div className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs text-[#555555] bg-white hover:bg-white hover:text-[#111111] border border-[#E2E8F0] shadow-2xs transition-all duration-150 group">
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
                       <Search className="w-4 h-4 text-[#DF9F28] group-hover:scale-110 transition-transform shrink-0" />
-                      <span className="text-xs text-zinc-500 font-medium truncate">
+                      <span className="text-xs text-[#555555] font-medium truncate">
                         Search products, categories, or brands...
                       </span>
                     </div>
-                    <kbd className="hidden lg:inline-flex items-center gap-0.5 px-2 py-0.5 text-[11px] font-mono font-semibold text-zinc-500 bg-white rounded-md border border-zinc-200 shadow-2xs shrink-0 select-none">
+                    <kbd className="hidden lg:inline-flex items-center gap-0.5 px-2 py-0.5 text-[11px] font-mono font-semibold text-[#888888] bg-[#F8FAFC] rounded-md border border-[#E2E8F0] shadow-2xs shrink-0 select-none">
                       ⌘K
                     </kbd>
                   </div>
@@ -403,25 +403,25 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={() => setIsCurrencyModalOpen(true)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 transition-all border border-zinc-200/90 bg-white cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-[#555555] hover:text-[#111111] hover:bg-slate-100 transition-all border border-[#E2E8F0] bg-white cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
                   title="Select Currency"
                 >
                   <span className="text-sm leading-none" role="img" aria-label={selectedCurrency.name}>{selectedCurrency.flag}</span>
-                  <span className="font-bold text-zinc-900 tracking-tight">{selectedCurrency.code}</span>
-                  <span className="text-zinc-400 font-mono text-[11px]">({selectedCurrency.symbol})</span>
+                  <span className="font-bold text-[#111111] tracking-tight">{selectedCurrency.code}</span>
+                  <span className="text-[#888888] font-mono text-[11px]">({selectedCurrency.symbol})</span>
                 </button>
               </div>
 
               {/* Wishlist Link */}
               <Link
                 href="/wishlist"
-                className="relative p-2.5 rounded-xl text-zinc-700 hover:text-[#DF9F28] hover:bg-zinc-100 border border-transparent hover:border-zinc-200 transition-all shrink-0 focus-visible:ring-2 focus-visible:ring-amber-500"
+                className="relative p-2.5 rounded-xl text-[#555555] hover:text-[#DF9F28] hover:bg-slate-100 border border-transparent hover:border-[#E2E8F0] transition-all shrink-0 focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
                 aria-label="Wishlist"
                 title="View Wishlist"
               >
                 <Heart className="w-4 h-4" />
                 {totalWishlistItems > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] bg-[#DF9F28] text-zinc-950 text-[9px] font-bold rounded-full flex items-center justify-center px-0.5 shadow-xs">
+                  <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] bg-[#DF9F28] text-[#111111] text-[9px] font-bold rounded-full flex items-center justify-center px-0.5 shadow-xs">
                     {totalWishlistItems}
                   </span>
                 )}
@@ -434,53 +434,53 @@ export default function Navbar() {
                     <button
                       type="button"
                       onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                      className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200/80 border border-zinc-200 text-zinc-900 transition-all text-xs font-semibold cursor-pointer shrink-0 group focus-visible:ring-2 focus-visible:ring-amber-500"
+                      className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-white hover:bg-slate-100 border border-[#E2E8F0] text-[#111111] transition-all text-xs font-semibold cursor-pointer shrink-0 group focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
                       aria-label="User Account Menu"
                     >
                       <User className="w-3.5 h-3.5 text-[#DF9F28] group-hover:scale-110 transition-transform" />
                       <span className="hidden sm:inline max-w-[80px] truncate">
                         {session.user.name || 'Account'}
                       </span>
-                      <ChevronDown className={`w-3 h-3 text-zinc-500 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
+                      <ChevronDown className={`w-3 h-3 text-[#888888] transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
                     </button>
 
                     {/* Account Dropdown */}
                     {isUserMenuOpen && (
-                      <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-zinc-200 py-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                        <div className="px-4 py-2.5 border-b border-zinc-100">
-                          <p className="text-xs font-semibold text-zinc-900 truncate">
+                      <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-[#E2E8F0] py-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                        <div className="px-4 py-2.5 border-b border-[#F1F5F9]">
+                          <p className="text-xs font-semibold text-[#111111] truncate">
                             {session.user.name || 'User'}
                           </p>
-                          <p className="text-[11px] text-zinc-500 truncate">
+                          <p className="text-[11px] text-[#888888] truncate">
                             {session.user.email}
                           </p>
                         </div>
 
                         <Link
                           href="/profile"
-                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-[#555555] hover:bg-[#F8FAFC] hover:text-[#111111] transition-colors"
                         >
-                          <User className="w-4 h-4 text-zinc-400" />
+                          <User className="w-4 h-4 text-[#888888]" />
                           <span>My Profile & Addresses</span>
                         </Link>
 
                         <Link
                           href="/orders"
-                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-[#555555] hover:bg-[#F8FAFC] hover:text-[#111111] transition-colors"
                         >
-                          <Package className="w-4 h-4 text-zinc-400" />
+                          <Package className="w-4 h-4 text-[#888888]" />
                           <span>My Orders</span>
                         </Link>
 
                         <Link
                           href="/lucky-draw"
-                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-[#555555] hover:bg-[#F8FAFC] hover:text-[#111111] transition-colors"
                         >
                           <Ticket className="w-4 h-4 text-[#DF9F28]" />
                           <span>My Lucky Tickets</span>
                         </Link>
 
-                        <div className="border-t border-zinc-100 mt-1 pt-1">
+                        <div className="border-t border-[#F1F5F9] mt-1 pt-1">
                           <button
                             type="button"
                             onClick={handleLogout}
@@ -500,25 +500,25 @@ export default function Navbar() {
                       setAuthModalMode('signin');
                       setIsAuthModalOpen(true);
                     }}
-                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200/80 border border-zinc-200 text-zinc-900 transition-all text-xs font-semibold cursor-pointer shrink-0 group focus-visible:ring-2 focus-visible:ring-amber-500"
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 border border-[#E2E8F0] text-[#111111] transition-all text-xs font-semibold cursor-pointer shrink-0 group focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
                     aria-label="Customer Sign In"
                   >
-                    <User className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+                    <User className="w-3.5 h-3.5 group-hover:scale-110 transition-transform text-[#DF9F28]" />
                     <span>Sign In</span>
                   </button>
                 )}
               </div>
 
-              {/* Shopping Cart Button */}
+              {/* Shopping Cart Button (Secondary 30% Deep Navy #0A192F with #DF9F28 Badge) */}
               <button
                 type="button"
                 onClick={() => openDrawer()}
-                className="relative flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white transition-all duration-150 active:scale-95 shrink-0 group cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-500 shadow-sm"
+                className="relative flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 rounded-xl bg-[#0A192F] hover:bg-[#061B3A] text-white transition-all duration-150 active:scale-95 shrink-0 group cursor-pointer focus-visible:ring-2 focus-visible:ring-[#DF9F28] shadow-sm"
                 aria-label="Shopping Cart"
               >
                 <ShoppingBag className="w-4 h-4 text-white group-hover:text-[#DF9F28] transition-colors" />
                 <span className="hidden sm:inline text-xs font-semibold tracking-wide">Cart</span>
-                <span className="flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold rounded-full bg-[#DF9F28] text-zinc-950">
+                <span className="flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold rounded-full bg-[#DF9F28] text-[#111111]">
                   {totalItems}
                 </span>
               </button>
@@ -529,7 +529,7 @@ export default function Navbar() {
 
         {/* Mobile Search Input Drawer (Dropdown) */}
         {isMobileSearchOpen && (
-          <div className="px-4 pb-3 md:hidden bg-white border-b border-zinc-200 animate-in fade-in duration-150">
+          <div className="px-4 pb-3 md:hidden bg-[#F8FAFC] border-b border-[#E2E8F0] animate-in fade-in duration-150">
             <form onSubmit={handleSearchSubmit} className="relative">
               <input
                 type="text"
@@ -537,12 +537,12 @@ export default function Navbar() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search products, brands & categories..."
                 autoFocus
-                className="w-full pl-10 pr-20 py-2 bg-zinc-100 text-xs text-zinc-900 rounded-full border border-zinc-200 focus:outline-none focus:border-[#DF9F28]"
+                className="w-full pl-10 pr-20 py-2 bg-white text-xs text-[#111111] rounded-full border border-[#E2E8F0] focus:outline-none focus:border-[#DF9F28]"
               />
-              <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-[#888888] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <button
                 type="submit"
-                className="absolute right-1 top-1/2 -translate-y-1/2 px-3 py-1 bg-zinc-900 text-white text-xs font-semibold rounded-full hover:bg-[#DF9F28] hover:text-zinc-950 transition-colors cursor-pointer"
+                className="absolute right-1 top-1/2 -translate-y-1/2 px-3 py-1 bg-[#0A192F] hover:bg-[#DF9F28] hover:text-[#111111] text-white text-xs font-semibold rounded-full transition-colors cursor-pointer"
               >
                 Search
               </button>
@@ -550,9 +550,9 @@ export default function Navbar() {
           </div>
         )}
 
-        {/* 2. Secondary Category Navigation Bar (Tier 2 - Dark Obsidian #111111) */}
+        {/* 2. Secondary Category Navigation Bar (Tier 2 - Deep Navy #0A192F - 30% Structural Palette) */}
         <nav
-          className="hidden lg:block bg-[#111111] border-t border-zinc-800 border-b border-zinc-900 text-white relative shadow-inner"
+          className="hidden lg:block bg-[#0A192F] border-t border-[#061B3A] border-b border-[#061B3A] text-white relative shadow-inner"
           onMouseLeave={handleMouseLeave}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -571,22 +571,22 @@ export default function Navbar() {
                         onMouseEnter={() => handleCategoryMouseEnter(cat.id)}
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 select-none group ${
                           isActive
-                            ? 'bg-[#DF9F28] text-zinc-950 font-bold shadow-xs'
-                            : 'text-zinc-300 hover:text-white hover:bg-white/10'
+                            ? 'bg-[#DF9F28] text-[#111111] font-bold shadow-xs hover:bg-[#C6891E]'
+                            : 'text-slate-200 hover:text-white hover:bg-white/10'
                         }`}
                       >
-                        <span className={isActive ? 'text-zinc-950' : 'text-[#DF9F28]'}>
+                        <span className={isActive ? 'text-[#111111]' : 'text-[#DF9F28]'}>
                           <Icon className="w-3.5 h-3.5" />
                         </span>
                         <span>{cat.label}</span>
                         {cat.popular && (
-                          <span className="text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider bg-[#DF9F28] text-zinc-950">
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider bg-[#DF9F28] text-[#111111]">
                             Popular
                           </span>
                         )}
                         <ChevronDown
                           className={`w-3 h-3 transition-transform duration-200 ${
-                            isActive ? 'rotate-180 text-zinc-950' : 'text-zinc-400 group-hover:text-zinc-200'
+                            isActive ? 'rotate-180 text-[#111111]' : 'text-slate-400 group-hover:text-white'
                           }`}
                         />
                       </Link>
@@ -596,13 +596,13 @@ export default function Navbar() {
               </div>
 
               {/* Right Trust & Guarantee Badges */}
-              <div className="hidden xl:flex items-center gap-4 text-xs font-medium text-zinc-400">
+              <div className="hidden xl:flex items-center gap-4 text-xs font-medium text-slate-300">
                 <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   Free Delivery over ₹999
                 </span>
-                <span className="text-zinc-700">•</span>
-                <Link href="/faq" className="text-zinc-300 hover:text-white transition-colors">
+                <span className="text-slate-600">•</span>
+                <Link href="/faq" className="text-slate-300 hover:text-[#DF9F28] transition-colors">
                   7-Day Easy Returns
                 </Link>
               </div>
@@ -613,7 +613,7 @@ export default function Navbar() {
           {/* 3. Mega Menu Hover Panel */}
           {activeCategoryData && (
             <div
-              className="absolute top-full inset-x-0 bg-white/98 backdrop-blur-xl border-b border-zinc-200 shadow-xl z-50 animate-in fade-in slide-in-from-top-2 duration-150"
+              className="absolute top-full inset-x-0 bg-white/98 backdrop-blur-xl border-b border-[#E2E8F0] shadow-xl z-50 animate-in fade-in slide-in-from-top-2 duration-150"
               onMouseEnter={handleMegaMenuMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
@@ -626,7 +626,7 @@ export default function Navbar() {
                       <span className="text-xs uppercase tracking-wider font-semibold text-[#DF9F28]">
                         {activeCategoryData.directoryTitle}
                       </span>
-                      <h4 className="text-base font-bold text-zinc-900 mt-0.5">
+                      <h4 className="text-base font-bold text-[#111111] mt-0.5">
                         {activeCategoryData.directorySubtitle}
                       </h4>
                     </div>
@@ -636,12 +636,12 @@ export default function Navbar() {
                         <Link
                           key={idx}
                           href={item.href}
-                          className="group flex items-center justify-between p-3 rounded-xl border border-zinc-100 hover:border-amber-300 hover:bg-amber-50/40 transition-all"
+                          className="group flex items-center justify-between p-3 rounded-xl border border-[#E2E8F0] hover:border-[#DF9F28] hover:bg-[#FEF8EE] transition-all"
                         >
-                          <span className="text-xs font-medium text-zinc-800 group-hover:text-[#DF9F28] transition-colors">
+                          <span className="text-xs font-medium text-[#111111] group-hover:text-[#DF9F28] transition-colors">
                             {item.title}
                           </span>
-                          <ArrowRight className="w-3.5 h-3.5 text-zinc-300 group-hover:text-[#DF9F28] group-hover:translate-x-1 transition-all" />
+                          <ArrowRight className="w-3.5 h-3.5 text-[#888888] group-hover:text-[#DF9F28] group-hover:translate-x-1 transition-all" />
                         </Link>
                       ))}
                     </div>
@@ -658,12 +658,12 @@ export default function Navbar() {
                   </div>
 
                   {/* Right Featured Recommendation (col-span-5) */}
-                  <div className="col-span-5 border-l border-zinc-100 pl-8">
+                  <div className="col-span-5 border-l border-[#E2E8F0] pl-8">
                     <Link
                       href={activeCategoryData.featured.href}
-                      className="group flex items-center gap-4 p-4 rounded-2xl bg-zinc-50 hover:bg-amber-50/50 border border-zinc-200 hover:border-amber-300 transition-all block"
+                      className="group flex items-center gap-4 p-4 rounded-2xl bg-[#F8FAFC] hover:bg-[#FEF8EE] border border-[#E2E8F0] hover:border-[#DF9F28] transition-all block"
                     >
-                      <div className="relative w-24 h-28 rounded-xl overflow-hidden bg-white shrink-0 border border-zinc-200">
+                      <div className="relative w-24 h-28 rounded-xl overflow-hidden bg-white shrink-0 border border-[#E2E8F0]">
                         <Image
                           src={activeCategoryData.featured.image}
                           alt={activeCategoryData.featured.title}
@@ -673,16 +673,16 @@ export default function Navbar() {
                         />
                       </div>
                       <div className="flex-1 min-w-0 space-y-1">
-                        <span className="text-[10px] uppercase tracking-wider font-semibold text-amber-900 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] uppercase tracking-wider font-semibold text-[#DF9F28] bg-[#FEF8EE] border border-[#DF9F28]/30 px-2 py-0.5 rounded-full">
                           {activeCategoryData.featured.badge}
                         </span>
-                        <h5 className="text-sm font-semibold text-zinc-900 group-hover:text-[#DF9F28] transition-colors truncate">
+                        <h5 className="text-sm font-semibold text-[#111111] group-hover:text-[#DF9F28] transition-colors truncate">
                           {activeCategoryData.featured.title}
                         </h5>
-                        <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed">
+                        <p className="text-xs text-[#555555] line-clamp-2 leading-relaxed">
                           {activeCategoryData.featured.description}
                         </p>
-                        <p className="text-xs font-bold text-zinc-900 pt-1">
+                        <p className="text-xs font-bold text-[#111111] pt-1">
                           {activeCategoryData.featured.price}
                         </p>
                       </div>
@@ -702,14 +702,14 @@ export default function Navbar() {
           {/* Backdrop */}
           <div
             onClick={() => setIsMobileMenuOpen(false)}
-            className="fixed inset-0 bg-zinc-950/70 backdrop-blur-xs transition-opacity duration-300"
+            className="fixed inset-0 bg-[#0A192F]/70 backdrop-blur-xs transition-opacity duration-300"
           />
 
           {/* Drawer Panel */}
           <div className="fixed inset-y-0 left-0 w-4/5 max-w-xs bg-white shadow-2xl flex flex-col justify-between overflow-y-auto z-50 animate-in slide-in-from-left duration-200">
             <div>
               {/* Header */}
-              <div className="p-4 border-b border-zinc-200 flex items-center justify-between bg-zinc-50">
+              <div className="p-4 border-b border-[#E2E8F0] flex items-center justify-between bg-[#F8FAFC]">
                 <Link
                   href="/"
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -724,14 +724,14 @@ export default function Navbar() {
                       className="object-contain"
                     />
                   </div>
-                  <span className="text-base font-bold tracking-tight text-zinc-900 leading-none">
+                  <span className="text-base font-bold tracking-tight text-[#111111] leading-none">
                     Judes<span className="text-[#DF9F28]">Cart</span>
                   </span>
                 </Link>
                 <button
                   type="button"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-1.5 text-zinc-500 hover:text-zinc-900 rounded-lg cursor-pointer"
+                  className="p-1.5 text-[#555555] hover:text-[#111111] rounded-lg cursor-pointer"
                   aria-label="Close menu"
                 >
                   <X className="w-5 h-5" />
@@ -739,19 +739,19 @@ export default function Navbar() {
               </div>
 
               {/* Mobile Quick Action Buttons */}
-              <div className="grid grid-cols-2 gap-2 p-3 bg-zinc-50 border-b border-zinc-200">
+              <div className="grid grid-cols-2 gap-2 p-3 bg-[#F8FAFC] border-b border-[#E2E8F0]">
                 <Link
                   href="/product"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-white text-zinc-800 border border-zinc-200 text-xs font-semibold hover:border-zinc-300"
+                  className="flex items-center gap-2 p-2.5 rounded-xl bg-white text-[#111111] border border-[#E2E8F0] text-xs font-semibold hover:border-[#DF9F28]"
                 >
-                  <SlidersHorizontal className="w-4 h-4 text-zinc-600 shrink-0" />
+                  <SlidersHorizontal className="w-4 h-4 text-[#555555] shrink-0" />
                   <span>All Products</span>
                 </Link>
                 <Link
                   href="/wishlist"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-white text-zinc-800 border border-zinc-200 text-xs font-semibold hover:border-zinc-300"
+                  className="flex items-center gap-2 p-2.5 rounded-xl bg-white text-[#111111] border border-[#E2E8F0] text-xs font-semibold hover:border-[#DF9F28]"
                 >
                   <Heart className="w-4 h-4 text-rose-500 shrink-0" />
                   <span>Wishlist ({totalWishlistItems})</span>
@@ -760,7 +760,7 @@ export default function Navbar() {
 
               {/* Navigation Category Accordions */}
               <div className="p-3 space-y-1">
-                <p className="px-3 py-1.5 text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">
+                <p className="px-3 py-1.5 text-[10px] font-semibold text-[#888888] uppercase tracking-wider">
                   Departments & Categories
                 </p>
 
@@ -769,17 +769,17 @@ export default function Navbar() {
                   const isExpanded = mobileExpandedCat === cat.id;
 
                   return (
-                    <div key={cat.id} className="border-b border-zinc-100 last:border-none">
+                    <div key={cat.id} className="border-b border-[#F1F5F9] last:border-none">
                       <div className="flex items-center justify-between py-1">
                         <Link
                           href={cat.href}
                           onClick={() => setIsMobileMenuOpen(false)}
-                          className="flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-zinc-800 hover:text-[#DF9F28] flex-1"
+                          className="flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-[#111111] hover:text-[#DF9F28] flex-1"
                         >
                           <Icon className="w-4 h-4 text-[#DF9F28]" />
                           <span>{cat.label}</span>
                           {cat.popular && (
-                            <span className="text-[8px] px-1.5 py-0.2 rounded-full font-semibold bg-[#DF9F28] text-zinc-950 uppercase">
+                            <span className="text-[8px] px-1.5 py-0.2 rounded-full font-semibold bg-[#DF9F28] text-[#111111] uppercase">
                               Hot
                             </span>
                           )}
@@ -787,7 +787,7 @@ export default function Navbar() {
                         <button
                           type="button"
                           onClick={() => setMobileExpandedCat(isExpanded ? null : cat.id)}
-                          className="p-2 text-zinc-400 hover:text-zinc-700"
+                          className="p-2 text-[#888888] hover:text-[#111111]"
                           aria-label={`Toggle ${cat.label} subcategories`}
                         >
                           <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
@@ -801,7 +801,7 @@ export default function Navbar() {
                               key={i}
                               href={sub.href}
                               onClick={() => setIsMobileMenuOpen(false)}
-                              className="block py-1 text-xs font-medium text-zinc-600 hover:text-[#DF9F28]"
+                              className="block py-1 text-xs font-medium text-[#555555] hover:text-[#DF9F28]"
                             >
                               {sub.title}
                             </Link>
@@ -820,17 +820,17 @@ export default function Navbar() {
                   );
                 })}
 
-                <div className="pt-2 border-t border-zinc-100">
+                <div className="pt-2 border-t border-[#F1F5F9]">
                   <Link
                     href="/lucky-draw"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center justify-between px-3 py-2.5 text-xs font-semibold text-amber-950 bg-amber-50 rounded-xl border border-amber-200"
+                    className="flex items-center justify-between px-3 py-2.5 text-xs font-semibold text-[#111111] bg-[#FEF8EE] rounded-xl border border-[#DF9F28]/30"
                   >
                     <div className="flex items-center gap-2">
                       <Ticket className="w-4 h-4 text-[#DF9F28]" />
                       <span>Weekly Lucky Draw</span>
                     </div>
-                    <span className="text-[10px] bg-[#DF9F28] text-zinc-950 font-bold px-1.5 py-0.5 rounded-md">
+                    <span className="text-[10px] bg-[#DF9F28] text-[#111111] font-bold px-1.5 py-0.5 rounded-md">
                       LIVE
                     </span>
                   </Link>
@@ -839,30 +839,30 @@ export default function Navbar() {
             </div>
 
             {/* Bottom Account & Support Links */}
-            <div className="p-4 border-t border-zinc-200 bg-zinc-50 space-y-2">
+            <div className="p-4 border-t border-[#E2E8F0] bg-[#F8FAFC] space-y-2">
               {session?.user ? (
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 px-1">
-                    <div className="w-7 h-7 rounded-full bg-amber-100 text-amber-800 font-semibold text-xs flex items-center justify-center border border-amber-200">
+                    <div className="w-7 h-7 rounded-full bg-[#FEF8EE] text-[#DF9F28] font-semibold text-xs flex items-center justify-center border border-[#DF9F28]/30">
                       {session.user.name ? session.user.name.charAt(0) : 'U'}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs font-semibold text-zinc-900 truncate">{session.user.name}</p>
-                      <p className="text-[10px] text-zinc-500 truncate">{session.user.email}</p>
+                      <p className="text-xs font-semibold text-[#111111] truncate">{session.user.name}</p>
+                      <p className="text-[10px] text-[#888888] truncate">{session.user.email}</p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-2 pt-1">
                     <Link
                       href="/profile"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="py-1.5 px-3 bg-white border border-zinc-200 rounded-lg text-xs font-medium text-center text-zinc-700 hover:border-amber-300"
+                      className="py-1.5 px-3 bg-white border border-[#E2E8F0] rounded-lg text-xs font-medium text-center text-[#555555] hover:border-[#DF9F28]"
                     >
                       Profile
                     </Link>
                     <Link
                       href="/orders"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="py-1.5 px-3 bg-white border border-zinc-200 rounded-lg text-xs font-medium text-center text-zinc-700 hover:border-amber-300"
+                      className="py-1.5 px-3 bg-white border border-[#E2E8F0] rounded-lg text-xs font-medium text-center text-[#555555] hover:border-[#DF9F28]"
                     >
                       Orders
                     </Link>
@@ -879,7 +879,7 @@ export default function Navbar() {
                 <Link
                   href="/login"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 bg-zinc-900 hover:bg-[#DF9F28] text-white hover:text-zinc-950 rounded-xl text-xs font-semibold tracking-wide transition-colors"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#0A192F] hover:bg-[#DF9F28] text-white hover:text-[#111111] rounded-xl text-xs font-semibold tracking-wide transition-colors"
                 >
                   <User className="w-4 h-4" />
                   <span>Sign In / Join JudesCart</span>

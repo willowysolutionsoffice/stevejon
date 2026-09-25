@@ -245,7 +245,7 @@ export default function NewArrivals() {
   }, [products, activeCategory]);
 
   return (
-    <section className="sj-container space-y-6 sm:space-y-8">
+    <section className="sj-container space-y-4 sm:space-y-5">
       {/* =========================================================================
           TANEIRA-INSPIRED SECTION HEADER: CUSTOMER FAVOURITES
          ========================================================================= */}

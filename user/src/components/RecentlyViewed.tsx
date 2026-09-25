@@ -132,7 +132,7 @@ export default function RecentlyViewed() {
 
   return (
     <section className="sj-container">
-      <div className="space-y-6 pt-4 sm:pt-6">
+      <div className="space-y-4 sm:space-y-5">
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E2E8F0] pb-4">
           <div className="flex items-center gap-2.5">

@@ -26,6 +26,7 @@ import {
   LogOut,
   Ticket,
   ArrowRight,
+  Camera,
 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
@@ -214,6 +215,15 @@ const NAVIGATION_CATEGORIES: NavCategory[] = [
   },
 ];
 
+const SEARCH_SUGGESTIONS = [
+  'Search for Bespoke Blazers...',
+  'Search for Luxury Outerwear...',
+  'Search for Leather Briefcases...',
+  'Search for Handcrafted Shoes...',
+  'Search for Fine Atelier Accessories...',
+  'Search for Premium Grooming...',
+];
+
 export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
@@ -222,6 +232,7 @@ export default function Navbar() {
   const { data: session } = authClient.useSession();
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -244,6 +255,14 @@ export default function Navbar() {
   const mouseLeaveTimeout = useRef<NodeJS.Timeout | null>(null);
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
+
+  // Cycle search suggestions placeholder smoothly
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPlaceholderIndex((prev) => (prev + 1) % SEARCH_SUGGESTIONS.length);
+    }, 2800);
+    return () => clearInterval(interval);
+  }, []);
 
   // Close menus on route change
   useEffect(() => {
@@ -391,11 +410,116 @@ export default function Navbar() {
           isVisible ? 'translate-y-0 shadow-xs' : '-translate-y-full shadow-none pointer-events-none'
         }`}
       >
-        {/* 1. Main Header Row (Tier 1 - Dominant 60% #F8FAFC Foundation) */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* ======================================================== */}
+        {/* 1. MOBILE HEADER (Below md - Taneira Style)             */}
+        {/* ======================================================== */}
+        <div className="md:hidden">
+          {/* Top Bar: Hamburger | Centered Brand | Wishlist & Cart */}
+          <div className="flex items-center justify-between h-14 px-3.5 sm:px-4">
+            {/* Left: Hamburger Toggle */}
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="p-2 -ml-1 text-[#111111] hover:text-[#DF9F28] active:scale-95 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#DF9F28] rounded-lg"
+              aria-label="Toggle navigation menu"
+            >
+              <Menu className="w-5 h-5 stroke-[2]" />
+            </button>
+
+            {/* Center: Brand Logo & Subtitle (Taneira/Tata luxury feel) */}
+            <Link
+              href="/"
+              className="flex flex-col items-center justify-center -mr-1 group focus-visible:outline-none"
+              aria-label="JudesCart Home"
+            >
+              <div className="flex items-center gap-1.5">
+                <div className="relative w-5 h-5 shrink-0">
+                  <Image
+                    src="/logo-icon.webp"
+                    alt="JudesCart"
+                    fill
+                    sizes="20px"
+                    className="object-contain group-hover:scale-105 transition-transform"
+                    priority
+                  />
+                </div>
+                <span className="text-[17px] font-extrabold tracking-tight text-[#111111] group-hover:text-[#DF9F28] transition-colors leading-none">
+                  Judes<span className="text-[#DF9F28]">Cart</span>
+                </span>
+              </div>
+              <span className="text-[8px] tracking-[0.24em] font-semibold text-[#888888] uppercase mt-0.5">
+                Shop More. Live Better.
+              </span>
+            </Link>
+
+            {/* Right: Wishlist & Cart Icons with Badges */}
+            <div className="flex items-center gap-1">
+              <Link
+                href="/wishlist"
+                className="relative p-2 text-[#111111] hover:text-[#DF9F28] active:scale-95 transition-all"
+                aria-label="Wishlist"
+              >
+                <Heart className="w-5 h-5 stroke-[1.8]" />
+                {totalWishlistItems > 0 && (
+                  <span className="absolute top-1 right-0.5 min-w-[15px] h-[15px] bg-[#E53E3E] text-white text-[9px] font-bold rounded-full flex items-center justify-center px-0.5 shadow-xs">
+                    {totalWishlistItems}
+                  </span>
+                )}
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => openDrawer()}
+                className="relative p-2 text-[#111111] hover:text-[#DF9F28] active:scale-95 transition-all cursor-pointer"
+                aria-label="Shopping Cart"
+              >
+                <ShoppingBag className="w-5 h-5 stroke-[1.8]" />
+                {totalItems > 0 && (
+                  <span className="absolute top-1 right-0.5 min-w-[15px] h-[15px] bg-[#DF9F28] text-[#111111] text-[9px] font-bold rounded-full flex items-center justify-center px-0.5 shadow-xs">
+                    {totalItems}
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Search Row: Full-width Curved Search Bar with Animated Placeholder & Camera Icon */}
+          <div className="px-3.5 pb-2.5 pt-0.5">
+            <div
+              onClick={() => setIsSearchModalOpen(true)}
+              className="flex items-center justify-between w-full h-10 px-3.5 bg-white rounded-full border border-[#E2E8F0] shadow-2xs cursor-pointer group active:scale-[0.99] transition-all hover:border-[#DF9F28]"
+            >
+              <div className="flex items-center gap-2.5 flex-1 min-w-0 pr-2">
+                <Search className="w-4 h-4 text-[#888888] shrink-0 group-hover:text-[#DF9F28] transition-colors" />
+                <span className="text-xs text-[#666666] font-normal truncate select-none transition-all duration-300">
+                  {SEARCH_SUGGESTIONS[placeholderIndex]}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 shrink-0 pl-2">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsSearchModalOpen(true);
+                  }}
+                  className="p-1 text-[#888888] hover:text-[#DF9F28] transition-colors cursor-pointer"
+                  title="Visual Search / Upload Image"
+                  aria-label="Visual Search"
+                >
+                  <Camera className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* 2. DESKTOP HEADER (md and up)                           */}
+        {/* ======================================================== */}
+        <div className="hidden md:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-18 sm:h-20 gap-3 sm:gap-6">
             
-            {/* Left: Logo & Mobile Menu Toggle */}
+            {/* Left: Logo */}
             <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
               <Link href="/" className="group flex items-center shrink-0 pr-1 focus-visible:outline-none" aria-label="JudesCart Home">
                 <div className="relative w-9 h-9 sm:w-10 sm:h-10 shrink-0">
@@ -408,7 +532,7 @@ export default function Navbar() {
                     priority
                   />
                 </div>
-                <div className="hidden sm:flex flex-col ml-2.5">
+                <div className="flex flex-col ml-2.5">
                   <span className="text-xl sm:text-[22px] font-bold tracking-tight text-[#111111] group-hover:text-[#DF9F28] transition-colors leading-none">
                     Judes<span className="text-[#DF9F28]">Cart</span>
                   </span>
@@ -418,30 +542,8 @@ export default function Navbar() {
                 </div>
               </Link>
 
-              {/* Hamburger Button for Mobile Drawer */}
-              <button
-                type="button"
-                onClick={() => setIsMobileMenuOpen(true)}
-                className="p-2 text-[#555555] hover:text-[#DF9F28] hover:bg-slate-200/60 rounded-xl transition-colors shrink-0 cursor-pointer lg:hidden focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
-                aria-label="Toggle navigation menu"
-                title="Menu & Options"
-              >
-                <Menu className="w-5 h-5" />
-              </button>
-
-              {/* Mobile Quick Search Button */}
-              <button
-                type="button"
-                onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
-                className="md:hidden p-2 text-[#555555] hover:text-[#DF9F28] hover:bg-slate-200/60 rounded-xl transition-colors shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
-                aria-label="Search catalog"
-                title="Search"
-              >
-                <Search className="w-4 h-4" />
-              </button>
-
               {/* Center: Large Search Bar (Desktop) */}
-              <div className="hidden md:flex flex-1 max-w-lg lg:max-w-xl ml-2">
+              <div className="flex flex-1 max-w-lg lg:max-w-xl ml-2">
                 <div 
                   onClick={() => setIsSearchModalOpen(true)} 
                   className="w-full relative cursor-pointer"
@@ -450,12 +552,15 @@ export default function Navbar() {
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
                       <Search className="w-4 h-4 text-[#DF9F28] group-hover:scale-110 transition-transform shrink-0" />
                       <span className="text-xs text-[#555555] font-medium truncate">
-                        Search products, categories, or brands...
+                        {SEARCH_SUGGESTIONS[placeholderIndex]}
                       </span>
                     </div>
-                    <kbd className="hidden lg:inline-flex items-center gap-0.5 px-2 py-0.5 text-[11px] font-mono font-semibold text-[#888888] bg-[#F8FAFC] rounded-md border border-[#E2E8F0] shadow-2xs shrink-0 select-none">
-                      ⌘K
-                    </kbd>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Camera className="w-4 h-4 text-[#888888] hover:text-[#DF9F28] transition-colors" />
+                      <kbd className="hidden lg:inline-flex items-center gap-0.5 px-2 py-0.5 text-[11px] font-mono font-semibold text-[#888888] bg-[#F8FAFC] rounded-md border border-[#E2E8F0] shadow-2xs select-none">
+                        ⌘K
+                      </kbd>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -465,18 +570,16 @@ export default function Navbar() {
             <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
               
               {/* Currency Badge */}
-              <div className="hidden sm:block">
-                <button
-                  type="button"
-                  onClick={() => setIsCurrencyModalOpen(true)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-[#555555] hover:text-[#111111] hover:bg-slate-100 transition-all border border-[#E2E8F0] bg-white cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
-                  title="Select Currency"
-                >
-                  <span className="text-sm leading-none" role="img" aria-label={selectedCurrency.name}>{selectedCurrency.flag}</span>
-                  <span className="font-bold text-[#111111] tracking-tight">{selectedCurrency.code}</span>
-                  <span className="text-[#888888] font-mono text-[11px]">({selectedCurrency.symbol})</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setIsCurrencyModalOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-[#555555] hover:text-[#111111] hover:bg-slate-100 transition-all border border-[#E2E8F0] bg-white cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
+                title="Select Currency"
+              >
+                <span className="text-sm leading-none" role="img" aria-label={selectedCurrency.name}>{selectedCurrency.flag}</span>
+                <span className="font-bold text-[#111111] tracking-tight">{selectedCurrency.code}</span>
+                <span className="text-[#888888] font-mono text-[11px]">({selectedCurrency.symbol})</span>
+              </button>
 
               {/* Wishlist Link */}
               <Link
@@ -504,7 +607,7 @@ export default function Navbar() {
                       aria-label="User Account Menu"
                     >
                       <User className="w-3.5 h-3.5 text-[#DF9F28] group-hover:scale-110 transition-transform" />
-                      <span className="hidden sm:inline max-w-[80px] truncate">
+                      <span className="max-w-[80px] truncate">
                         {session.user.name || 'Account'}
                       </span>
                       <ChevronDown className={`w-3 h-3 text-[#888888] transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
@@ -575,7 +678,7 @@ export default function Navbar() {
                 )}
               </div>
 
-              {/* Shopping Cart Button (Secondary 30% Deep Navy #0A192F with #DF9F28 Badge) */}
+              {/* Shopping Cart Button */}
               <button
                 type="button"
                 onClick={() => openDrawer()}
@@ -592,29 +695,6 @@ export default function Navbar() {
             </div>
           </div>
         </div>
-
-        {/* Mobile Search Input Drawer (Dropdown) */}
-        {isMobileSearchOpen && (
-          <div className="px-4 pb-3 md:hidden bg-[#F8FAFC] border-b border-[#E2E8F0] animate-in fade-in duration-150">
-            <form onSubmit={handleSearchSubmit} className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search products, brands & categories..."
-                autoFocus
-                className="w-full pl-10 pr-20 py-2 bg-white text-xs text-[#111111] rounded-full border border-[#E2E8F0] focus:outline-none focus:border-[#DF9F28]"
-              />
-              <Search className="w-4 h-4 text-[#888888] absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <button
-                type="submit"
-                className="absolute right-1 top-1/2 -translate-y-1/2 px-3 py-1 bg-[#0A192F] hover:bg-[#DF9F28] hover:text-[#111111] text-white text-xs font-semibold rounded-full transition-colors cursor-pointer"
-              >
-                Search
-              </button>
-            </form>
-          </div>
-        )}
 
         {/* 2. Secondary Category Navigation Bar (Tier 2 - Deep Navy #0A192F - 30% Structural Palette) */}
         <nav

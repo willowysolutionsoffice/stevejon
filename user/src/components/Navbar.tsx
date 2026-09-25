@@ -235,10 +235,15 @@ export default function Navbar() {
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
   const [mobileExpandedCat, setMobileExpandedCat] = useState<string | null>(null);
 
+  const [isVisible, setIsVisible] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
+
   const headerRef = useRef<HTMLElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const mouseLeaveTimeout = useRef<NodeJS.Timeout | null>(null);
+  const lastScrollY = useRef(0);
+  const ticking = useRef(false);
 
   // Close menus on route change
   useEffect(() => {
@@ -246,7 +251,66 @@ export default function Navbar() {
     setIsMobileSearchOpen(false);
     setIsUserMenuOpen(false);
     setActiveCategoryId(null);
+    setIsVisible(true);
   }, [pathname]);
+
+  // Throttled scroll-direction detection with smooth transform animation
+  useEffect(() => {
+    // Keep header visible when any menu, modal, or drawer is open
+    if (
+      isMobileMenuOpen ||
+      isMobileSearchOpen ||
+      isSearchModalOpen ||
+      isAccountDrawerOpen ||
+      isAuthModalOpen ||
+      isDailyGiftModalOpen ||
+      isCurrencyModalOpen ||
+      activeCategoryId !== null ||
+      isUserMenuOpen
+    ) {
+      setIsVisible(true);
+      return;
+    }
+
+    const handleScroll = () => {
+      if (!ticking.current) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          const scrollDiff = currentScrollY - lastScrollY.current;
+
+          setIsScrolled(currentScrollY > 20);
+
+          // Always visible when near the top of the page
+          if (currentScrollY < 80) {
+            setIsVisible(true);
+          } else if (scrollDiff > 8) {
+            // Scrolling down -> hide header
+            setIsVisible(false);
+          } else if (scrollDiff < -8) {
+            // Scrolling up -> smoothly reveal header
+            setIsVisible(true);
+          }
+
+          lastScrollY.current = Math.max(0, currentScrollY);
+          ticking.current = false;
+        });
+        ticking.current = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [
+    isMobileMenuOpen,
+    isMobileSearchOpen,
+    isSearchModalOpen,
+    isAccountDrawerOpen,
+    isAuthModalOpen,
+    isDailyGiftModalOpen,
+    isCurrencyModalOpen,
+    activeCategoryId,
+    isUserMenuOpen,
+  ]);
 
   // Handle outside click to close menus
   useEffect(() => {
@@ -323,7 +387,9 @@ export default function Navbar() {
     <>
       <header
         ref={headerRef}
-        className="sticky top-0 z-40 w-full bg-[#F8FAFC]/98 backdrop-blur-md border-b border-[#E2E8F0] shadow-xs transition-all duration-200"
+        className={`sticky top-0 z-40 w-full bg-[#F8FAFC]/98 backdrop-blur-md border-b border-[#E2E8F0] transition-transform duration-300 ease-in-out will-change-transform ${
+          isVisible ? 'translate-y-0 shadow-xs' : '-translate-y-full shadow-none pointer-events-none'
+        }`}
       >
         {/* 1. Main Header Row (Tier 1 - Dominant 60% #F8FAFC Foundation) */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

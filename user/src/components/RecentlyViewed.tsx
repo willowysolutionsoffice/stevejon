@@ -136,7 +136,7 @@ export default function RecentlyViewed() {
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E2E8F0] pb-4">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/30">
+            <div className="p-2 rounded-lg bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/30">
               <History className="w-4 h-4 text-[#DF9F28]" />
             </div>
             <div>
@@ -145,7 +145,7 @@ export default function RecentlyViewed() {
                   Recently Viewed &amp; Recommended
                 </h3>
                 {hasRecent && (
-                  <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/30">
+                  <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/30">
                     <Sparkles className="w-3 h-3 text-[#DF9F28]" />
                     Personalized
                   </span>

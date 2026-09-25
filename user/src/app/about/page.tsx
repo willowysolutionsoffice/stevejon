@@ -20,7 +20,7 @@ export default function AboutPage() {
             <span className="inline-flex items-center text-xs font-bold tracking-[0.2em] text-[#DF9F28] uppercase">
               <span>THE JUDESCART ATELIER</span>
             </span>
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-sans font-extrabold text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-white tracking-tight">
               A Legacy of Sartorial Excellence
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed">
@@ -49,7 +49,7 @@ export default function AboutPage() {
                 </p>
               </div>
 
-              <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-slate-100 shadow-xl border border-slate-200">
+              <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-slate-100 shadow-xl border border-slate-200">
                 <Image
                   src="/cat_apparel_1778670103427.png"
                   alt="JudesCart Tailoring Heritage"
@@ -96,7 +96,7 @@ export default function AboutPage() {
                 return (
                   <div
                     key={idx}
-                    className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xs hover:border-[#DF9F28]/40 hover:shadow-md transition-all space-y-4"
+                    className="bg-white p-8 rounded-xl border border-slate-200 shadow-xs hover:border-[#DF9F28]/40 hover:shadow-md transition-all space-y-4"
                   >
                     <div className="w-12 h-12 rounded-2xl bg-[#FEF8EE] text-[#DF9F28] flex items-center justify-center border border-[#DF9F28]/20">
                       <Icon className="w-6 h-6" />

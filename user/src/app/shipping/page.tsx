@@ -34,7 +34,7 @@ export default function ShippingPage() {
           <div className="w-12 h-12 bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/20 rounded-2xl flex items-center justify-center mx-auto mb-3">
             <Truck className="w-6 h-6" />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-[#111111] tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black text-[#111111] tracking-tight">
             Shipping & Delivery Policy
           </h1>
           <p className="text-[#555555] text-xs sm:text-sm mt-2">
@@ -43,7 +43,7 @@ export default function ShippingPage() {
         </div>
 
         {/* Shipping Rates Table */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs mb-10">
+        <div className="bg-white rounded-xl p-6 sm:p-8 border border-slate-200/80 shadow-xs mb-10">
           <h2 className="text-lg font-bold text-[#111111] mb-4">Domestic Delivery Speeds & Rates</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
@@ -90,7 +90,7 @@ export default function ShippingPage() {
 
         {/* Feature Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs">
+          <div className="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs">
             <div className="w-10 h-10 bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/20 rounded-xl flex items-center justify-center mb-4">
               <ShieldCheck className="w-5 h-5" />
             </div>
@@ -100,7 +100,7 @@ export default function ShippingPage() {
             </p>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs">
+          <div className="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs">
             <div className="w-10 h-10 bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/20 rounded-xl flex items-center justify-center mb-4">
               <Package className="w-5 h-5" />
             </div>
@@ -110,7 +110,7 @@ export default function ShippingPage() {
             </p>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs">
+          <div className="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs">
             <div className="w-10 h-10 bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/20 rounded-xl flex items-center justify-center mb-4">
               <MapPin className="w-5 h-5" />
             </div>
@@ -122,7 +122,7 @@ export default function ShippingPage() {
         </div>
 
         {/* Frequently Asked Shipping Questions */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
+        <div className="bg-white rounded-xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
           <h2 className="text-lg font-bold text-[#111111] mb-4">Shipping FAQ</h2>
           <div className="space-y-4 text-xs sm:text-sm">
             <div>

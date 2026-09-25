@@ -107,7 +107,7 @@ export default function LoginPage() {
       <Navbar />
 
       <main className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden">
+        <div className="w-full max-w-md bg-white rounded-xl shadow-xl border border-slate-200/80 overflow-hidden">
           
           {/* Header Banner */}
           <div className="p-8 pb-6 border-b border-[#061B3A] bg-[#0A192F] text-white text-center relative overflow-hidden">
@@ -123,7 +123,7 @@ export default function LoginPage() {
             <p className="text-[10px] font-bold uppercase tracking-widest text-[#DF9F28]">
               JudesCart Membership
             </p>
-            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white mt-1">
+            <h1 className="text-lg sm:text-xl font-black tracking-tight text-white mt-1">
               {mode === 'signin' ? 'Welcome Back' : 'Create VIP Account'}
             </h1>
             <p className="text-xs text-slate-300 mt-1 max-w-xs mx-auto">

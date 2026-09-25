@@ -62,10 +62,10 @@ export default function Winners() {
         {winners.map((winner, idx) => (
           <div
             key={winner.id || idx}
-            className="bg-white rounded-2xl border border-[#E2E8F0] p-3.5 sm:p-4 flex flex-col items-center text-center shadow-xs hover:shadow-md hover:border-[#DF9F28] transition-all duration-200 group"
+            className="bg-white rounded-lg border border-[#E2E8F0] p-3 sm:p-3.5 flex flex-col items-center text-center shadow-xs hover:shadow-md hover:border-[#DF9F28] transition-all duration-200 group"
           >
             {/* Winner Portrait */}
-            <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-slate-100 mb-3 border border-[#E2E8F0]">
+            <div className="relative w-full aspect-square rounded-md overflow-hidden bg-slate-100 mb-3 border border-[#E2E8F0]">
               <Image
                 src={winner.winnerImage || '/winner_man.jpg'}
                 alt={winner.winnerName}
@@ -73,8 +73,8 @@ export default function Winners() {
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="absolute top-2 right-2 p-1.5 rounded-full bg-[#DF9F28] text-[#111111] shadow-xs">
-                <Trophy className="w-3.5 h-3.5" />
+              <div className="absolute top-2 right-2 p-1 rounded-md bg-[#DF9F28] text-[#111111] shadow-xs">
+                <Trophy className="w-3 h-3" />
               </div>
             </div>
 

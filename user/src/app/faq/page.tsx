@@ -61,7 +61,7 @@ export default function FAQPage() {
               <HelpCircle className="w-3.5 h-3.5" />
               <span>SUPPORT & CONCIERGE</span>
             </span>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-sans font-extrabold text-[#111111] tracking-tight">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-sans font-extrabold text-[#111111] tracking-tight">
               Frequently Asked Questions
             </h1>
             <p className="text-xs sm:text-sm text-[#555555] max-w-md mx-auto">
@@ -124,7 +124,7 @@ export default function FAQPage() {
           </div>
 
           {/* Contact Concierge Box */}
-          <div className="bg-[#0A192F] text-white rounded-3xl p-8 sm:p-10 text-center space-y-4 shadow-xl border border-[#061B3A]">
+          <div className="bg-[#0A192F] text-white rounded-xl p-8 sm:p-10 text-center space-y-4 shadow-xl border border-[#061B3A]">
             <h3 className="text-xl font-sans font-bold text-white">Still Have Questions?</h3>
             <p className="text-xs sm:text-sm text-slate-300 max-w-sm mx-auto">
               Our concierge team is available to assist you with orders, styling, or delivery queries.

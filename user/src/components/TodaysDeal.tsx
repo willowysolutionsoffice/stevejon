@@ -67,7 +67,7 @@ export default function TodaysDeal() {
 
   return (
     <section className="py-12 px-4 md:px-8 max-w-7xl mx-auto">
-      <div className="bg-white rounded-[2rem] border border-[#E2E8F0] shadow-xs overflow-hidden p-6 md:p-12 flex flex-col lg:flex-row items-stretch gap-8 min-h-[480px]">
+      <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-xs overflow-hidden p-6 md:p-12 flex flex-col lg:flex-row items-stretch gap-8 min-h-[480px]">
         {/* Deal info & Countdown */}
         <div className="flex-1 flex flex-col justify-center items-center text-center p-4 lg:p-8 min-w-[280px]">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold tracking-tight uppercase text-[#111111] mb-4">
@@ -105,7 +105,7 @@ export default function TodaysDeal() {
             </div>
           </div>
 
-          <Link href="/product" className="bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] font-bold text-xs tracking-[0.2em] uppercase px-10 py-4 rounded-xl inline-flex items-center gap-2.5 transition-all duration-200 shadow-sm active:scale-95 group cursor-pointer focus-visible:ring-2 focus-visible:ring-[#DF9F28]">
+          <Link href="/product" className="bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] font-bold text-xs tracking-[0.2em] uppercase px-8 py-3.5 rounded-lg inline-flex items-center gap-2.5 transition-all duration-200 shadow-sm active:scale-95 group cursor-pointer focus-visible:ring-2 focus-visible:ring-[#DF9F28]">
             Shop Now
             <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1 text-[#111111]" />
           </Link>
@@ -113,7 +113,7 @@ export default function TodaysDeal() {
 
         {/* Dynamic Deal Cards */}
         {dealProducts.map((prod) => (
-          <Link key={prod.id} href={`/product?id=${prod.id}`} className="w-full lg:w-[28%] relative rounded-2xl overflow-hidden aspect-[3/4] group cursor-pointer shadow-xs hover:shadow-md transition-shadow bg-[#F8FAFC] border border-[#E2E8F0] block">
+          <Link key={prod.id} href={`/product?id=${prod.id}`} className="w-full lg:w-[28%] relative rounded-lg overflow-hidden aspect-[3/4] group cursor-pointer shadow-xs hover:shadow-md transition-shadow bg-[#F8FAFC] border border-[#E2E8F0] block">
             <Image
               src={prod.image}
               alt={`Today's Deal - ${prod.name}`}
@@ -135,7 +135,7 @@ export default function TodaysDeal() {
 
         {/* Fallbacks if dealProducts count is less than 2 */}
         {dealProducts.length === 0 && [1, 2].map((i) => (
-          <div key={i} className="w-full lg:w-[28%] rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] animate-pulse aspect-[3/4]"></div>
+          <div key={i} className="w-full lg:w-[28%] rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] animate-pulse aspect-[3/4]"></div>
         ))}
       </div>
     </section>

@@ -47,7 +47,7 @@ export default function Testimonials() {
           {REVIEWS.map((review, idx) => (
             <div
               key={idx}
-              className="bg-[#F8FAFC] rounded-2xl border border-slate-200/80 p-6 sm:p-8 flex flex-col justify-between hover:border-[#DF9F28]/40 hover:shadow-md transition-all group"
+              className="bg-[#F8FAFC] rounded-lg border border-slate-200/80 p-6 sm:p-8 flex flex-col justify-between hover:border-[#DF9F28]/40 hover:shadow-md transition-all group"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
@@ -56,7 +56,7 @@ export default function Testimonials() {
                       <Star key={i} className="w-4 h-4 fill-[#DF9F28]" />
                     ))}
                   </div>
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-100">
                     <ShieldCheck className="w-3 h-3" />
                     {review.tag}
                   </span>

@@ -19,12 +19,12 @@ export default function TermsPage() {
           <span className="text-[#111111]">Terms of Service</span>
         </div>
 
-        <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/80 shadow-xs space-y-8">
+        <div className="bg-white rounded-xl p-6 sm:p-10 border border-slate-200/80 shadow-xs space-y-8">
           <div>
-            <div className="w-10 h-10 bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/20 rounded-xl flex items-center justify-center mb-3">
+            <div className="w-10 h-10 bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/20 rounded-2xl flex items-center justify-center mb-3">
               <Scale className="w-5 h-5" />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-[#111111] tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-black text-[#111111] tracking-tight">
               Terms & Conditions of Service
             </h1>
             <p className="text-xs text-[#888888] mt-1">Effective Date: September 2026</p>

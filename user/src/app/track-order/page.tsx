@@ -100,7 +100,7 @@ function TrackOrderContent() {
           <div className="w-12 h-12 bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/20 rounded-2xl flex items-center justify-center mx-auto mb-3">
             <Truck className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#111111] tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black text-[#111111] tracking-tight">
             Track Your Consignment
           </h1>
           <p className="text-[#555555] text-xs sm:text-sm mt-2">
@@ -109,7 +109,7 @@ function TrackOrderContent() {
         </div>
 
         {/* Search Input Box */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs max-w-2xl mx-auto mb-10">
+        <div className="bg-white rounded-xl p-6 sm:p-8 border border-slate-200/80 shadow-xs max-w-2xl mx-auto mb-10">
           <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
               <Package className="w-4 h-4 text-[#888888] absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -134,7 +134,7 @@ function TrackOrderContent() {
 
         {/* Tracking Details Card */}
         {searchedId && (
-          <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
+          <div className="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
             {/* Status Header */}
             <div className="p-6 sm:p-8 bg-gradient-to-r from-[#0A192F] via-[#061B3A] to-[#0A192F] text-white flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>

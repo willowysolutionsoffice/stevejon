@@ -57,7 +57,7 @@ export default function CollectionsPage() {
             <span className="inline-flex items-center text-xs font-bold tracking-[0.2em] text-[#DF9F28] uppercase">
               <span>THE COMPLETE WARDROBE</span>
             </span>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-sans font-extrabold text-[#111111] tracking-tight">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-sans font-extrabold text-[#111111] tracking-tight">
               Our Collections
             </h1>
             <p className="text-xs sm:text-sm text-[#555555] leading-relaxed">

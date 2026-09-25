@@ -139,7 +139,7 @@ export default function LuckyDrawPage() {
                   <span>COMMUNITY REWARD INITIATIVE</span>
                 </div>
 
-                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-sans font-extrabold text-white tracking-tight leading-tight">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-sans font-extrabold text-white tracking-tight leading-tight">
                   The JudesCart <br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#DF9F28] via-amber-200 to-white">
                     Weekly Grand Draw
@@ -201,7 +201,7 @@ export default function LuckyDrawPage() {
 
               {/* Right Column: Grand Prize Showcase */}
               <div className="lg:col-span-5 relative">
-                <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-[#061B3A] border border-white/10 shadow-2xl p-6 sm:p-8 flex flex-col justify-between group">
+                <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-[#061B3A] border border-white/10 shadow-2xl p-6 sm:p-8 flex flex-col justify-between group">
                   <Image
                     src={activeCampaign.prizeImage || '/prod_overshirt_1778670536589.png'}
                     alt={activeCampaign.prizeName}
@@ -281,7 +281,7 @@ export default function LuckyDrawPage() {
                 return (
                   <div
                     key={idx}
-                    className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-200 hover:border-[#DF9F28]/50 hover:shadow-md transition-all relative group"
+                    className="p-8 rounded-xl bg-[#F8FAFC] border border-slate-200 hover:border-[#DF9F28]/50 hover:shadow-md transition-all relative group"
                   >
                     <span className="text-4xl font-sans font-extrabold text-slate-200 group-hover:text-[#DF9F28]/30 transition-colors absolute top-6 right-6">
                       {item.step}
@@ -327,7 +327,7 @@ export default function LuckyDrawPage() {
               {campaigns.map((camp) => (
                 <div
                   key={camp.id}
-                  className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+                  className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
                 >
                   <div className="relative aspect-[16/10] w-full bg-[#0A192F]">
                     <Image

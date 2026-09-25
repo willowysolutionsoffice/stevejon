@@ -9,7 +9,7 @@ export default function PromoSection() {
   return (
     <section className="py-16 md:py-24 bg-white border-b border-slate-200/80">
       <div className="sj-container">
-        <div className="relative rounded-3xl overflow-hidden bg-[#0A192F] text-white p-8 md:p-14 lg:p-16 border border-[#061B3A] shadow-xl">
+        <div className="relative rounded-xl overflow-hidden bg-[#0A192F] text-white p-8 md:p-14 lg:p-16 border border-[#061B3A] shadow-xl">
           
           {/* Subtle Background Pattern */}
           <div className="absolute inset-0 bg-[radial-gradient(#DF9F28_1px,transparent_1px)] [background-size:20px_20px] opacity-10 pointer-events-none" />
@@ -19,11 +19,11 @@ export default function PromoSection() {
             {/* Left Content Column */}
             <div className="lg:col-span-6 space-y-6">
               
-              <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#DF9F28]/20 border border-[#DF9F28]/40 text-[#DF9F28] text-xs font-semibold tracking-widest uppercase">
+              <div className="inline-flex items-center px-3 py-1 rounded-md bg-[#DF9F28]/20 border border-[#DF9F28]/40 text-[#DF9F28] text-xs font-semibold tracking-widest uppercase">
                 <span>THE ATELIER HERITAGE</span>
               </div>
 
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-sans font-extrabold text-white tracking-tight leading-tight">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-sans font-extrabold text-white tracking-tight leading-tight">
                 Curated With Intention. <br />
                 <span className="text-[#DF9F28]">Crafted To Endure.</span>
               </h2>
@@ -50,7 +50,7 @@ export default function PromoSection() {
               <div className="pt-4">
                 <Link
                   href="/about"
-                  className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] text-xs sm:text-sm font-bold tracking-wider uppercase rounded-full transition-all shadow-md group"
+                  className="inline-flex items-center gap-2.5 px-6 py-3 bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] text-xs sm:text-sm font-bold tracking-wider uppercase rounded-lg transition-all shadow-md group"
                 >
                   <span>Read Our Full Story</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -62,7 +62,7 @@ export default function PromoSection() {
             <div className="lg:col-span-6 relative">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-4">
-                  <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-slate-800 border border-slate-700/60 shadow-lg">
+                  <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-slate-800 border border-slate-700/60 shadow-lg">
                     <Image
                       src="/cat_apparel_1778670103427.png"
                       alt="JudesCart Tailored Apparel"
@@ -72,7 +72,7 @@ export default function PromoSection() {
                   </div>
                 </div>
                 <div className="space-y-4 pt-8">
-                  <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-slate-800 border border-slate-700/60 shadow-lg">
+                  <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-slate-800 border border-slate-700/60 shadow-lg">
                     <Image
                       src="/cat_leather_1778670351299.png"
                       alt="JudesCart Handcrafted Leather"

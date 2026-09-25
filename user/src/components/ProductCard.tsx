@@ -111,66 +111,66 @@ export default function ProductCard({
 
   return (
     <div
-      className="group relative flex flex-col rounded-2xl bg-white border border-[#E2E8F0] overflow-hidden hover:shadow-md hover:border-[#DF9F28] transition-all duration-200"
+      className="group relative flex flex-col rounded-lg bg-white border border-[#E2E8F0] overflow-hidden hover:shadow-md hover:border-[#DF9F28] transition-all duration-300"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Image Container with Restrained Badge, Wishlist & Quick Action */}
+      {/* Image Container with 3:4 Aspect Ratio & Subtle Rounding */}
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-slate-100">
         <Link href={`/product?id=${encodeURIComponent(String(id))}`} className="relative block w-full h-full focus-visible:outline-none">
           <Image
             src={displayImage}
             alt={name}
             fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover object-center group-hover:scale-[1.03] transition-transform duration-500 ease-out"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-cover object-center group-hover:scale-[1.04] transition-transform duration-500 ease-out"
           />
         </Link>
 
-        {/* Single Primary Badge */}
-        <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none">
+        {/* Badges */}
+        <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none flex flex-col gap-1">
           {hasDiscount ? (
-            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#0A192F] text-white shadow-xs">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#0A192F] text-white shadow-xs">
               {discountPercent}% OFF
             </span>
           ) : isCustomerFavorite ? (
-            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#DF9F28] text-[#111111] shadow-xs">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#DF9F28] text-[#111111] shadow-xs">
               Bestseller
             </span>
           ) : isNewArrival ? (
-            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#0A192F] text-white shadow-xs">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#0A192F] text-white shadow-xs">
               New
             </span>
           ) : null}
         </div>
 
-        {/* Wishlist Button (Accessible 36x36px target) */}
+        {/* Wishlist Button */}
         <button
           type="button"
           onClick={handleWishlistToggle}
           aria-label={isFavorited ? 'Remove from wishlist' : 'Add to wishlist'}
-          className="absolute top-2.5 right-2.5 z-10 w-9 h-9 rounded-full bg-white/90 backdrop-blur-xs border border-[#E2E8F0] flex items-center justify-center text-[#555555] hover:text-rose-600 hover:bg-white transition-all active:scale-95 cursor-pointer shadow-xs"
+          className="absolute top-2.5 right-2.5 z-10 w-7 h-7 rounded-md bg-white/90 backdrop-blur-xs border border-[#E2E8F0] flex items-center justify-center text-[#555555] hover:text-rose-600 hover:bg-white transition-all active:scale-95 cursor-pointer shadow-xs"
         >
-          <Heart className={`w-4 h-4 transition-colors ${isFavorited ? 'fill-rose-600 text-rose-600' : ''}`} />
+          <Heart className={`w-3.5 h-3.5 transition-colors ${isFavorited ? 'fill-rose-600 text-rose-600' : ''}`} />
         </button>
 
-        {/* Desktop Slide-up Action Bar */}
-        <div className="absolute inset-x-3 bottom-3 z-20 transition-all duration-200 transform translate-y-3 opacity-0 pointer-events-none group-hover:translate-y-0 group-hover:opacity-100 group-hover:pointer-events-auto hidden sm:block">
-          <div className="flex items-center gap-2">
+        {/* Desktop Quick Action Floating Bar */}
+        <div className="absolute inset-x-2.5 bottom-2.5 z-20 transition-all duration-200 transform translate-y-2 opacity-0 pointer-events-none group-hover:translate-y-0 group-hover:opacity-100 group-hover:pointer-events-auto hidden sm:block">
+          <div className="flex items-center gap-1.5">
             <button
               type="button"
               onClick={handleQuickView}
               aria-label="Quick View"
               title="Quick View"
-              className="w-10 h-10 rounded-xl bg-white text-[#555555] hover:text-[#111111] border border-[#E2E8F0] shadow-sm flex items-center justify-center cursor-pointer transition-colors"
+              className="w-7 h-7 rounded-md bg-white text-[#555555] hover:text-[#111111] border border-[#E2E8F0] shadow-sm flex items-center justify-center cursor-pointer transition-colors"
             >
-              <Eye className="w-4 h-4" />
+              <Eye className="w-3.5 h-3.5" />
             </button>
             <button
               type="button"
               onClick={handleAddToCart}
               disabled={isAdded}
-              className={`flex-1 h-10 px-4 rounded-xl text-xs font-semibold tracking-wide transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm ${
+              className={`flex-1 h-7 px-2.5 rounded-md text-[11px] font-bold tracking-wide transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm ${
                 isAdded
                   ? 'bg-emerald-600 text-white'
                   : 'bg-[#0A192F] hover:bg-[#DF9F28] hover:text-[#111111] text-white'
@@ -178,12 +178,12 @@ export default function ProductCard({
             >
               {isAdded ? (
                 <>
-                  <Check className="w-4 h-4" />
+                  <Check className="w-3.5 h-3.5" />
                   <span>Added</span>
                 </>
               ) : (
                 <>
-                  <ShoppingBag className="w-4 h-4" />
+                  <ShoppingBag className="w-3.5 h-3.5" />
                   <span>Add to Bag</span>
                 </>
               )}
@@ -192,63 +192,55 @@ export default function ProductCard({
         </div>
       </div>
 
-      {/* Card Information Body */}
-      <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between space-y-2">
-        <div className="space-y-1">
+      {/* Card Information Body - Compact & Clean */}
+      <div className="p-2.5 sm:p-3 flex-1 flex flex-col justify-between space-y-1.5">
+        <div className="space-y-0.5">
           {/* Category & Rating Row */}
           <div className="flex items-center justify-between text-xs">
-            <span className="text-[11px] uppercase tracking-wider font-semibold text-[#DF9F28]">
+            <span className="text-[10px] uppercase tracking-wider font-semibold text-[#DF9F28]">
               {category}
             </span>
-            <div className="flex items-center gap-1 text-[#555555]">
-              <Star className="w-3.5 h-3.5 fill-[#DF9F28] text-[#DF9F28]" />
-              <span className="text-xs font-medium text-[#111111]">{rating.toFixed(1)}</span>
-              <span className="text-[11px] text-[#888888]">({reviewsCount})</span>
+            <div className="flex items-center gap-0.5 text-[#555555]">
+              <Star className="w-3 h-3 fill-[#DF9F28] text-[#DF9F28]" />
+              <span className="text-[11px] font-semibold text-[#111111]">{rating.toFixed(1)}</span>
             </div>
           </div>
 
           {/* Product Title */}
           <Link href={`/product?id=${encodeURIComponent(String(id))}`} className="block group-hover:text-[#DF9F28] transition-colors focus-visible:outline-none">
-            <h3 className="text-sm font-semibold text-[#111111] leading-snug line-clamp-2">
+            <h3 className="text-xs sm:text-sm font-semibold text-[#111111] leading-snug line-clamp-1">
               {name}
             </h3>
           </Link>
-
-          {/* Optional Short Description on large cards */}
-          {description && (
-            <p className="hidden md:block text-xs text-[#555555] line-clamp-1 pt-0.5">
-              {description}
-            </p>
-          )}
         </div>
 
         {/* Price & Mobile Actions */}
-        <div className="pt-2 border-t border-[#F1F5F9] flex items-center justify-between">
+        <div className="pt-1.5 border-t border-[#F1F5F9] flex items-center justify-between">
           <div className="flex items-baseline gap-1.5">
-            <span className="text-sm sm:text-base font-bold text-[#111111]">
+            <span className="text-xs sm:text-sm font-bold text-[#111111]">
               ₹{price.toLocaleString('en-IN')}
             </span>
             {hasDiscount && (
-              <span className="text-xs text-[#888888] line-through">
+              <span className="text-[10px] sm:text-[11px] text-[#888888] line-through">
                 ₹{originalPrice.toLocaleString('en-IN')}
               </span>
             )}
           </div>
 
-          {/* Mobile Quick Add (Touch friendly) */}
+          {/* Mobile Quick Add */}
           <div className="sm:hidden">
             <button
               type="button"
               onClick={handleAddToCart}
               disabled={isAdded}
               aria-label="Add to bag"
-              className={`p-2 rounded-lg text-xs font-medium transition-all ${
+              className={`p-1.5 rounded-md text-xs font-medium transition-all ${
                 isAdded
                   ? 'bg-emerald-600 text-white'
                   : 'bg-[#0A192F] text-white active:bg-[#DF9F28] active:text-[#111111]'
               }`}
             >
-              {isAdded ? <Check className="w-4 h-4" /> : <ShoppingBag className="w-4 h-4" />}
+              {isAdded ? <Check className="w-3.5 h-3.5" /> : <ShoppingBag className="w-3.5 h-3.5" />}
             </button>
           </div>
         </div>

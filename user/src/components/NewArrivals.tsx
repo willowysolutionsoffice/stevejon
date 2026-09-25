@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import { ArrowRight, Sparkles, Compass, ArrowUpRight } from 'lucide-react';
 import { getApiUrl } from '@/lib/api';
 import ProductCard from './ProductCard';
 
@@ -34,10 +36,10 @@ interface RawProduct {
 
 const CATEGORY_TABS = [
   'ALL PRODUCTS',
-  'ELECTRONICS',
   'APPAREL',
   'LEATHER GOODS',
   'FOOTWEAR',
+  'ACCESSORIES',
   'HOME LIVING',
 ];
 
@@ -90,7 +92,7 @@ const FALLBACK_PRODUCTS: RawProduct[] = [
   {
     id: 'prod-5',
     name: 'Precision Wireless ANC Studio Headphones',
-    category: { id: 'c3', name: 'ELECTRONICS' },
+    category: { id: 'c3', name: 'ACCESSORIES' },
     brand: { id: 'b1', name: 'JudesCart' },
     image: '/cat_accessories_1778670517925.png',
     isNewArrival: true,
@@ -101,7 +103,7 @@ const FALLBACK_PRODUCTS: RawProduct[] = [
   {
     id: 'prod-6',
     name: 'Smart Obsidian Touchscreen Chrono Watch',
-    category: { id: 'c3', name: 'ELECTRONICS' },
+    category: { id: 'c3', name: 'ACCESSORIES' },
     brand: { id: 'b1', name: 'JudesCart' },
     image: '/cat_accessories_1778670517925.png',
     isCustomerFavorite: true,
@@ -212,7 +214,7 @@ export default function NewArrivals() {
       if (catName === target) return true;
 
       // Category match aliases
-      if (target === 'ELECTRONICS' && (catName.includes('ELECTR') || catName.includes('TECH') || catName.includes('ACCESS') || prodName.includes('HEADPHONE') || prodName.includes('WATCH') || prodName.includes('AUDIO'))) return true;
+      if (target === 'ACCESSORIES' && (catName.includes('ELECTR') || catName.includes('TECH') || catName.includes('ACCESS') || prodName.includes('HEADPHONE') || prodName.includes('WATCH') || prodName.includes('AUDIO'))) return true;
       if (target === 'APPAREL' && (catName.includes('APPAR') || catName.includes('CLOTH') || catName.includes('TAILOR') || catName.includes('FASHION') || prodName.includes('JACKET') || prodName.includes('OVERSHIRT') || prodName.includes('BLAZER') || prodName.includes('TROUSER'))) return true;
       if (target === 'LEATHER GOODS' && (catName.includes('LEATHER') || catName.includes('BAG') || prodName.includes('LEATHER') || prodName.includes('BRIEFCASE') || prodName.includes('WEEKENDER') || prodName.includes('WALLET'))) return true;
       if (target === 'FOOTWEAR' && (catName.includes('FOOT') || catName.includes('SHOE') || prodName.includes('OXFORD') || prodName.includes('BOOT') || prodName.includes('SNEAKER') || prodName.includes('LOAFER'))) return true;
@@ -225,7 +227,6 @@ export default function NewArrivals() {
       return matched.slice(0, 12);
     }
 
-    // Fallback if current database doesn't have matches for the category
     return FALLBACK_PRODUCTS.filter((p) => {
       const catName = p.category?.name?.toUpperCase().trim() || '';
       return catName === target;
@@ -234,19 +235,25 @@ export default function NewArrivals() {
 
   return (
     <section className="sj-container space-y-6 sm:space-y-8">
-      {/* Section Header with Category Pills */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+      {/* =========================================================================
+          TANEIRA-INSPIRED SECTION HEADER & CURATION TABS
+         ========================================================================= */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#E2E8F0] pb-5">
         <div>
-          <span className="text-xs uppercase tracking-wider font-semibold text-[#DF9F28]">
-            TOP TRENDING PICKS
-          </span>
-          <h2 className="text-xl sm:text-2xl font-bold text-[#111111] tracking-tight mt-1">
+          <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest font-bold text-[#DF9F28] mb-1">
+            <Sparkles className="w-3.5 h-3.5 text-[#DF9F28]" />
+            <span>CURATED EDITS &amp; TOP PICKS</span>
+          </div>
+          <h2 className="text-xl sm:text-2xl font-bold text-[#111111] tracking-tight">
             Featured at JudesCart
           </h2>
+          <p className="text-xs text-[#555555] mt-0.5">
+            Discover precision tailoring, master leathers, and bespoke luxury pieces.
+          </p>
         </div>
 
-        {/* Category Pills Filter */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+        {/* Category Pill Filters (Taneira Style Clean Rounded Navigation) */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
           {CATEGORY_TABS.map((tab) => {
             const isActive = activeCategory === tab;
             return (
@@ -254,9 +261,9 @@ export default function NewArrivals() {
                 key={tab}
                 type="button"
                 onClick={() => setActiveCategory(tab)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#DF9F28] ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#DF9F28] ${
                   isActive
-                    ? 'bg-[#0A192F] text-white shadow-xs'
+                    ? 'bg-[#0A192F] text-white shadow-sm border border-[#0A192F]'
                     : 'bg-white text-[#555555] border border-[#E2E8F0] hover:border-[#DF9F28] hover:text-[#111111]'
                 }`}
               >
@@ -267,8 +274,77 @@ export default function NewArrivals() {
         </div>
       </div>
 
-      {/* Products Grid: 3 columns desktop, 2 columns tablet, 2 columns mobile */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 lg:gap-6">
+      {/* =========================================================================
+          TANEIRA-STYLE EDITORIAL CURATION SPOTLIGHT BANNER
+         ========================================================================= */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+        <div className="lg:col-span-8 relative rounded-xl overflow-hidden bg-[#0A192F] text-white p-6 sm:p-8 flex flex-col justify-between min-h-[220px] sm:min-h-[260px] border border-[#E2E8F0] shadow-sm">
+          <Image
+            src="/about_atelier.png"
+            alt="The Atelier Curation"
+            fill
+            className="object-cover object-center opacity-30 mix-blend-luminosity hover:scale-105 transition-transform duration-700"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#061B3A] via-[#061B3A]/85 to-transparent pointer-events-none" />
+
+          <div className="relative z-10 space-y-2 max-w-lg">
+            <span className="inline-block px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-[#DF9F28]/20 text-[#DF9F28] border border-[#DF9F28]/40">
+              The Artisan Curation
+            </span>
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white tracking-tight leading-snug">
+              Masterpiece Weaves &amp; Hand-Finished Silhouettes
+            </h3>
+            <p className="text-xs text-slate-300 leading-relaxed max-w-md hidden sm:block">
+              Engineered with ethical Italian wool, vegetable-tanned full-grain leathers, and timeless architectural tailoring.
+            </p>
+          </div>
+
+          <div className="relative z-10 pt-4 flex items-center justify-between">
+            <Link
+              href="/product"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] font-bold text-xs tracking-wide transition-all shadow-sm active:scale-95 cursor-pointer"
+            >
+              <span>Explore Curated Edit</span>
+              <ArrowRight className="w-3.5 h-3.5 text-[#111111]" />
+            </Link>
+            <span className="text-[11px] text-slate-300 font-medium hidden md:inline">
+              Complimentary Lucky Draw ticket included with every purchase
+            </span>
+          </div>
+        </div>
+
+        <div className="lg:col-span-4 rounded-xl bg-gradient-to-br from-[#FEF8EE] to-[#F1F5F9] border border-[#DF9F28]/30 p-6 sm:p-7 flex flex-col justify-between shadow-xs">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#DF9F28]">
+                LUCKY DRAW PERK
+              </span>
+              <Compass className="w-4 h-4 text-[#DF9F28]" />
+            </div>
+            <h4 className="text-base sm:text-lg font-bold text-[#111111] leading-snug">
+              Weekly Luxury Sweepstakes
+            </h4>
+            <p className="text-xs text-[#555555] leading-relaxed">
+              Every curated order automatically enters you into the verified weekly lucky draw for bespoke coats, leather duffles, and studio accessories.
+            </p>
+          </div>
+
+          <div className="pt-4 border-t border-[#E2E8F0]">
+            <Link
+              href="/lucky-draw"
+              className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#111111] hover:text-[#DF9F28] transition-colors"
+            >
+              <span>View Active Prize Pool</span>
+              <ArrowUpRight className="w-3.5 h-3.5 text-[#DF9F28]" />
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* =========================================================================
+          PRODUCTS GRID: 4-COLUMN COMPACT LAYOUT ON DESKTOP (Taneira-Scale Cards)
+         ========================================================================= */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
         {filteredProducts.map((prod) => {
           const mainVariant = prod.variants?.[0];
           const price = mainVariant?.price || 4299;
@@ -295,6 +371,18 @@ export default function NewArrivals() {
           );
         })}
       </div>
+
+      {/* View All CTA Footer */}
+      <div className="pt-4 text-center">
+        <Link
+          href="/product"
+          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-white hover:bg-[#0A192F] hover:text-white text-[#111111] border border-[#E2E8F0] hover:border-[#0A192F] font-bold text-xs uppercase tracking-wider transition-all shadow-xs active:scale-95"
+        >
+          <span>Browse All Featured Styles</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
+      </div>
     </section>
   );
 }
+

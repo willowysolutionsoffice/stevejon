@@ -75,17 +75,17 @@ export default function LuckyDrawPoster() {
 
   return (
     <section className="sj-container">
-      <div className="relative rounded-3xl overflow-hidden bg-[#0A192F] text-white border border-[#061B3A] shadow-md">
+      <div className="relative rounded-xl overflow-hidden bg-[#0A192F] text-white border border-[#061B3A] shadow-md">
         <div className="grid grid-cols-1 lg:grid-cols-12 items-center">
           
           {/* Left Text & Countdown */}
           <div className="lg:col-span-7 p-6 sm:p-10 lg:p-12 space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#DF9F28]/15 border border-[#DF9F28]/40 text-[#DF9F28] text-xs font-semibold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#DF9F28]/15 border border-[#DF9F28]/40 text-[#DF9F28] text-xs font-semibold uppercase tracking-wider">
               <Trophy className="w-3.5 h-3.5 text-[#DF9F28]" />
               <span>Live Weekly Sweepstakes</span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-tight">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-tight leading-tight">
               {activeCampaign.name}
             </h2>
 
@@ -100,19 +100,19 @@ export default function LuckyDrawPoster() {
                 <span>Next Live Draw Countdown</span>
               </div>
               <div className="grid grid-cols-4 gap-2 max-w-xs text-center font-mono">
-                <div className="bg-[#061B3A] border border-white/10 rounded-xl p-2.5">
+                <div className="bg-[#061B3A] border border-white/10 rounded-lg p-2.5">
                   <span className="block text-lg sm:text-xl font-bold text-white leading-none">{pad(timeLeft.days)}</span>
                   <span className="text-[10px] text-slate-300 font-sans font-medium uppercase mt-1 block">Days</span>
                 </div>
-                <div className="bg-[#061B3A] border border-white/10 rounded-xl p-2.5">
+                <div className="bg-[#061B3A] border border-white/10 rounded-lg p-2.5">
                   <span className="block text-lg sm:text-xl font-bold text-white leading-none">{pad(timeLeft.hours)}</span>
                   <span className="text-[10px] text-slate-300 font-sans font-medium uppercase mt-1 block">Hours</span>
                 </div>
-                <div className="bg-[#061B3A] border border-white/10 rounded-xl p-2.5">
+                <div className="bg-[#061B3A] border border-white/10 rounded-lg p-2.5">
                   <span className="block text-lg sm:text-xl font-bold text-white leading-none">{pad(timeLeft.minutes)}</span>
                   <span className="text-[10px] text-slate-300 font-sans font-medium uppercase mt-1 block">Mins</span>
                 </div>
-                <div className="bg-[#061B3A] border border-[#DF9F28]/30 rounded-xl p-2.5">
+                <div className="bg-[#061B3A] border border-[#DF9F28]/30 rounded-lg p-2.5">
                   <span className="block text-lg sm:text-xl font-bold text-[#DF9F28] leading-none">{pad(timeLeft.seconds)}</span>
                   <span className="text-[10px] text-[#DF9F28] font-sans font-medium uppercase mt-1 block">Secs</span>
                 </div>
@@ -123,7 +123,7 @@ export default function LuckyDrawPoster() {
             <div className="pt-2">
               <Link
                 href="/lucky-draw"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] font-bold text-xs sm:text-sm tracking-wide transition-all shadow-sm active:scale-98 focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] font-bold text-xs sm:text-sm tracking-wide transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
               >
                 <span>View Lucky Draw Details</span>
                 <ArrowRight className="w-4 h-4 text-[#111111]" />

@@ -55,12 +55,12 @@ export default function CurrencyModal({
 
       <div
         ref={modalRef}
-        className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-[#E2E8F0] overflow-hidden z-10 flex flex-col animate-in zoom-in-95 duration-150"
+        className="relative w-full max-w-md bg-white rounded-xl shadow-2xl border border-[#E2E8F0] overflow-hidden z-10 flex flex-col animate-in zoom-in-95 duration-150"
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-[#E2E8F0] bg-white">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#FEF8EE] text-[#DF9F28] flex items-center justify-center border border-[#DF9F28]/30">
+            <div className="w-8 h-8 rounded-lg bg-[#FEF8EE] text-[#DF9F28] flex items-center justify-center border border-[#DF9F28]/30">
               <Globe className="w-4 h-4" />
             </div>
             <div>
@@ -72,7 +72,7 @@ export default function CurrencyModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-full text-[#888888] hover:text-[#111111] hover:bg-slate-100 transition-colors"
+            className="p-1.5 rounded-md text-[#888888] hover:text-[#111111] hover:bg-slate-100 transition-colors"
             aria-label="Close currency modal"
           >
             <X className="w-4 h-4" />
@@ -91,7 +91,7 @@ export default function CurrencyModal({
                   onSelectCurrency(c);
                   onClose();
                 }}
-                className={`w-full flex items-center justify-between p-3 rounded-2xl transition-all text-left cursor-pointer border ${
+                className={`w-full flex items-center justify-between p-3 rounded-lg transition-all text-left cursor-pointer border ${
                   isSelected
                     ? 'bg-[#FEF8EE] border-[#DF9F28] text-[#111111] shadow-xs'
                     : 'hover:bg-[#F8FAFC] border-transparent text-[#555555]'

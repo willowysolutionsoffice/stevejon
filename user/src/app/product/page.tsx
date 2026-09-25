@@ -607,7 +607,7 @@ function ProductContent() {
                     </span>
                   </div>
 
-                  <h1 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#111111] leading-tight">
+                  <h1 className="font-sans text-xl sm:text-2xl lg:text-[28px] font-extrabold text-[#111111] leading-tight">
                     {selectedProduct.name}
                   </h1>
 
@@ -962,7 +962,7 @@ function ProductContent() {
           {/* CURATED BUNDLE: Frequently Bought Together                               */}
           {/* ========================================================================= */}
           <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
-            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/90 shadow-sm space-y-6">
+            <div className="p-6 sm:p-8 rounded-xl bg-white border border-slate-200/90 shadow-sm space-y-6">
               
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
                 <div>
@@ -1222,7 +1222,7 @@ function ProductContent() {
               <span className="text-xs font-bold tracking-[0.2em] text-[#DF9F28] uppercase">
                 JudesCart Catalog
               </span>
-              <h1 className="text-2xl sm:text-4xl font-sans font-extrabold text-[#111111] tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-sans font-extrabold text-[#111111] tracking-tight">
                 All Collections &amp; Apparel
               </h1>
               <p className="text-xs sm:text-sm text-[#555555]">
@@ -1364,7 +1364,7 @@ function ProductContent() {
               {/* Products Catalog Cards Grid */}
               <div className="lg:col-span-9">
                 {filteredProducts.length === 0 ? (
-                  <div className="py-20 text-center bg-white rounded-3xl border border-slate-200 p-8 space-y-4">
+                  <div className="py-20 text-center bg-white rounded-xl border border-slate-200 p-8 space-y-4">
                     <div className="w-16 h-16 rounded-full bg-[#FEF8EE] text-[#DF9F28] flex items-center justify-center mx-auto">
                       <ShoppingBag className="w-8 h-8" />
                     </div>

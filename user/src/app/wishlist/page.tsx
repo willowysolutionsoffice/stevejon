@@ -41,7 +41,7 @@ export default function WishlistPage() {
               <span className="text-xs font-bold tracking-[0.2em] text-[#DF9F28] uppercase">
                 SAVED ITEMS
               </span>
-              <h1 className="text-2xl sm:text-3xl font-sans font-extrabold text-[#111111] tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-sans font-extrabold text-[#111111] tracking-tight">
                 Your Wishlist ({wishlistItems.length})
               </h1>
               <p className="text-xs sm:text-sm text-[#555555]">
@@ -59,7 +59,7 @@ export default function WishlistPage() {
 
           {/* Wishlist Grid */}
           {wishlistItems.length === 0 ? (
-            <div className="max-w-md mx-auto py-16 bg-white rounded-3xl border border-slate-200 text-center space-y-4 p-8">
+            <div className="max-w-md mx-auto py-16 bg-white rounded-xl border border-slate-200 text-center space-y-4 p-8">
               <div className="w-16 h-16 rounded-full bg-[#FEF8EE] text-[#DF9F28] flex items-center justify-center mx-auto border border-[#DF9F28]/30">
                 <Heart className="w-8 h-8" />
               </div>

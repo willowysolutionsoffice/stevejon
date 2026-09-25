@@ -53,10 +53,10 @@ export default function Categories() {
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-[#E2E8F0] pb-4">
         <div>
-          <span className="text-xs uppercase tracking-wider font-semibold text-[#DF9F28]">
+          <span className="text-[11px] uppercase tracking-wider font-semibold text-[#DF9F28]">
             All Departments
           </span>
-          <h2 className="text-xl sm:text-2xl font-bold text-[#111111] tracking-tight mt-1">
+          <h2 className="text-xl sm:text-2xl font-bold text-[#111111] tracking-tight mt-0.5">
             Shop by Department
           </h2>
         </div>
@@ -71,7 +71,7 @@ export default function Categories() {
       </div>
 
       {/* Categories Grid (2 cols mobile, 2 cols tablet, 3 cols desktop) */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-5">
         {displayCategories.map((cat, idx) => {
           const itemCount = cat._count?.products || (idx * 7 + 14);
 
@@ -79,7 +79,7 @@ export default function Categories() {
             <Link
               key={cat.id}
               href={`/product?category=${encodeURIComponent(cat.name)}`}
-              className="group relative aspect-[16/11] rounded-2xl overflow-hidden bg-slate-100 border border-[#E2E8F0] shadow-xs flex flex-col justify-end p-4 sm:p-6 transition-all duration-200 hover:shadow-md hover:border-[#DF9F28] focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
+              className="group relative aspect-[16/11] rounded-xl overflow-hidden bg-slate-100 border border-[#E2E8F0] shadow-xs flex flex-col justify-end p-4 sm:p-6 transition-all duration-300 hover:shadow-md hover:border-[#DF9F28] focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
             >
               {/* Category Background Image */}
               <Image
@@ -87,7 +87,7 @@ export default function Categories() {
                 alt={cat.name}
                 fill
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
-                className="object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
+                className="object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
               />
 
               {/* Midnight Navy Gradient Dark Overlay (#061B3A) */}
@@ -95,11 +95,11 @@ export default function Categories() {
 
               {/* Bottom Card Information */}
               <div className="relative z-10 text-white space-y-1">
-                <span className="text-[11px] uppercase tracking-wider text-[#DF9F28] font-semibold block">
+                <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-[#DF9F28] font-bold block">
                   {itemCount} Styles
                 </span>
                 
-                <h3 className="text-sm sm:text-lg font-bold text-white leading-tight line-clamp-1">
+                <h3 className="text-sm sm:text-base md:text-lg font-bold text-white leading-tight line-clamp-1">
                   {cat.name}
                 </h3>
               </div>

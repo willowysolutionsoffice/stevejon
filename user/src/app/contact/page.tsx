@@ -50,7 +50,7 @@ export default function ContactPage() {
           <div className="w-12 h-12 bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/20 rounded-2xl flex items-center justify-center mx-auto mb-3">
             <Headphones className="w-6 h-6" />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-[#111111] tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black text-[#111111] tracking-tight">
             We&apos;re Here to Help
           </h1>
           <p className="text-[#555555] text-xs sm:text-sm mt-2">
@@ -61,7 +61,7 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Contact Details & Channels */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-6">
+            <div className="bg-white rounded-xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-6">
               <h2 className="text-lg font-bold text-[#111111]">Contact Channels</h2>
 
               <div className="flex items-start gap-3">
@@ -100,7 +100,7 @@ export default function ContactPage() {
             </div>
 
             {/* Quick Links */}
-            <div className="bg-[#FEF8EE] border border-[#DF9F28]/30 rounded-3xl p-6">
+            <div className="bg-[#FEF8EE] border border-[#DF9F28]/30 rounded-xl p-6">
               <div className="flex items-center gap-2 mb-2">
                 <Sparkles className="w-4 h-4 text-[#DF9F28]" />
                 <h3 className="text-xs font-bold text-[#111111] uppercase">Self-Service Portals</h3>
@@ -121,7 +121,7 @@ export default function ContactPage() {
 
           {/* Form */}
           <div className="lg:col-span-7">
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
+            <div className="bg-white rounded-xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
               <h2 className="text-lg font-bold text-[#111111] mb-2">Send us a Message</h2>
               <p className="text-xs text-[#555555] mb-6">
                 Fill in the details below and our customer relations team will contact you shortly.

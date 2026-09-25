@@ -161,7 +161,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
         aria-hidden="true" 
       />
 
-      <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-[#E2E8F0] overflow-hidden z-10 flex flex-col max-h-[80vh] animate-in zoom-in-95 duration-150">
+      <div className="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-[#E2E8F0] overflow-hidden z-10 flex flex-col max-h-[80vh] animate-in zoom-in-95 duration-150">
         {/* Search Header */}
         <form onSubmit={handleSearchSubmit} className="relative flex items-center px-5 py-4 border-b border-[#E2E8F0] bg-white">
           <Search className="w-5 h-5 text-[#DF9F28] shrink-0 mr-3" />
@@ -262,10 +262,10 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   <div
                     key={item.id}
                     onClick={() => handleProductSelect(item.id)}
-                    className="flex items-center justify-between p-2.5 rounded-2xl hover:bg-[#F8FAFC] border border-transparent hover:border-[#DF9F28] transition-all cursor-pointer group"
+                    className="flex items-center justify-between p-2.5 rounded-lg hover:bg-[#F8FAFC] border border-transparent hover:border-[#DF9F28] transition-all cursor-pointer group"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="relative w-12 h-12 rounded-xl bg-slate-100 overflow-hidden shrink-0 border border-[#E2E8F0]">
+                      <div className="relative w-12 h-12 rounded-md bg-slate-100 overflow-hidden shrink-0 border border-[#E2E8F0]">
                         <Image
                           src={item.image || '/prod_overshirt_1778670536589.png'}
                           alt={item.name}

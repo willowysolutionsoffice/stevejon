@@ -279,7 +279,7 @@ export default function ProfilePage() {
               <span className="text-xs font-bold tracking-[0.2em] text-[#DF9F28] uppercase">
                 ACCOUNT MANAGEMENT
               </span>
-              <h1 className="text-2xl sm:text-3xl font-sans font-extrabold text-[#111111]">
+              <h1 className="text-xl sm:text-2xl font-sans font-extrabold text-[#111111]">
                 Customer Profile
               </h1>
               <p className="text-xs sm:text-sm text-[#555555]">
@@ -322,7 +322,7 @@ export default function ProfilePage() {
 
           {/* Tab 1: Profile Information */}
           {activeTab === 'profile' && (
-            <div className="max-w-xl bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-xs space-y-6">
+            <div className="max-w-xl bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-xs space-y-6">
               <div className="flex items-center gap-4 pb-6 border-b border-slate-100">
                 <div className="w-16 h-16 rounded-full bg-[#FEF8EE] text-[#DF9F28] font-sans font-bold text-2xl flex items-center justify-center border border-[#DF9F28]/30 shadow-inner">
                   {profileData.name ? profileData.name.charAt(0).toUpperCase() : 'U'}
@@ -411,7 +411,7 @@ export default function ProfilePage() {
                   ))}
                 </div>
               ) : addresses.length === 0 ? (
-                <div className="p-8 bg-white rounded-3xl border border-slate-200 text-center space-y-3">
+                <div className="p-8 bg-white rounded-xl border border-slate-200 text-center space-y-3">
                   <MapPin className="w-8 h-8 text-slate-400 mx-auto" />
                   <p className="text-xs text-[#555555]">No delivery addresses saved yet.</p>
                 </div>
@@ -420,7 +420,7 @@ export default function ProfilePage() {
                   {addresses.map((addr) => (
                     <div
                       key={addr.id}
-                      className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between space-y-4 hover:border-slate-300 transition-all"
+                      className="bg-white p-6 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between space-y-4 hover:border-slate-300 transition-all"
                     >
                       <div className="space-y-2 text-xs">
                         <div className="flex items-center justify-between">
@@ -464,7 +464,7 @@ export default function ProfilePage() {
           {/* Tab 3: Lucky Draw Tickets */}
           {activeTab === 'tickets' && (
             <div className="space-y-6">
-              <div className="p-6 bg-[#FEF8EE] rounded-3xl border border-[#DF9F28]/30 flex items-start gap-4">
+              <div className="p-6 bg-[#FEF8EE] rounded-xl border border-[#DF9F28]/30 flex items-start gap-4">
                 <Ticket className="w-6 h-6 text-[#DF9F28] shrink-0 mt-1" />
                 <div className="space-y-1 text-xs text-[#111111]">
                   <h4 className="font-bold text-sm">JudesCart Community Lucky Tickets</h4>
@@ -481,7 +481,7 @@ export default function ProfilePage() {
                   ))}
                 </div>
               ) : tickets.length === 0 ? (
-                <div className="p-12 bg-white rounded-3xl border border-slate-200 text-center space-y-3">
+                <div className="p-12 bg-white rounded-xl border border-slate-200 text-center space-y-3">
                   <Ticket className="w-8 h-8 text-slate-400 mx-auto" />
                   <p className="text-xs text-[#555555]">You don&apos;t have any active lucky draw tickets yet.</p>
                   <Link
@@ -535,7 +535,7 @@ export default function ProfilePage() {
           {/* Address Modal Dialog */}
           {isAddressModalOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0A192F]/60 backdrop-blur-xs">
-              <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full space-y-6 shadow-2xl border border-slate-200">
+              <div className="bg-white rounded-xl p-6 sm:p-8 max-w-md w-full space-y-6 shadow-2xl border border-slate-200">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                   <h3 className="text-sm font-bold uppercase tracking-wider text-[#111111]">
                     {editingAddress ? 'Edit Address' : 'New Delivery Address'}

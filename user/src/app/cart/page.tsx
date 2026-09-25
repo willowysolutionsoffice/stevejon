@@ -389,7 +389,7 @@ export default function CartPage() {
           {/* 1. ORDER SUCCESS CONFIRMATION MODAL / SCREEN */}
           {/* ========================================================================= */}
           {placedOrder ? (
-            <div className="max-w-2xl mx-auto bg-white rounded-3xl border border-slate-200 shadow-xl p-8 sm:p-12 text-center space-y-6">
+            <div className="max-w-2xl mx-auto bg-white rounded-xl border border-slate-200 shadow-xl p-8 sm:p-12 text-center space-y-6">
               <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto border border-emerald-100 shadow-xs">
                 <CheckCircle2 className="w-9 h-9" />
               </div>
@@ -398,7 +398,7 @@ export default function CartPage() {
                 <span className="text-xs font-bold tracking-[0.2em] text-[#DF9F28] uppercase">
                   ORDER CONFIRMED
                 </span>
-                <h1 className="text-2xl sm:text-3xl font-sans font-extrabold text-[#111111] tracking-tight">
+                <h1 className="text-xl sm:text-2xl font-sans font-extrabold text-[#111111] tracking-tight">
                   Thank You For Your Order!
                 </h1>
                 <p className="text-xs sm:text-sm text-[#555555]">
@@ -453,7 +453,7 @@ export default function CartPage() {
             /* ========================================================================= */
             /* 2. EMPTY CART VIEW */
             /* ========================================================================= */
-            <div className="max-w-xl mx-auto bg-white rounded-3xl border border-slate-200 shadow-sm p-10 sm:p-16 text-center space-y-6">
+            <div className="max-w-xl mx-auto bg-white rounded-xl border border-slate-200 shadow-sm p-10 sm:p-16 text-center space-y-6">
               <div className="w-20 h-20 rounded-full bg-[#FEF8EE] text-[#DF9F28] flex items-center justify-center mx-auto">
                 <ShoppingBag className="w-10 h-10" />
               </div>
@@ -483,7 +483,7 @@ export default function CartPage() {
                   <span className="text-xs font-bold tracking-[0.2em] text-[#DF9F28] uppercase">
                     REVIEW YOUR SELECTION
                   </span>
-                  <h1 className="text-2xl sm:text-3xl font-sans font-extrabold text-[#111111] tracking-tight">
+                  <h1 className="text-xl sm:text-2xl font-sans font-extrabold text-[#111111] tracking-tight">
                     Shopping Bag ({items.length} {items.length === 1 ? 'item' : 'items'})
                   </h1>
                 </div>
@@ -589,7 +589,7 @@ export default function CartPage() {
 
                 {/* Right Column: Order Summary & Checkout Accordion */}
                 <div className="lg:col-span-5 space-y-6">
-                  <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6 sticky top-28">
+                  <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6 sticky top-28">
                     <h2 className="text-lg font-sans font-extrabold text-[#111111] tracking-tight">
                       Order Summary
                     </h2>

@@ -162,7 +162,7 @@ export default function Hero() {
             Landscape e-commerce image background + readable promotional text + CTA
            ========================================================================= */}
         <div
-          className="w-full lg:col-span-8 xl:col-span-8 relative rounded-2xl sm:rounded-3xl overflow-hidden bg-[#0A192F] border border-[#E2E8F0] shadow-sm transition-all duration-300 group flex flex-col justify-between h-[340px] xs:h-[370px] sm:h-[400px] md:h-[420px] lg:h-[440px] xl:h-[460px]"
+          className="w-full lg:col-span-8 xl:col-span-8 relative rounded-xl sm:rounded-2xl overflow-hidden bg-[#0A192F] border border-[#E2E8F0] shadow-sm transition-all duration-300 group flex flex-col justify-between h-[340px] xs:h-[370px] sm:h-[400px] md:h-[420px] lg:h-[440px] xl:h-[460px]"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onTouchStart={handleTouchStart}
@@ -221,21 +221,21 @@ export default function Hero() {
               {/* Banner Text Content & CTA (Left-Aligned) */}
               <div className="relative z-10 p-5 sm:p-7 md:p-9 lg:p-11 flex flex-col justify-between h-full max-w-xl space-y-3 sm:space-y-4">
                 <div className="space-y-1.5 sm:space-y-2">
-                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#DF9F28] inline-block px-2.5 py-0.5 rounded-full bg-[#061B3A]/80 backdrop-blur-md border border-[#DF9F28]/30">
+                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#DF9F28] inline-block px-2.5 py-0.5 rounded-md bg-[#061B3A]/80 backdrop-blur-md border border-[#DF9F28]/30">
                     {spot1Banner.tag}
                   </span>
 
-                  <h1 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-[36px] xl:text-[38px] font-bold text-white tracking-tight leading-tight line-clamp-2">
+                  <h1 className="text-lg xs:text-xl sm:text-2xl md:text-[26px] lg:text-[28px] font-bold text-white tracking-tight leading-snug line-clamp-2">
                     {spot1Banner.title}
                   </h1>
 
                   {spot1Banner.offerPrice && (
-                    <p className="text-sm xs:text-base sm:text-lg font-bold text-[#DF9F28] tracking-tight pt-0.5">
+                    <p className="text-xs sm:text-sm md:text-base font-bold text-[#DF9F28] tracking-tight pt-0.5">
                       {spot1Banner.offerPrice}
                     </p>
                   )}
 
-                  <p className="text-xs sm:text-sm text-slate-200 font-normal leading-relaxed line-clamp-2 max-w-xs sm:max-w-md pt-0.5">
+                  <p className="text-xs sm:text-xs md:text-sm text-slate-200 font-normal leading-relaxed line-clamp-2 max-w-xs sm:max-w-md pt-0.5">
                     {spot1Banner.description}
                   </p>
                 </div>
@@ -244,7 +244,7 @@ export default function Hero() {
                 <div className="pt-1 sm:pt-2 flex flex-col items-start gap-1.5 sm:gap-2">
                   <Link
                     href={spot1Banner.buttonLink}
-                    className="px-5 py-2.5 sm:px-6 sm:py-3 bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] font-bold text-xs sm:text-sm tracking-wide rounded-xl shadow-md transition-all duration-200 inline-flex items-center gap-2 group/btn cursor-pointer active:scale-95 focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
+                    className="px-5 py-2.5 sm:px-6 sm:py-3 bg-[#DF9F28] hover:bg-[#C6891E] text-[#111111] font-bold text-xs sm:text-sm tracking-wide rounded-lg shadow-md transition-all duration-200 inline-flex items-center gap-2 group/btn cursor-pointer active:scale-95 focus-visible:ring-2 focus-visible:ring-[#DF9F28]"
                   >
                     <span>{spot1Banner.buttonText}</span>
                     <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover/btn:translate-x-1 text-[#111111]" />
@@ -266,7 +266,7 @@ export default function Hero() {
           onClick={handleSecondaryClick}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          className="hidden lg:flex lg:col-span-4 xl:col-span-4 relative rounded-2xl sm:rounded-3xl overflow-hidden bg-[#0A192F] border border-[#E2E8F0] shadow-sm hover:shadow-md transition-all duration-300 group cursor-pointer lg:h-[440px] xl:h-[460px] flex-col justify-between"
+          className="hidden lg:flex lg:col-span-4 xl:col-span-4 relative rounded-xl sm:rounded-2xl overflow-hidden bg-[#0A192F] border border-[#E2E8F0] shadow-sm hover:shadow-md transition-all duration-300 group cursor-pointer lg:h-[440px] xl:h-[460px] flex-col justify-between"
           title="Click to bring this banner into the main spotlight"
         >
           <AnimatePresence mode="wait">
@@ -309,7 +309,7 @@ export default function Hero() {
                   </span>
                 )}
 
-                <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight leading-snug line-clamp-2">
+                <h2 className="text-base sm:text-lg font-bold text-white tracking-tight leading-snug line-clamp-2">
                   {spot2Banner.title}
                 </h2>
 
@@ -317,7 +317,7 @@ export default function Hero() {
                   <span className="text-xs font-semibold uppercase tracking-wider text-white group-hover:text-[#DF9F28] transition-colors">
                     {spot2Banner.buttonText}
                   </span>
-                  <div className="w-8 h-8 rounded-lg bg-[#DF9F28] text-[#111111] flex items-center justify-center shadow-xs group-hover:bg-[#C6891E] transition-colors">
+                  <div className="w-8 h-8 rounded-full bg-[#DF9F28] text-[#111111] flex items-center justify-center shadow-xs group-hover:bg-[#C6891E] transition-colors">
                     <ArrowRight className="w-4 h-4" />
                   </div>
                 </div>

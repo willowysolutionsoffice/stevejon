@@ -108,7 +108,7 @@ export default function CheckoutPage() {
           <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md animate-bounce">
             <CheckCircle2 className="w-12 h-12" />
           </div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-2">
+          <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mb-2">
             Order Confirmed!
           </h1>
           <p className="text-stone-600 mb-6">
@@ -116,7 +116,7 @@ export default function CheckoutPage() {
             <span className="font-mono font-bold text-slate-900">{orderId}</span>.
           </p>
 
-          <div className="bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border border-amber-300/60 rounded-3xl p-6 mb-8 text-left">
+          <div className="bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border border-amber-300/60 rounded-xl p-6 mb-8 text-left">
             <div className="flex items-center gap-2 mb-3">
               <Sparkles className="w-5 h-5 text-[#DF9F28]" />
               <h2 className="text-base font-bold text-slate-900">Lucky Draw Entry Verified</h2>
@@ -169,7 +169,7 @@ export default function CheckoutPage() {
           {/* Left Form Column */}
           <div className="lg:col-span-7 space-y-6">
             {/* Step 1: Shipping Address */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
+            <div className="bg-white rounded-xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-8 h-8 rounded-full bg-[#0A192F] text-white flex items-center justify-center font-bold text-sm">
                   1
@@ -250,7 +250,7 @@ export default function CheckoutPage() {
             </div>
 
             {/* Step 2: Shipping Method */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
+            <div className="bg-white rounded-xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-8 h-8 rounded-full bg-[#0A192F] text-white flex items-center justify-center font-bold text-sm">
                   2
@@ -307,7 +307,7 @@ export default function CheckoutPage() {
             </div>
 
             {/* Step 3: Payment Method */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
+            <div className="bg-white rounded-xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-8 h-8 rounded-full bg-[#0A192F] text-white flex items-center justify-center font-bold text-sm">
                   3
@@ -368,7 +368,7 @@ export default function CheckoutPage() {
 
           {/* Right Summary Column */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs sticky top-28">
+            <div className="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs sticky top-28">
               <h2 className="text-base font-bold text-[#111111] mb-4 pb-3 border-b border-slate-100">
                 Order Summary ({items.length} items)
               </h2>

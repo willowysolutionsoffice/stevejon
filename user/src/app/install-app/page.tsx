@@ -59,7 +59,7 @@ export default function InstallAppPage() {
         </div>
 
         {/* Hero Section */}
-        <div className="bg-gradient-to-br from-[#0A192F] via-[#061B3A] to-[#0A192F] rounded-3xl p-8 sm:p-14 text-white shadow-xl relative overflow-hidden mb-12 border border-[#061B3A]">
+        <div className="bg-gradient-to-br from-[#0A192F] via-[#061B3A] to-[#0A192F] rounded-xl p-8 sm:p-14 text-white shadow-xl relative overflow-hidden mb-12 border border-[#061B3A]">
           <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-10 bg-[radial-gradient(#DF9F28_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
 
           <div className="relative z-10 max-w-xl">
@@ -68,7 +68,7 @@ export default function InstallAppPage() {
               <span>Official JudesCart Progressive Web App</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight mb-4">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight mb-4">
               Shop Faster.<br />
               <span className="text-[#DF9F28]">Never Miss a Lucky Draw.</span>
             </h1>
@@ -100,7 +100,7 @@ export default function InstallAppPage() {
 
         {/* Perks Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs">
+          <div className="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs">
             <div className="w-10 h-10 bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/20 rounded-xl flex items-center justify-center mb-4">
               <Zap className="w-5 h-5" />
             </div>
@@ -108,7 +108,7 @@ export default function InstallAppPage() {
             <p className="text-xs text-[#555555]">Cached offline catalogs with smooth transitions and instant search.</p>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs">
+          <div className="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs">
             <div className="w-10 h-10 bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/20 rounded-xl flex items-center justify-center mb-4">
               <Ticket className="w-5 h-5" />
             </div>
@@ -116,7 +116,7 @@ export default function InstallAppPage() {
             <p className="text-xs text-[#555555]">Real-time alerts when weekly winning numbers are drawn live.</p>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs">
+          <div className="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs">
             <div className="w-10 h-10 bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/20 rounded-xl flex items-center justify-center mb-4">
               <Bell className="w-5 h-5" />
             </div>
@@ -124,7 +124,7 @@ export default function InstallAppPage() {
             <p className="text-xs text-[#555555]">Get notified the instant items in your wishlist go on limited sale.</p>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs">
+          <div className="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs">
             <div className="w-10 h-10 bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/20 rounded-xl flex items-center justify-center mb-4">
               <ShieldCheck className="w-5 h-5" />
             </div>
@@ -134,7 +134,7 @@ export default function InstallAppPage() {
         </div>
 
         {/* Installation Instructions */}
-        <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/80 shadow-xs">
+        <div className="bg-white rounded-xl p-6 sm:p-10 border border-slate-200/80 shadow-xs">
           <h2 className="text-lg font-bold text-[#111111] mb-6">How to Install on Mobile Devices</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

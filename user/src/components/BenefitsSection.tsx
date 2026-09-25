@@ -8,7 +8,7 @@ import { ArrowRight, ShieldCheck, Leaf, Sparkles } from 'lucide-react';
 export default function BenefitsSection() {
   return (
     <section className="sj-container">
-      <div className="relative rounded-3xl overflow-hidden bg-white text-[#111111] shadow-xs border border-[#E2E8F0]">
+      <div className="relative rounded-xl overflow-hidden bg-white text-[#111111] shadow-xs border border-[#E2E8F0]">
         <div className="grid grid-cols-1 lg:grid-cols-12 items-center">
           
           {/* Left Text & Value Props */}
@@ -18,7 +18,7 @@ export default function BenefitsSection() {
               <span>The JudesCart Standard</span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight text-[#111111] tracking-tight">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight text-[#111111] tracking-tight">
               Bespoke Quality. Master Craftsmanship. Timeless Style.
             </h2>
 
@@ -27,7 +27,7 @@ export default function BenefitsSection() {
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-[#F1F5F9] text-xs text-[#555555]">
-              <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
+              <div className="p-4 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0]">
                 <h4 className="font-semibold text-[#111111] uppercase tracking-wide text-xs flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-[#DF9F28]" />
                   <span>Atelier Guarantee</span>
@@ -37,7 +37,7 @@ export default function BenefitsSection() {
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
+              <div className="p-4 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0]">
                 <h4 className="font-semibold text-[#111111] uppercase tracking-wide text-xs flex items-center gap-1.5">
                   <Leaf className="w-4 h-4 text-[#DF9F28]" />
                   <span>Carbon-Neutral Dispatch</span>

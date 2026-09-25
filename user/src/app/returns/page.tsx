@@ -44,7 +44,7 @@ export default function ReturnsPage() {
           <div className="w-12 h-12 bg-[#FEF8EE] text-[#DF9F28] border border-[#DF9F28]/20 rounded-2xl flex items-center justify-center mx-auto mb-3">
             <RotateCcw className="w-6 h-6" />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-[#111111] tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black text-[#111111] tracking-tight">
             30-Day Hassle-Free Returns & Refunds
           </h1>
           <p className="text-[#555555] text-xs sm:text-sm mt-2">
@@ -54,7 +54,7 @@ export default function ReturnsPage() {
 
         {/* 3 Step Process */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs relative">
+          <div className="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs relative">
             <div className="w-8 h-8 rounded-full bg-[#0A192F] text-white flex items-center justify-center font-bold text-xs mb-4">
               1
             </div>
@@ -64,7 +64,7 @@ export default function ReturnsPage() {
             </p>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs relative">
+          <div className="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs relative">
             <div className="w-8 h-8 rounded-full bg-[#0A192F] text-white flex items-center justify-center font-bold text-xs mb-4">
               2
             </div>
@@ -74,7 +74,7 @@ export default function ReturnsPage() {
             </p>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs relative">
+          <div className="bg-white rounded-xl p-6 border border-slate-200/80 shadow-xs relative">
             <div className="w-8 h-8 rounded-full bg-[#DF9F28] text-[#111111] flex items-center justify-center font-bold text-xs mb-4">
               3
             </div>
@@ -86,7 +86,7 @@ export default function ReturnsPage() {
         </div>
 
         {/* Interactive Return Request Form */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs max-w-2xl mx-auto mb-12">
+        <div className="bg-white rounded-xl p-6 sm:p-8 border border-slate-200/80 shadow-xs max-w-2xl mx-auto mb-12">
           <h2 className="text-lg font-bold text-[#111111] mb-2">Initiate Return or Replacement</h2>
           <p className="text-xs text-[#555555] mb-6">
             Enter your order reference number to generate a return shipping docket.

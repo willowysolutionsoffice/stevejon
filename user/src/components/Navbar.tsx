@@ -452,30 +452,66 @@ export default function Navbar() {
               </span>
             </Link>
 
-            {/* Right: Wishlist & Cart Icons with Badges */}
-            <div className="flex items-center gap-1">
+            {/* Right: Symbol Actions (Currency | User | Wishlist | Cart) */}
+            <div className="flex items-center gap-0.5 sm:gap-1">
+              {/* Currency Symbol */}
+              <button
+                type="button"
+                onClick={() => setIsCurrencyModalOpen(true)}
+                className="flex items-center justify-center min-w-[28px] h-7 px-1.5 rounded-lg bg-white border border-[#E2E8F0] text-[11px] font-bold text-[#111111] hover:border-[#DF9F28] transition-colors cursor-pointer select-none active:scale-95"
+                title={`Currency: ${selectedCurrency.code}`}
+                aria-label="Change Currency"
+              >
+                <span>{selectedCurrency.symbol}</span>
+              </button>
+
+              {/* User / Account Symbol */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (session?.user) {
+                    setIsAccountDrawerOpen(true);
+                  } else {
+                    setAuthModalMode('signin');
+                    setIsAuthModalOpen(true);
+                  }
+                }}
+                className="relative p-1.5 text-[#111111] hover:text-[#DF9F28] active:scale-95 transition-all rounded-lg"
+                aria-label="Account"
+                title={session?.user ? 'My Account' : 'Sign In'}
+              >
+                <User className="w-5 h-5 stroke-[1.8]" />
+                {session?.user && (
+                  <span className="absolute 1 top-1.5 right-1 w-2 h-2 bg-[#22C55E] rounded-full ring-2 ring-white" />
+                )}
+              </button>
+
+              {/* Wishlist Symbol */}
               <Link
                 href="/wishlist"
-                className="relative p-2 text-[#111111] hover:text-[#DF9F28] active:scale-95 transition-all"
+                className="relative p-1.5 text-[#111111] hover:text-[#DF9F28] active:scale-95 transition-all rounded-lg"
                 aria-label="Wishlist"
+                title="Wishlist"
               >
                 <Heart className="w-5 h-5 stroke-[1.8]" />
                 {totalWishlistItems > 0 && (
-                  <span className="absolute top-1 right-0.5 min-w-[15px] h-[15px] bg-[#E53E3E] text-white text-[9px] font-bold rounded-full flex items-center justify-center px-0.5 shadow-xs">
+                  <span className="absolute top-0.5 -right-0.5 min-w-[15px] h-[15px] bg-[#E53E3E] text-white text-[9px] font-bold rounded-full flex items-center justify-center px-0.5 shadow-xs">
                     {totalWishlistItems}
                   </span>
                 )}
               </Link>
 
+              {/* Shopping Bag / Cart Symbol */}
               <button
                 type="button"
                 onClick={() => openDrawer()}
-                className="relative p-2 text-[#111111] hover:text-[#DF9F28] active:scale-95 transition-all cursor-pointer"
+                className="relative p-1.5 text-[#111111] hover:text-[#DF9F28] active:scale-95 transition-all cursor-pointer rounded-lg"
                 aria-label="Shopping Cart"
+                title="Cart"
               >
                 <ShoppingBag className="w-5 h-5 stroke-[1.8]" />
                 {totalItems > 0 && (
-                  <span className="absolute top-1 right-0.5 min-w-[15px] h-[15px] bg-[#DF9F28] text-[#111111] text-[9px] font-bold rounded-full flex items-center justify-center px-0.5 shadow-xs">
+                  <span className="absolute top-0.5 -right-0.5 min-w-[15px] h-[15px] bg-[#DF9F28] text-[#111111] text-[9px] font-bold rounded-full flex items-center justify-center px-0.5 shadow-xs">
                     {totalItems}
                   </span>
                 )}

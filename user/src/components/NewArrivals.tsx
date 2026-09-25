@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Sparkles, Compass, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, Sparkles, Compass, ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getApiUrl } from '@/lib/api';
 import ProductCard from './ProductCard';
 
@@ -181,6 +181,7 @@ const FALLBACK_PRODUCTS: RawProduct[] = [
 export default function NewArrivals() {
   const [products, setProducts] = useState<RawProduct[]>(FALLBACK_PRODUCTS);
   const [activeCategory, setActiveCategory] = useState<string>('ALL PRODUCTS');
+  const carouselRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchCatalog = async () => {
@@ -200,6 +201,16 @@ export default function NewArrivals() {
 
     fetchCatalog();
   }, []);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (carouselRef.current) {
+      const scrollAmount = carouselRef.current.clientWidth * 0.75;
+      carouselRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
 
   const filteredProducts = useMemo(() => {
     if (activeCategory === 'ALL PRODUCTS') {
@@ -236,48 +247,131 @@ export default function NewArrivals() {
   return (
     <section className="sj-container space-y-6 sm:space-y-8">
       {/* =========================================================================
-          TANEIRA-INSPIRED SECTION HEADER & CURATION TABS
+          TANEIRA-INSPIRED SECTION HEADER: CUSTOMER FAVOURITES
          ========================================================================= */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#E2E8F0] pb-5">
         <div>
           <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest font-bold text-[#DF9F28] mb-1">
             <Sparkles className="w-3.5 h-3.5 text-[#DF9F28]" />
-            <span>CURATED EDITS &amp; TOP PICKS</span>
+            <span>FEATURED AT JUDESCART</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-bold text-[#111111] tracking-tight">
-            Featured at JudesCart
+            Customer Favourites
           </h2>
           <p className="text-xs text-[#555555] mt-0.5">
-            Discover precision tailoring, master leathers, and bespoke luxury pieces.
+            Discover our highest-rated sartorial pieces, master leathers, and signature craftsmanship.
           </p>
         </div>
 
-        {/* Category Pill Filters (Taneira Style Clean Rounded Navigation) */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-          {CATEGORY_TABS.map((tab) => {
-            const isActive = activeCategory === tab;
+        {/* Category Pill Filters (Taneira Style Clean Rounded Navigation) & Nav Arrows */}
+        <div className="flex items-center justify-between md:justify-end gap-3">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+            {CATEGORY_TABS.map((tab) => {
+              const isActive = activeCategory === tab;
+              return (
+                <button
+                  key={tab}
+                  type="button"
+                  onClick={() => setActiveCategory(tab)}
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#DF9F28] ${
+                    isActive
+                      ? 'bg-[#0A192F] text-white shadow-sm border border-[#0A192F]'
+                      : 'bg-white text-[#555555] border border-[#E2E8F0] hover:border-[#DF9F28] hover:text-[#111111]'
+                  }`}
+                >
+                  {tab}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Desktop Top Navigation Arrow Controls */}
+          <div className="hidden sm:flex items-center gap-1.5 shrink-0 pl-2">
+            <button
+              type="button"
+              onClick={() => scroll('left')}
+              className="w-8 h-8 rounded-full bg-white border border-[#E2E8F0] text-[#555555] hover:text-[#111111] hover:border-[#0A192F] hover:bg-slate-100 flex items-center justify-center transition-all shadow-2xs active:scale-95 cursor-pointer"
+              aria-label="Previous customer favourites"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => scroll('right')}
+              className="w-8 h-8 rounded-full bg-white border border-[#E2E8F0] text-[#555555] hover:text-[#111111] hover:border-[#0A192F] hover:bg-slate-100 flex items-center justify-center transition-all shadow-2xs active:scale-95 cursor-pointer"
+              aria-label="Next customer favourites"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* =========================================================================
+          TANEIRA-STYLE CUSTOMER FAVOURITES CAROUSEL WITH FLOATING ARROWS
+         ========================================================================= */}
+      <div className="relative group/carousel">
+        {/* Floating Left Navigation Button */}
+        <button
+          type="button"
+          onClick={() => scroll('left')}
+          className="absolute -left-3 sm:-left-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/95 backdrop-blur-xs text-[#111111] shadow-md hover:shadow-lg border border-[#E2E8F0] flex items-center justify-center hover:bg-[#0A192F] hover:text-white transition-all active:scale-90 cursor-pointer opacity-90 group-hover/carousel:opacity-100"
+          aria-label="Scroll left"
+        >
+          <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+        </button>
+
+        {/* Floating Right Navigation Button */}
+        <button
+          type="button"
+          onClick={() => scroll('right')}
+          className="absolute -right-3 sm:-right-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/95 backdrop-blur-xs text-[#111111] shadow-md hover:shadow-lg border border-[#E2E8F0] flex items-center justify-center hover:bg-[#0A192F] hover:text-white transition-all active:scale-90 cursor-pointer opacity-90 group-hover/carousel:opacity-100"
+          aria-label="Scroll right"
+        >
+          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+        </button>
+
+        {/* Horizontal Carousel Track */}
+        <div
+          ref={carouselRef}
+          className="flex overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory gap-3 sm:gap-4 lg:gap-5 pb-2"
+        >
+          {filteredProducts.map((prod) => {
+            const mainVariant = prod.variants?.[0];
+            const price = mainVariant?.price || 4299;
+            const originalPrice = mainVariant?.offerPrice;
+
             return (
-              <button
-                key={tab}
-                type="button"
-                onClick={() => setActiveCategory(tab)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#DF9F28] ${
-                  isActive
-                    ? 'bg-[#0A192F] text-white shadow-sm border border-[#0A192F]'
-                    : 'bg-white text-[#555555] border border-[#E2E8F0] hover:border-[#DF9F28] hover:text-[#111111]'
-                }`}
+              <div
+                key={prod.id}
+                className="w-[calc(50%-6px)] sm:w-[calc(33.333%-11px)] lg:w-[calc(25%-15px)] shrink-0 snap-start"
               >
-                {tab}
-              </button>
+                <ProductCard
+                  id={prod.id}
+                  variantId={mainVariant?.id}
+                  name={prod.name}
+                  category={prod.category?.name || 'APPAREL'}
+                  brand={prod.brand?.name || 'JudesCart'}
+                  price={price}
+                  originalPrice={originalPrice}
+                  image={prod.image || '/prod_overshirt_1778670536589.png'}
+                  subimage={prod.subimage || []}
+                  description={prod.description}
+                  rating={prod.rating || 4.9}
+                  reviewsCount={prod.reviewsCount || 128}
+                  isNewArrival={prod.isNewArrival}
+                  isCustomerFavorite={true}
+                />
+              </div>
             );
           })}
         </div>
       </div>
 
       {/* =========================================================================
-          TANEIRA-STYLE EDITORIAL CURATION SPOTLIGHT BANNER
+          TANEIRA-STYLE EDITORIAL SPOTLIGHT & LUCKY DRAW BANNER
          ========================================================================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch pt-2">
         <div className="lg:col-span-8 relative rounded-xl overflow-hidden bg-[#0A192F] text-white p-6 sm:p-8 flex flex-col justify-between min-h-[220px] sm:min-h-[260px] border border-[#E2E8F0] shadow-sm">
           <Image
             src="/about_atelier.png"
@@ -341,39 +435,8 @@ export default function NewArrivals() {
         </div>
       </div>
 
-      {/* =========================================================================
-          PRODUCTS GRID: 4-COLUMN COMPACT LAYOUT ON DESKTOP (Taneira-Scale Cards)
-         ========================================================================= */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
-        {filteredProducts.map((prod) => {
-          const mainVariant = prod.variants?.[0];
-          const price = mainVariant?.price || 4299;
-          const originalPrice = mainVariant?.offerPrice;
-
-          return (
-            <ProductCard
-              key={prod.id}
-              id={prod.id}
-              variantId={mainVariant?.id}
-              name={prod.name}
-              category={prod.category?.name || 'APPAREL'}
-              brand={prod.brand?.name || 'JudesCart'}
-              price={price}
-              originalPrice={originalPrice}
-              image={prod.image || '/prod_overshirt_1778670536589.png'}
-              subimage={prod.subimage || []}
-              description={prod.description}
-              rating={prod.rating || 4.9}
-              reviewsCount={prod.reviewsCount || 128}
-              isNewArrival={prod.isNewArrival}
-              isCustomerFavorite={prod.isCustomerFavorite}
-            />
-          );
-        })}
-      </div>
-
       {/* View All CTA Footer */}
-      <div className="pt-4 text-center">
+      <div className="pt-2 text-center">
         <Link
           href="/product"
           className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-white hover:bg-[#0A192F] hover:text-white text-[#111111] border border-[#E2E8F0] hover:border-[#0A192F] font-bold text-xs uppercase tracking-wider transition-all shadow-xs active:scale-95"
